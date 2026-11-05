@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>半導體期中複習站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
+<style>
+:root{--bg:#ECE8E3;--surface:#F7F5F2;--ink:#3D4340;--muted:#7B827E;--line:#D8D1C9;--c1:#7F9688;--c2:#B5857F;--c3:#8D9DAE;--c1s:#DCE5DF;--c2s:#F0E0DC;--c3s:#DEE4EA}
+@media (prefers-color-scheme: dark){:root{color-scheme:dark;--bg:#252928;--surface:#2F3432;--ink:#E5E1DB;--muted:#A1A8A4;--line:#434A47;--c1:#97AE9F;--c2:#CC9F98;--c3:#A5B4C3;--c1s:#36443C;--c2s:#4A3936;--c3s:#37404A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-size:18px;line-height:1.7;padding:max(24px,env(safe-area-inset-top)) 16px max(32px,env(safe-area-inset-bottom))}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1{font-family:"Noto Serif TC",serif;font-size:clamp(1.6rem,6vw,2.2rem);margin:0;letter-spacing:.02em}
+.sub{margin:0;color:var(--muted);font-size:.92rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-size:.8rem;padding:2px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.tags b{color:var(--ink);font-weight:500}
+a.card{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:16px;padding:18px 20px;transition:transform .15s,background .15s}
+a.card:hover,a.card:focus-visible{background:var(--cs);transform:translateY(-1px)}
+a.card:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+a.card b{font-size:1.2rem}
+a.card span{color:var(--muted);font-size:.9rem}
+.note{font-size:.82rem;color:var(--muted);margin:0}
+@media (prefers-reduced-motion:reduce){a.card{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>半導體期中複習站</h1>
+    <p class="sub">AI 世代的半導體產業概論｜期中考 11/6（五）10:20～12:10　建國 E105　閉書考</p>
+  </header>
+  <div class="tags"><span>選擇題 <b>80 分</b>：對 +2、錯 −0.7、不答 0</span><span>申論 <b>20 分</b>：自選 2 題</span></div>
+  <a class="card" href="quiz.html" style="--c:var(--c1);--cs:var(--c1s)"><b>選擇題刷題本</b><span>第一～三章投影片 126 題｜點選即顯示對錯、逐項解釋、投影片圖解、測驗紀錄</span></a>
+  <a class="card" href="essay-quiz.html" style="--c:var(--c2);--cs:var(--c2s)"><b>說明題觀念刷題本</b><span>6 題申論觀念改成 48 題選擇題｜用刷題記住申論重點</span></a>
+  <a class="card" href="essay-map.html" style="--c:var(--c3);--cs:var(--c3s)"><b>申論題重點樹</b><span>6 題申論的重點心智圖｜手機預設清單模式，考前快速瀏覽</span></a>
+  <p class="note">作答紀錄存在各自的瀏覽器裡，手機和電腦的紀錄不會互通。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"></head><body><title>申論題重點樹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#ECE8E3; --surface:#F7F5F2; --ink:#3D4340; --muted:#7B827E; --line:#D8D1C9;
+  --c1:#7F9688; --c1s:#DCE5DF; --c2:#B5857F; --c2s:#F0E0DC; --c3:#8D9DAE; --c3s:#DEE4EA;
+  --c4:#B59E7C; --c4s:#EFE7DA; --c5:#9A8FA6; --c5s:#E7E2EC; --c6:#7E9A9C; --c6s:#DBE6E6;
+  --root:#5F6B66; --rootink:#F7F5F2; --brink:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#252928; --surface:#2F3432; --ink:#E5E1DB; --muted:#A1A8A4; --line:#434A47;
+    --c1:#97AE9F; --c1s:#36443C; --c2:#CC9F98; --c2s:#4A3936; --c3:#A5B4C3; --c3s:#37404A;
+    --c4:#C9B89F; --c4s:#433D33; --c5:#B3A8BF; --c5s:#3E3946; --c6:#98B3B5; --c6s:#344344;
+    --root:#C9D2CD; --rootink:#252928; --brink:#232726;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#252928; --surface:#2F3432; --ink:#E5E1DB; --muted:#A1A8A4; --line:#434A47;
+  --c1:#97AE9F; --c1s:#36443C; --c2:#CC9F98; --c2s:#4A3936; --c3:#A5B4C3; --c3s:#37404A;
+  --c4:#C9B89F; --c4s:#433D33; --c5:#B3A8BF; --c5s:#3E3946; --c6:#98B3B5; --c6s:#344344;
+  --root:#C9D2CD; --rootink:#252928; --brink:#232726;
+}
+*{box-sizing:border-box}
+.wrap>*{min-width:0;max-width:100%}
+.rule,.grade{display:flex}
+
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-size:1rem;line-height:1.7;margin:0}
+.wrap{max-width:1600px;margin:0 auto;padding-inline:clamp(16px,2.5vw,36px);padding-block:20px 48px;display:flex;flex-direction:column;gap:14px}
+h1{font-family:"Noto Serif TC","PMingLiU",serif;font-size:clamp(1.4rem,3.6vw,1.9rem);margin:0;letter-spacing:.02em}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.9rem}
+.grade{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.grade span{font-size:.78rem;padding:2px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.grade b{color:var(--ink);font-weight:500}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{font:inherit;font-size:.9rem;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 14px;border-radius:999px}
+.tab[aria-selected="true"]{background:var(--root);border-color:var(--root);color:var(--rootink)}
+.tab:focus-visible{outline:2px solid var(--c3);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px clamp(12px,2.5vw,24px);display:flex;flex-direction:column;gap:10px}
+.panel h2{font-family:"Noto Serif TC",serif;font-size:1.15rem;margin:0;text-wrap:balance}
+.q{margin:0;color:var(--muted);font-size:.88rem;max-width:75ch}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+svg{display:block}
+svg text{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+.tip{font-size:.8rem;color:var(--muted)}
+.fsz{display:inline-flex;gap:4px;align-items:center;font-size:.85rem;color:var(--muted);margin-left:auto}
+.fsz button{font:inherit;cursor:pointer;min-width:38px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.fsz button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+.mode{display:inline-flex;gap:4px;font-size:.85rem;color:var(--muted);align-items:center}
+.mode button{font:inherit;cursor:pointer;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.mode button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.list{display:flex;flex-direction:column;gap:12px}
+.list .root{background:var(--root);color:var(--rootink);border-radius:12px;padding:10px 14px;font-weight:700}
+.list section{border-left:5px solid var(--c);background:var(--cs);border-radius:10px;padding:10px 14px}
+.list h3{margin:0 0 6px;font-size:1.05rem;color:var(--ink)}
+.list ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.list li{line-height:1.6}
+@media (max-width:640px){
+  .wrap{padding-inline:16px;padding-block:14px 32px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .tab{flex:none}
+  .panel{padding:14px;border-radius:14px}
+}
+.outline{background:var(--bg);border-radius:12px;padding:12px 14px;font-size:.88rem}
+.outline b{font-family:"Noto Serif TC",serif}
+.outline ol{margin:6px 0 0;padding-left:1.4em}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>申論題重點樹</h1>
+    <p class="sub">戴副總經理 6 題申論｜考試自選 2 題、每題 10 分｜照樹枝順序寫，每個葉子就是一個要寫到的重點</p>
+    <div class="grade"><span>名詞精準 <b>35%</b></span><span>原理邏輯 <b>30%</b></span><span>跨領域舉例 <b>25%</b></span><span>結構條理 <b>10%</b></span></div>
+  </header>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="ctl"><span class="mode" id="mode"></span><span class="fsz" id="fsz"></span></div>
+  <section class="panel" id="panel" role="tabpanel"></section>
+  <div class="outline">
+    <b>萬用寫法（每題都套）</b>
+    <ol>
+      <li>前言：一句點題，預告要回答哪幾點</li>
+      <li>照樹的「第一層枝」分段下標題，每段寫葉子的重點</li>
+      <li>名詞寫成「中文（English）」，每點補一句「為什麼」</li>
+      <li>至少一個例子（iPhone、ChatGPT、台積電、自己的經驗）</li>
+      <li>結論：連回「AI × 半導體」或自己的看法</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+const T = [
+ {k:"一", title:"ABC 三大支柱＋DNN 訓練與推理",
+  q:"何謂 ABC？三者關係？何謂 DNN？從訓練與推理剖析核心目標、關鍵演算法與差異。",
+  b:[
+   ["ABC 三大支柱",["Algorithms 演算法｜決定「怎麼學」","Big Data 巨量資料｜決定「學什麼」；資料要清理，避免過擬合","Computing Power 算力｜決定「學多快」：GPU、TPU","三者缺一不可 → 帶動台積電、NVIDIA"]],
+   ["DNN 深度神經網路",["AI ⊃ ML ⊃ DL（層層包含）","輸入層 → 隱藏層 → 輸出層","包含 1 個以上隱藏層（Hidden Layer）","層數再多，仍遠不及人腦"]],
+   ["訓練 Training",["目標：確定所有神經元參數（Parameters）的最佳值","反向傳播 Back-propagation：誤差由後往前傳，算出每個參數要修多少","梯度下降 Gradient Descent：往誤差變小的方向一小步調整（蒙眼下山）","像「讀書」📚：雲端 GPU／TPU"]],
+   ["推理 Inferring",["訓練完成後，給新輸入 → 輸出結果或預測","例：使用者問 ChatGPT","像「考試」✍️：手機、筆電裡的 NPU"]]
+  ]},
+ {k:"二", title:"AI 時代人類的先天優勢＋三大能力",
+  q:"如何自保並「利用它們」強化自己？申論應對心態與先天優勢、非理工學生三大能力。",
+  b:[
+   ["心態",["不焦慮、不怕被取代","學會「利用它們」讓自己更強大","AI 靠 ABC 發展，人類靠「先天優勢」"]],
+   ["為什麼需要先天優勢",["AI 會給「看似合理」但不一定正確的答案","人類能理解意義、判斷價值、承擔責任","TEDx「人類邊界」：發明創造、直覺、社交敏銳、情感勇氣、感官想像"]],
+   ["三大必備能力",["數位及數學技能：資料分析＋AI 工具（微積分、線代、機率統計）","AI 還不會的能力：批判性思維、倫理判斷、溝通力、同理心","跨界合作：與理工／AI 專業合作，打造「人文＋科技」"]],
+   ["我的例子＋結論",["實習做交通事故通報平台","AI 寫程式很快，需求與結果對不對要靠自己判斷","結論：AI 越強，判斷力與人性越值錢"]]
+  ]},
+ {k:"三", title:"能隙、摻雜與 IC 的構成",
+  q:"導體／絕緣體／半導體的能隙差異？半導體關鍵特性與如何調控？IC、電晶體、晶片的關係？",
+  b:[
+   ["能隙 Band Gap",["導體 Conductor：價帶導帶重疊 Overlap、無能隙（金銀銅）","絕緣體 Insulator：能隙很寬 Wide Band Gap（玻璃、塑膠）","半導體 Semiconductor：能隙窄；絕對零度像絕緣體，室溫靠熱能導電（矽、鍺）"]],
+   ["關鍵特性：可精準調控導電度",["方法：摻雜 Doping、施加電場、光照","五價（磷）→ N 型：多自由電子","三價（硼）→ P 型：多電洞","P＋N → 二極體；三層 → 電晶體"]],
+   ["IC、晶片、電晶體",["IC 積體電路：千萬個電晶體＋電阻電容集成於矽基板","IC ＝ 晶片 Chip（同一概念）","功能來自大量電晶體（電晶體是磚、IC 是房子）","Intel 4004 約 2,300 個 → Cerebras 數兆個（摩爾定律）"]]
+  ]},
+ {k:"四", title:"CMCC 四大功能＋多元整合",
+  q:"列出 CMCC 英文名稱、功能重點與代表晶片；單一晶片只能一種功能嗎？以 iPhone 為例說明整合趨勢。",
+  b:[
+   ["Computation 計算",["邏輯運算、資料處理（大腦）","CPU、GPU、TPU、MCU、NPU"]],
+   ["Memory 記憶",["資料暫存與永久儲存","DRAM、SRAM／ROM、Flash、HBM"]],
+   ["Connection 連接",["無線通訊、訊號傳輸","4G／5G、WiFi、藍牙、感測器 Sensors"]],
+   ["Control 控制",["系統控制、電源管理","ECU、PMIC、驅動 IC（Driver）"]],
+   ["多元整合趨勢",["一顆 IC 可同時具備多種功能","iPhone 18 Pro 多達 30 多種晶片，涵蓋 CMCC","SoC 系統單晶片：整合計算＋控制＋連接","為何整合：空間小、省電、傳輸距離短、效能高","電動車：自駕晶片、ECU、感測器"]]
+  ]},
+ {k:"五", title:"產業鏈上中下游＋晶圓製造複雜性",
+  q:"上游三要素與重點？中游 Foundry 運作重點與步驟數？下游 OSAT 如何轉成終端產品？",
+  b:[
+   ["前言：專業分工",["IDM 一手包辦 vs 專業分工","Sony 集合日本人才仍追不上台積電"]],
+   ["上游",["IC 設計：EDA、IP Core、光罩 GDSII（聯發科、Fabless）","材料：矽晶圓（石英砂→多晶矽→晶柱→切片拋光）、光阻劑、特殊氣體、CMP 研磨液","設備：微影（EUV 最關鍵）、蝕刻沉積、量測檢驗"]],
+   ["中游 Foundry",["把電路圖變成實體結構（台積電）","約 1,000～1,500 個步驟","8 大製程在同片晶圓反覆循環，一層層 3D 堆疊","無塵室：一粒灰塵就整片報廢"]],
+   ["下游 OSAT",["晶圓切割 Dicing","黏晶 Die Attaching、打線 Wire Bonding、封膠 Molding","最終測試 Final Test／ATE → 終端產品（日月光）"]],
+   ["台灣地位",["設計 18%（世界第 2）","代工 65～70%（第 1）","封測 48～50%（第 1）→ 護國神山"]]
+  ]},
+ {k:"六", title:"超大晶片限制 vs CoWoS 先進封裝",
+  q:"為何不普遍做 Cerebras 那樣的超大晶片，而用 Chiplets＋CoWoS？剖析 CoWoS-S 由上至下 5 層，及如何高頻寬低延遲。",
+  b:[
+   ["為何不做超大晶片",["光罩尺寸限制：一般 GPU 約 800 mm²","Cerebras WSE：整片 300 mm 晶圓、46,225 mm²（50 多倍）","面積越大，一個瑕疵整顆報廢 → 良率低、成本高、難量產","改用小晶片 Chiplets＋HBM，以 CoWoS 整合：突破面積、維持良率"]],
+   ["CoWoS-S 5 層（由上到下）",["① 頂層晶片 Top Dies：Compute／Logic＋HBM（TSV 堆疊，底部 Base Die）","② 微凸塊 µBumps","③ 矽中介層 Silicon Interposer：Short Wires 橫向＋TSV 向下","④ C4 銅凸塊＋封裝基板 Package Substrate","⑤ 封裝錫球 Package Balls＋電路板 PCB"]],
+   ["為何高頻寬、低延遲",["運算晶片與 HBM 並排在同一片中介層","高密度短導線：距離短、通道多","TSV 垂直穿透矽，不用繞遠路"]],
+   ["結論",["延續摩爾定律 Moore's Law 的關鍵","台積電 AI 時代的核心競爭力"]]
+  ]}
+];
+
+const NS = "http://www.w3.org/2000/svg";
+const COLS = ["c1","c2","c3","c4","c5","c6"];
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function wrap(text, max){
+  // 英文、數字連在一起當成一個單位，不從中間切斷
+  const toks = text.match(/[A-Za-z0-9.,'’\-\/~²µ+]+|\s+|[^\sA-Za-z0-9.,'’\-\/~²µ+]/g) || [];
+  const tw = s => [...s].reduce((a, c) => a + (c.charCodeAt(0) < 256 || "²µ’".includes(c) ? 0.56 : 1), 0);
+  const lines = []; let line = "", w = 0;
+  for (const tk of toks) {
+    const k = tw(tk);
+    if (w + k > max && line.trim()) { lines.push(line.trimEnd()); line = ""; w = 0; if (/^\s+$/.test(tk)) continue; }
+    line += tk; w += k;
+  }
+  if (line.trim()) lines.push(line.trimEnd());
+  return lines;
+}
+function draw(t){
+  const FS = 14, LH = 20, PAD = 9, GAP = 10, BGAP = 18; const K = (window.__fontPx || 19) / 15;
+  const ROOT_W = 170, BR_W = 190, LF_W = 330, X0 = 4, X1 = ROOT_W + 50, X2 = X1 + BR_W + 46;
+  const W = X2 + LF_W + 6;
+  // 先算每個葉子的高度
+  let y = 8; const branches = [];
+  t.b.forEach(([name, leaves], bi) => {
+    const items = leaves.map(s => { const ls = wrap(s, 21); return { ls, h: ls.length * LH + PAD * 2 }; });
+    const top = y;
+    items.forEach(it => { it.y = y; y += it.h + GAP; });
+    const bottom = y - GAP;
+    const bl = wrap(name, 11);
+    const bh = bl.length * LH + PAD * 2;
+    branches.push({ name: bl, items, cy: (top + bottom) / 2, bh, col: COLS[bi % COLS.length] });
+    y += BGAP;
+  });
+  const H = y - BGAP + 8;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: Math.round(W * K), height: Math.round(H * K), role: "img", "aria-label": `申論題${t.k}重點樹：${t.title}` });
+  const css = getComputedStyle(document.documentElement);
+  const v = n => css.getPropertyValue("--" + n).trim();
+  const rootLines = wrap(t.title, 9);
+  const rh = rootLines.length * 22 + 28, ry = H / 2 - rh / 2;
+  // 連線
+  branches.forEach(b => {
+    el("path", { d: `M${X0 + ROOT_W},${H / 2} C${X0 + ROOT_W + 30},${H / 2} ${X1 - 30},${b.cy} ${X1},${b.cy}`, fill: "none", stroke: v(b.col), "stroke-width": 2.2, opacity: .85 }, svg);
+    b.items.forEach(it => {
+      const ly = it.y + it.h / 2;
+      el("path", { d: `M${X1 + BR_W},${b.cy} C${X1 + BR_W + 24},${b.cy} ${X2 - 24},${ly} ${X2},${ly}`, fill: "none", stroke: v(b.col), "stroke-width": 1.5, opacity: .7 }, svg);
+    });
+  });
+  // 根
+  el("rect", { x: X0, y: ry, width: ROOT_W, height: rh, rx: 16, fill: v("root") }, svg);
+  const rk = el("text", { x: X0 + ROOT_W / 2, y: ry + 22, "text-anchor": "middle", "font-size": 12, fill: v("rootink"), opacity: .85, "letter-spacing": 2 }, svg); rk.textContent = `申論題${t.k}`;
+  rootLines.forEach((s, i) => { const tx = el("text", { x: X0 + ROOT_W / 2, y: ry + 44 + i * 22, "text-anchor": "middle", "font-size": 16, "font-weight": 700, fill: v("rootink") }, svg); tx.textContent = s; });
+  // 枝與葉
+  branches.forEach(b => {
+    const by = b.cy - b.bh / 2;
+    el("rect", { x: X1, y: by, width: BR_W, height: b.bh, rx: 12, fill: v(b.col) }, svg);
+    b.name.forEach((s, i) => { const tx = el("text", { x: X1 + 14, y: by + PAD + 15 + i * LH, "font-size": 15, "font-weight": 700, fill: v("brink") }, svg); tx.textContent = s; });
+    b.items.forEach(it => {
+      el("rect", { x: X2, y: it.y, width: LF_W, height: it.h, rx: 10, fill: v(b.col + "s"), stroke: v(b.col), "stroke-width": 1 }, svg);
+      it.ls.forEach((s, i) => { const tx = el("text", { x: X2 + 12, y: it.y + PAD + 14 + i * LH, "font-size": FS, fill: v("ink") }, svg); tx.textContent = s; });
+    });
+  });
+  return svg;
+}
+function listView(t){
+  const box = document.createElement("div"); box.className = "list";
+  box.innerHTML = `<div class="root">申論題${t.k}｜${t.title}</div>` + t.b.map(([name, leaves], bi) =>
+    `<section style="--c:var(--${COLS[bi % COLS.length]});--cs:var(--${COLS[bi % COLS.length]}s)"><h3>${name}</h3><ul>${leaves.map(s => `<li>${s}</li>`).join("")}</ul></section>`).join("");
+  return box;
+}
+let view = null;
+try { view = localStorage.getItem("essay-map-view"); } catch(e) {}
+function curView(){ return view || (window.matchMedia("(max-width: 760px)").matches ? "list" : "tree"); }
+function modeBtns(){
+  const b = document.getElementById("mode");
+  b.innerHTML = "顯示：" + [["tree","樹狀圖"],["list","清單"]].map(([k, n]) => `<button type="button" data-v="${k}" aria-pressed="${curView() === k}">${n}</button>`).join("");
+  b.querySelectorAll("button").forEach(x => x.onclick = () => { view = x.dataset.v; try { localStorage.setItem("essay-map-view", view); } catch(e) {} modeBtns(); show(cur); });
+}
+let cur = 0;
+function show(i){
+  cur = i;
+  document.querySelectorAll(".tab").forEach((b, k) => b.setAttribute("aria-selected", String(k === i)));
+  const t = T[i], p = document.getElementById("panel");
+  p.innerHTML = `<h2>申論題${t.k}｜${t.title}</h2><p class="q">題目要點：${t.q}</p><div class="scroll" id="sc"></div><p class="tip">手機上可以左右滑動看整棵樹</p>`;
+  document.getElementById("sc").appendChild(curView() === "list" ? listView(t) : draw(t));
+  const tip = p.querySelector(".tip"); if (tip) tip.hidden = curView() === "list";
+  try { localStorage.setItem("essay-map-tab", String(i)); } catch(e) {}
+}
+const tabs = document.getElementById("tabs");
+T.forEach((t, i) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab");
+  b.textContent = `${t.k}｜${t.title.split("＋")[0].split(" vs ")[0]}`;
+  b.onclick = () => show(i);
+  tabs.appendChild(b);
+});
+let start = 0; try { start = +(localStorage.getItem("essay-map-tab") || 0) || 0; } catch(e) {}
+window.__onFont = px => { window.__fontPx = px; if (typeof cur === 'number' && document.getElementById('sc')) show(cur); };
+(function(){
+  const SIZES = [["小",16],["中",19],["大",22],["特大",25]];
+  let cur = 19; try { cur = +(localStorage.getItem("semi-font") || 19) || 19; } catch(e) {}
+  const box = document.getElementById("fsz");
+  function apply(px){
+    cur = px; document.documentElement.style.fontSize = px + "px";
+    try { localStorage.setItem("semi-font", String(px)); } catch(e) {}
+    box.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.px === px)));
+    if (window.__onFont) window.__onFont(px);
+  }
+  box.innerHTML = "字體：" + SIZES.map(([n, px]) => `<button type="button" data-px="${px}">${n}</button>`).join("");
+  box.querySelectorAll("button").forEach(b => b.onclick = () => apply(+b.dataset.px));
+  apply(cur);
+})();
+
+modeBtns();
+show(Math.min(start, T.length - 1));
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+if (mq.addEventListener) mq.addEventListener("change", () => show(cur));
+new MutationObserver(() => show(cur)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+</body></html>
