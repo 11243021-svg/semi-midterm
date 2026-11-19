@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>申論題重點樹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap">
+<style>
+/* ── 色票：紙、墨、一個朱紅 ── */
+:root{
+  color-scheme:light;
+  --paper:#EEEAE2; --paper-2:#E5E0D6; --ink:#171614; --ink-2:#47433C; --muted:#6E675D;
+  --rule:#C9C1B4; --accent:#B5391C; --on-accent:#F7F3EC;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#181714; --paper-2:#211F1B; --ink:#ECE6DA; --ink-2:#C2BAAD; --muted:#9A9285;
+    --rule:#3B3732; --accent:#E2734F; --on-accent:#181714;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#181714; --paper-2:#211F1B; --ink:#ECE6DA; --ink-2:#C2BAAD; --muted:#9A9285;
+  --rule:#3B3732; --accent:#E2734F; --on-accent:#181714;
+}
+
+/* ── 字型與節奏 ── */
+:root{
+  --f-latin:"Instrument Serif","Times New Roman",serif;
+  --f-serif:"Noto Serif TC","PMingLiU","Songti TC",serif;
+  --f-sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --tick:1.1rem;
+  --ease:cubic-bezier(.2,.7,.1,1);
+  --draw:cubic-bezier(.65,0,.25,1);
+}
+*{box-sizing:border-box}
+html{font-size:19px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-sans);font-size:1rem;line-height:1.75;font-weight:400}
+button{font:inherit;color:inherit}
+svg{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.ic{width:1em;height:1em;display:inline-block;vertical-align:-.14em;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.ic *{transform-box:fill-box}
+
+/* 版心：跟著視窗流動，大螢幕上限 1600px */
+.page{width:100%;max-width:1600px;margin:0 auto;padding:28px clamp(16px,3.4vw,56px) 56px}
+.page>*{min-width:0}
+
+/* ── 細線（全部用偽元素畫，進場時由左畫到右） ── */
+@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.ln-b,.ln-t{position:relative}
+.ln-b::after,.ln-t::before{content:"";position:absolute;left:0;right:0;height:var(--lh,1px);background:var(--lc,var(--ink));transform-origin:left;animation:draw var(--ld,.9s) var(--draw) both;animation-delay:var(--dl,0s)}
+.ln-b::after{bottom:0}
+.ln-t::before{top:0}
+
+/* 小型大寫標籤 */
+.eyebrow{font-family:var(--f-sans);font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.4}
+.it{font-family:var(--f-latin);font-style:italic;font-weight:400;letter-spacing:0}
+
+/* ── 數字里程表 ── */
+.odo{display:inline-block;white-space:nowrap;line-height:1.1}
+.odo .ov{display:inline-block}
+.dg{position:relative;display:inline-block;clip-path:inset(0 -.45em);overflow-y:clip;vertical-align:baseline}
+.dg .ph{visibility:hidden}
+.dg .strip{position:absolute;left:0;right:0;top:0;text-align:center;transition:transform 1.15s var(--ease);will-change:transform}
+.dg .strip span{display:block}
+.nd{display:inline-block}
+
+/* ── 眉標列 ── */
+.masthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 24px;padding-bottom:13px;--lh:3px}
+.masthead .mid{font-family:var(--f-latin);font-style:italic;font-size:1.05rem;color:var(--ink);letter-spacing:0;text-transform:none}
+.double{height:5px;margin-bottom:clamp(28px,5vw,64px);--dl:.15s}
+
+/* ── 刊頭 ── */
+.hero{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:28px;align-items:end}
+.hero-title{grid-column:1 / span 8}
+.hero-spec{grid-column:9 / span 4}
+.kicker{display:flex;gap:12px;align-items:baseline;margin-bottom:10px}
+.kicker .num{font-family:var(--f-latin);font-style:italic;font-size:1.3rem;color:var(--accent);line-height:1}
+h1{font-family:var(--f-serif);font-weight:900;font-size:clamp(2.3rem,6.4vw,5rem);line-height:1.05;letter-spacing:.01em;margin:0}
+.ch{display:inline-block;animation:chIn .7s var(--ease) both;animation-delay:calc(var(--i) * 75ms + .2s)}
+@keyframes chIn{from{opacity:0;transform:translateY(.28em)}to{opacity:1;transform:none}}
+.h1-en{display:block;font-family:var(--f-latin);font-style:italic;font-weight:400;font-size:clamp(1.3rem,2.8vw,2.2rem);line-height:1.2;color:var(--ink-2);margin-top:.35em;letter-spacing:0;animation:fadeIn .9s ease both .75s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sub{margin:18px 0 0;max-width:38em;color:var(--ink-2);font-size:.92rem;line-height:1.8;padding-left:14px;border-left:1px solid var(--ink)}
+
+/* 細線數據表 */
+.spec{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.spec caption{text-align:left;padding-bottom:8px;--dl:.3s}
+.spec tr{position:relative}
+.spec tr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rule);transform-origin:left;animation:draw .8s var(--draw) both;animation-delay:calc(var(--r) * 90ms + .45s);transition:background-color .2s,height .2s}
+.spec th,.spec td{padding:9px 0;vertical-align:baseline;transition:color .2s}
+/* 滑過只推內層文字，外層儲存格寬度與命中範圍不變（避免邊緣抽搐） */
+.spec th .sx{display:inline-block;transition:transform .25s var(--ease)}
+.spec th{font-weight:400;text-align:left;font-size:.86rem;color:var(--ink-2)}
+.spec td{text-align:right;font-family:var(--f-latin);font-style:italic;font-size:1.55rem;line-height:1;color:var(--ink)}
+.spec tr:first-child td{color:var(--accent)}
+.spec tr:hover th{color:var(--ink)}
+.spec tr:hover th .sx{transform:translateX(6px)}
+.spec tr:hover td{color:var(--accent)}
+.spec tr:hover::after{background:var(--ink)}
+
+/* ── 目次（題目分頁） ── */
+.contents{margin-top:clamp(36px,6vw,72px)}
+.contents-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px}
+.tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;padding:0;list-style:none}
+.tabs li{min-width:0}
+.tab{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:14px 14px 16px 0;border-bottom:1px solid var(--rule);position:relative;width:100%;height:100%;transition:background-color .2s}
+.tabs li+li .tab{padding-left:14px;border-left:1px solid var(--rule)}
+.tab .n{font-family:var(--f-serif);font-weight:700;font-size:1.25rem;line-height:1;color:var(--muted);transition:color .2s,transform .3s var(--ease);display:inline-block;width:max-content}
+.tab .t{font-size:.8rem;line-height:1.5;color:var(--ink-2);transition:color .2s}
+.tab::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease),opacity .2s}
+.tabs li+li .tab::after{left:14px}
+.tab[aria-selected="true"] .n{color:var(--accent);animation:flip .55s var(--ease)}
+@keyframes flip{from{transform:perspective(200px) rotateX(-90deg);opacity:0}to{transform:none;opacity:1}}
+.tab[aria-selected="true"] .t{color:var(--ink);font-weight:500}
+.tab[aria-selected="true"]::after{transform:scaleX(1)}
+.tab:hover .n{color:var(--ink);transform:translateY(-3px)}
+.tab[aria-selected="true"]:hover .n{color:var(--accent)}
+.tab:hover .t{color:var(--ink)}
+.tab:not([aria-selected="true"]):hover::after{transform:scaleX(.3);opacity:.55}
+.tab:active .n{transform:translateY(0) scale(.94)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ── 控制列 ── */
+.ctl{display:flex;flex-wrap:wrap;gap:10px clamp(16px,2vw,32px);align-items:center;padding:14px 0;--lc:var(--rule);--dl:.2s}
+.seg{display:inline-flex;align-items:center;gap:10px}
+.seg .eyebrow{margin-right:2px}
+.seg .opts{display:inline-flex;border:1px solid var(--ink)}
+.seg button{all:unset;box-sizing:border-box;cursor:pointer;font-size:.78rem;line-height:1;padding:8px 10px;min-height:34px;display:inline-flex;align-items:center;gap:7px;color:var(--ink);transition:background-color .18s,color .18s}
+.seg button+button{border-left:1px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:not([aria-pressed="true"]):hover{background:var(--paper-2)}
+.seg button:active{background:var(--rule)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.seg button .ic{font-size:1.05em}
+.ctl .theme{margin-left:auto}
+
+/* ── 小圖示動畫（滑過／點擊） ── */
+.ic-tree .lf{transform-origin:left center;transition:transform .35s var(--ease)}
+.seg button:hover .ic-tree .lf{animation:grow .5s var(--ease) both}
+.seg button:hover .ic-tree .lf:nth-of-type(2){animation-delay:.07s}
+.seg button:hover .ic-tree .lf:nth-of-type(3){animation-delay:.14s}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.ic-list .row{transition:transform .3s var(--ease)}
+.seg button:hover .ic-list .row:nth-of-type(1){transform:translateX(2px)}
+.seg button:hover .ic-list .row:nth-of-type(2){transform:translateX(-2px)}
+.seg button:hover .ic-list .row:nth-of-type(3){transform:translateX(3px)}
+.ic-sun .rays{transform-origin:center;transition:transform .6s var(--ease)}
+.seg button:hover .ic-sun .rays{transform:rotate(90deg)}
+.ic-moon path{transform-origin:center;transition:transform .5s var(--ease)}
+.seg button:hover .ic-moon path{transform:rotate(-22deg)}
+.ic-auto .half{transform-origin:center;transition:transform .6s var(--ease)}
+.seg button:hover .ic-auto .half{transform:rotate(180deg)}
+.ic-eye .lid{transform-origin:center}
+.seg button:hover .ic-eye .lid,.seg button:hover .ic-eye .pupil{animation:blink .45s ease}
+@keyframes blink{0%,100%{transform:scaleY(1)}45%{transform:scaleY(.1)}}
+.ic-eye .pupil{transform-origin:center}
+.ic-eye .slash{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .4s var(--ease)}
+[aria-pressed="true"] .ic-eye .slash{stroke-dashoffset:0}
+#fsz .ic-aa{font-size:var(--aa,1em)}
+.ic-aa .big{transform-origin:left bottom;transition:transform .3s var(--ease)}
+.seg button:hover .ic-aa .big{transform:scale(1.15)}
+
+/* ── 文章（換題像翻頁） ── */
+.article{margin-top:clamp(32px,5vw,56px);perspective:1800px;position:relative}
+.sheet{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;container-type:inline-size}
+.sheet.out-f{transform-origin:left center;animation:outF .26s cubic-bezier(.5,0,.75,0) forwards}
+.sheet.out-b{transform-origin:right center;animation:outB .26s cubic-bezier(.5,0,.75,0) forwards}
+.sheet.in-f{transform-origin:right center;animation:inF .6s var(--ease) both}
+.sheet.in-b{transform-origin:left center;animation:inB .6s var(--ease) both}
+.sheet.in-fade{animation:fadeUp .35s ease-out both}
+@keyframes outF{to{opacity:0;transform:rotateY(9deg) translateX(-28px)}}
+@keyframes outB{to{opacity:0;transform:rotateY(-9deg) translateX(28px)}}
+@keyframes inF{from{opacity:0;transform:rotateY(-11deg) translateX(48px)}to{opacity:1;transform:none}}
+@keyframes inB{from{opacity:0;transform:rotateY(11deg) translateX(-48px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.edge{position:absolute;top:0;bottom:0;left:0;width:1px;background:var(--ink);pointer-events:none;opacity:0}
+.in-f>.edge{animation:edgeF .7s var(--ease)}
+.in-b>.edge{animation:edgeB .7s var(--ease)}
+@keyframes edgeF{from{transform:translateX(100cqw);opacity:.7}to{transform:translateX(0);opacity:0}}
+@keyframes edgeB{from{transform:translateX(0);opacity:.7}to{transform:translateX(100cqw);opacity:0}}
+
+.art-head{grid-column:1 / -1;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:0;align-items:end;padding-bottom:22px;--dl:.15s;--ld:1.1s}
+.art-num{grid-column:1 / span 2;font-family:var(--f-latin);font-style:italic;font-size:clamp(3.4rem,8vw,6.8rem);line-height:.9;color:var(--accent)}
+.art-num .odo{line-height:1}
+.art-title{grid-column:3 / span 10}
+h2{font-family:var(--f-serif);font-weight:700;font-size:clamp(1.35rem,2.6vw,2.1rem);line-height:1.3;margin:6px 0 0;text-wrap:balance}
+.cw{animation:fadeIn .5s ease both;animation-delay:calc(var(--i) * 22ms + .18s)}
+.q{grid-column:3 / span 7;margin:20px 0 0;font-family:var(--f-serif);font-weight:500;font-size:1rem;line-height:1.85;color:var(--ink-2);max-width:46em}
+.q b{font-family:var(--f-sans);font-weight:700;font-size:.62rem;letter-spacing:.18em;color:var(--accent);margin-right:.6em;vertical-align:.12em}
+.prog{grid-column:10 / span 3;justify-self:stretch;margin-top:20px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right}
+.prog .pv{font-family:var(--f-latin);font-style:italic;font-size:1.7rem;line-height:1;color:var(--ink)}
+.prog .pv .nd{color:var(--muted);padding:0 .15em}
+.clr{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-size:.66rem;letter-spacing:.12em;color:var(--muted);padding:4px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.clr:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.clr .ic-undo{transition:transform .45s var(--ease)}
+.clr:hover .ic-undo{transform:rotate(-200deg)}
+.clr.arm{color:var(--accent);border-bottom-color:var(--accent)}
+.clr.arm .ic-undo{animation:shake .4s ease}
+@keyframes shake{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+.clr:disabled{cursor:default;opacity:.4;border-bottom-color:transparent;color:var(--muted)}
+.pbar{position:relative;width:100%;max-width:12rem;height:1px;background:var(--rule)}
+.pbar i{position:absolute;left:0;right:0;top:-1px;height:3px;background:var(--accent);transform:scaleX(var(--p,0));transform-origin:left;transition:transform .6s var(--ease)}
+.art-body{grid-column:1 / -1;padding-top:28px;min-width:0}
+
+/* ── 樹狀圖：編號大綱＋細線連接 ── */
+/* 樹不設固定高度：整段展開跟著頁面捲，只有放不下時才在框內橫捲 */
+.scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:0 2px 6px 0;max-height:none}
+.tree{display:grid;grid-template-columns:11.5rem minmax(0,1fr);align-items:center;min-width:54rem}
+.t-root{position:relative;padding:12px 2.2rem 14px 0}
+.t-root .box{padding:13px 0 13px;--lh:3px}
+.t-root .box::after{height:1px;animation-delay:.25s}
+.t-root .rn{font-family:var(--f-latin);font-style:italic;font-size:1.6rem;line-height:1;color:var(--accent);margin:6px 0 8px}
+.t-root .rt{font-family:var(--f-serif);font-weight:900;font-size:1.12rem;line-height:1.45}
+.t-root::after{content:"";position:absolute;right:0;top:50%;width:2.2rem;border-top:1px solid var(--ink);transition:border-color .25s}
+.t-branches{list-style:none;margin:0;padding:0}
+.t-branch{--lc:var(--ink);--lw:1px;position:relative;display:grid;grid-template-columns:12.5rem minmax(0,1fr);padding:0 0 1.6rem 1.6rem}
+.t-branch:last-child{padding-bottom:0}
+.t-branch::before{content:"";position:absolute;left:0;top:var(--tick);width:1.6rem;border-top:var(--lw) solid var(--lc);transition:border-color .25s}
+.t-branch::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:var(--lw) solid var(--lc);transition:border-color .25s}
+.t-branch:first-child::after{top:var(--tick)}
+.t-branch:last-child::after{bottom:auto;height:var(--tick)}
+.t-branch:only-child::after{display:none}
+.t-bl{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:block;align-self:start;padding:.15rem 1.8rem .4rem .7rem;transition:opacity .25s}
+.t-bl::after{content:"";position:absolute;right:0;top:var(--tick);width:1.8rem;border-top:var(--lw) solid var(--lc);transition:border-color .25s}
+.bn{display:block;font-family:var(--f-latin);font-style:italic;font-size:1.9rem;line-height:1;color:var(--accent)}
+.t-bl .bt{display:block;font-family:var(--f-serif);font-weight:700;font-size:1.02rem;line-height:1.45;margin-top:8px;transition:color .2s}
+.fx{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:.62rem;letter-spacing:.16em;color:var(--muted);transition:color .2s}
+.ic-chev{transition:transform .35s var(--ease)}
+.fold[aria-expanded="false"] .ic-chev{transform:rotate(-90deg)}
+.fold:hover .fx{color:var(--accent)}
+.fold:hover .ic-chev{animation:nudge .5s var(--ease)}
+@keyframes nudge{50%{translate:0 2px}}
+.fold:active .bt{transform:translateY(1px)}
+.t-col{min-width:0;transition:opacity .25s}
+.t-more{display:none;margin:0;padding:.2rem 0 .5rem 1.4rem;font-size:.8rem;color:var(--muted);position:relative}
+.t-more::before{content:"";position:absolute;left:0;top:var(--tick);width:1rem;border-top:var(--lw,1px) solid var(--lc,var(--ink))}
+.folded .t-more{display:block}
+.t-wrap{display:grid;grid-template-rows:1fr;transition:grid-template-rows .45s var(--ease)}
+.t-wrap>ul{min-height:0;overflow:hidden}
+.folded .t-wrap{grid-template-rows:0fr}
+.t-leaves{list-style:none;margin:0;padding:0}
+.t-leaf{position:relative;padding-left:1.4rem}
+.t-leaf::before{content:"";position:absolute;left:0;top:var(--tick);width:1rem;border-top:var(--lw) solid var(--lc);transition:border-color .25s}
+.t-leaf::after{content:"";position:absolute;left:0;top:0;bottom:0;border-left:var(--lw) solid var(--lc);transition:border-color .25s}
+.t-leaf:first-child::after{top:var(--tick)}
+.t-leaf:last-child::after{bottom:auto;height:var(--tick)}
+.t-leaf:only-child::after{display:none}
+.tip{display:none;align-items:center;gap:8px;margin:14px 0 0;font-size:.74rem;color:var(--muted)}
+.tip .ic{animation:swipe 2.4s var(--ease) 1s 2}
+@keyframes swipe{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
+
+/* 滑到某個分支：連接線加粗變朱紅，其他分支變淡 */
+@media (hover:hover){
+  .t-branch:hover{--lc:var(--accent);--lw:2px}
+  .tree:has(.t-branch:hover) .t-root::after{border-top-color:var(--accent)}
+  .t-branches:has(.t-branch:hover) .t-branch:not(:hover) .t-bl,
+  .t-branches:has(.t-branch:hover) .t-branch:not(:hover) .t-col{opacity:.3}
+  .t-branch:hover .t-bl .bt{color:var(--accent)}
+  .list:has(.l-sec:hover) .l-sec:not(:hover){opacity:.35}
+}
+
+/* ── 重點（葉子）：可標成「背過了」 ── */
+.leaf{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:grid;grid-template-columns:2.4rem minmax(0,1fr) 1.6rem;align-items:start;width:100%;padding:.36rem 0 .5rem;font-size:.92rem;line-height:1.6;--d:calc(var(--i,0) * 45ms + .3s)}
+.leaf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rule);transform-origin:left;animation:draw .75s var(--draw) both;animation-delay:var(--d);transition:background-color .2s}
+.t-leaf:last-child .leaf::after,.l-sec li:last-child .leaf::after{background:var(--ink)}
+.leaf:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.leaf .ln{font-variant-numeric:tabular-nums;font-size:.72rem;color:var(--muted);padding-top:.15em;letter-spacing:.04em;transition:color .2s,transform .3s var(--ease)}
+.leaf .lt{position:relative;justify-self:start;transition:color .25s,transform .3s var(--ease),text-decoration-color .3s;text-decoration:line-through;text-decoration-color:transparent;text-decoration-thickness:1.5px}
+.leaf .mk{justify-self:end;color:var(--accent);padding:.2em .2em 0 0}
+.ic-check path{stroke-dasharray:32;stroke-dashoffset:32;transition:stroke-dashoffset .45s var(--ease)}
+.leaf.done .ic-check path{stroke-dashoffset:0}
+.leaf.done .lt{color:var(--muted);text-decoration-color:var(--accent)}
+.leaf.done .ln{color:var(--accent)}
+.leaf:hover .ln{color:var(--accent);transform:translateX(4px)}
+.t-leaf:hover{--lc:var(--accent)}
+.leaf:hover .mk{transform:translateX(-2px)}
+.leaf .mk{transition:transform .3s var(--ease)}
+.art-num,.spec td{cursor:default}
+.leaf:hover .lt{transform:translateX(4px)}
+.leaf:hover::after{background:var(--accent)}
+.leaf:hover:not(.done) .mk .ic-check path{stroke-dashoffset:22}
+.leaf:active .lt{transform:translateX(2px)}
+.leaf:hover .ic-book .pg{animation:pageFlip .6s var(--ease)}
+@keyframes pageFlip{50%{transform:scaleX(.15)}}
+.ic-book .pg{transform-origin:left center}
+.leaf:hover .ic-pen{animation:scribble .6s ease}
+@keyframes scribble{25%{transform:rotate(-12deg)}60%{transform:rotate(8deg)}}
+.ic-pen{transform-origin:20% 80%}
+
+/* 背誦模式：重點被遮字條蓋住，點一下翻開 */
+.leaf .lt::after{content:"點一下翻開" / "";position:absolute;inset:.08em -.25em .08em -.25em;background:var(--ink-2);color:transparent;font-size:.6rem;letter-spacing:.2em;line-height:1;display:flex;align-items:center;padding-left:.8em;transform:scaleX(0);transform-origin:right;transition:transform .42s var(--ease),background-color .2s,color .2s;pointer-events:none}
+.recite .leaf:not(.rev) .lt::after{transform:scaleX(1);transform-origin:left;transition-delay:calc(var(--i,0) * 28ms),0s,0s}
+.recite .leaf:not(.rev):hover .lt::after{background:var(--ink);color:var(--paper)}
+.recite .leaf:not(.rev):hover .lt{transform:translateX(0) translateY(-2px)}
+
+/* ── 清單（兩欄各自獨立往下流動，收合不互相影響高度） ── */
+.list{display:flex;flex-direction:column;row-gap:36px}
+.list-cols{display:flex;gap:48px;align-items:flex-start}
+.list-col{flex:1;min-width:0;display:flex;flex-direction:column;row-gap:36px}
+.list .l-root{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;padding:13px 0 13px;--lh:3px}
+.list .l-root::after{height:1px}
+.list .l-root strong{font-family:var(--f-serif);font-weight:900;font-size:1.12rem}
+.l-sec{position:relative;padding-top:12px;min-width:0;transition:opacity .25s}
+.l-sec::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--ink);transform-origin:left;animation:draw .9s var(--draw) both;animation-delay:calc(var(--s) * 90ms + .1s);transition:background-color .2s,height .2s}
+.l-sec:hover::before{background:var(--accent);height:2px}
+.l-h{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;width:100%;margin:0 0 6px;font-family:var(--f-serif);font-weight:700;font-size:1.05rem;line-height:1.4}
+.l-h .bn{display:inline-block;font-size:1.6rem}
+.l-h .bt{flex:1;min-width:0;transition:color .2s}
+.l-h .fx{margin-top:0;font-family:var(--f-sans);font-weight:500}
+.l-sec:hover .l-h .bt{color:var(--accent)}
+.l-sec .t-more{padding-left:0}
+.l-sec .t-more::before{display:none}
+.l-sec ul{list-style:none;margin:0;padding:0}
+
+/* ── 萬用寫法 ── */
+.method{margin-top:clamp(44px,7vw,88px);--lh:3px}
+.method-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 20px;padding:15px 0 14px}
+.method-head h4{margin:0;font-family:var(--f-serif);font-weight:900;font-size:1.3rem}
+.method ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.method li{position:relative;padding:16px 18px 20px 0;font-size:.88rem;line-height:1.75;color:var(--ink-2);min-width:0;transition:color .2s}
+.method li+li{padding-left:18px;border-left:1px solid var(--rule)}
+.method li::before{content:"";position:absolute;left:0;right:0;top:-1px;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+.method li+li::before{left:18px}
+.method .mn{display:block;font-family:var(--f-latin);font-style:italic;font-size:2.4rem;line-height:1;color:var(--ink);margin-bottom:10px;transition:color .2s,transform .35s var(--ease)}
+.method li:first-child .mn{color:var(--accent)}
+.method li:hover{color:var(--ink)}
+.method li:hover::before{transform:scaleX(1)}
+.method li:hover .mn{color:var(--accent);transform:translateX(4px)}
+
+.colophon{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 20px;margin-top:40px;padding-top:12px;--lc:var(--rule)}
+
+/* ── 響應式 ── */
+@media (max-width:900px){
+  .hero-title,.hero-spec{grid-column:1 / -1}
+  .tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tabs li:nth-child(4) .tab{padding-left:0;border-left:0}
+  .tabs li:nth-child(4) .tab::after{left:0}
+  .q{grid-column:3 / -1}
+  .prog{grid-column:3 / -1;align-items:flex-start;text-align:left}
+  .method ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .method li,.method li+li{padding:16px 16px 18px 0;border-left:0;border-bottom:1px solid var(--rule)}
+  .method li:nth-child(even){padding-left:16px;border-left:1px solid var(--rule)}
+  .method li::before,.method li+li::before{left:0}
+  .method li:nth-child(even)::before{left:16px}
+  .method li:last-child{grid-column:1 / -1;border-left:0;padding-left:0}
+}
+@media (max-width:640px){
+  .page{padding:18px 16px 40px}
+  .masthead .side{display:none}
+  .tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tabs li .tab,.tabs li+li .tab{padding:12px 12px 14px 0;border-left:0}
+  .tabs li:nth-child(even) .tab{padding-left:12px;border-left:1px solid var(--rule)}
+  .tabs li .tab::after{left:0}
+  .tabs li:nth-child(even) .tab::after{left:12px}
+  .ctl{gap:12px 20px}
+  .ctl .theme{margin-left:0}
+  .art-head{display:block}
+  .art-num{font-size:3.6rem;margin-bottom:12px}
+  .q{margin-top:16px}
+  .prog{align-items:flex-start;text-align:left;margin-top:18px}
+  .list{row-gap:28px}
+  .list-cols{flex-direction:column;gap:28px}
+  .list-col{row-gap:28px}
+  .tip{display:flex}
+  .method ol{grid-template-columns:minmax(0,1fr)}
+  .method li,.method li+li,.method li:nth-child(even){padding:14px 0 16px;border-left:0;display:grid;grid-template-columns:2.6rem minmax(0,1fr);align-items:baseline}
+  .method li::before,.method li:nth-child(even)::before{left:0}
+  .method .mn{font-size:1.8rem;margin:0}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead ln-b">
+    <span class="eyebrow">Semiconductor Review</span>
+    <span class="eyebrow mid">Essay Studies</span>
+    <span class="eyebrow side" id="mast-no"></span>
+  </div>
+  <div class="double ln-b" aria-hidden="true"></div>
+
+  <header class="hero">
+    <div class="hero-title">
+      <div class="kicker"><span class="num" id="kick-no"></span><span class="eyebrow">Midterm · Essay Section</span></div>
+      <h1 id="h1"><span class="sr">申論題重點樹</span><span class="h1-zh" aria-hidden="true"></span><span class="h1-en" lang="en">The Essay Tree</span></h1>
+      <p class="sub">戴副總經理 6 題申論｜考試自選 2 題、每題 10 分｜照樹枝順序寫，每個葉子就是一個要寫到的重點</p>
+    </div>
+    <div class="hero-spec">
+      <table class="spec">
+        <caption class="ln-b"><span class="eyebrow">Grading · 評分比重</span></caption>
+        <tbody id="spec"></tbody>
+      </table>
+    </div>
+  </header>
+
+  <nav class="contents" aria-label="題目">
+    <div class="contents-head ln-b"><span class="eyebrow">Contents</span><span class="eyebrow" id="q-count"></span></div>
+    <ul class="tabs" role="tablist" id="tabs"></ul>
+  </nav>
+
+  <div class="ctl ln-b">
+    <div class="seg"><span class="eyebrow">View 顯示</span><span class="opts" id="mode"></span></div>
+    <div class="seg"><span class="eyebrow">Size 字體</span><span class="opts" id="fsz"></span></div>
+    <div class="seg"><span class="eyebrow">Recite 背誦</span><span class="opts" id="recite"></span></div>
+    <div class="seg theme"><span class="eyebrow">Theme 外觀</span><span class="opts" id="theme"></span></div>
+  </div>
+
+  <article class="article" id="panel" role="tabpanel"></article>
+
+  <section class="method ln-t" aria-labelledby="mh">
+    <div class="method-head ln-b" style="--lh:1px;--dl:.1s"><h4 id="mh">萬用寫法（每題都套）</h4><span class="eyebrow">Method · Five Steps</span></div>
+    <ol>
+      <li><span class="mn">1</span><span>前言：一句點題，預告要回答哪幾點</span></li>
+      <li><span class="mn">2</span><span>照樹的「第一層枝」分段下標題，每段寫葉子的重點</span></li>
+      <li><span class="mn">3</span><span>名詞寫成「中文（English）」，每點補一句「為什麼」</span></li>
+      <li><span class="mn">4</span><span>至少一個例子（iPhone、ChatGPT、台積電、自己的經驗）</span></li>
+      <li><span class="mn">5</span><span>結論：連回「AI × 半導體」或自己的看法</span></li>
+    </ol>
+  </section>
+
+  <footer class="colophon ln-t">
+    <span class="eyebrow">Design Sample D — Editorial</span>
+    <span class="eyebrow">Semiconductor · AI Era</span>
+  </footer>
+</div>
+
+<script>
+/* 內容：照「申論題重點樹.html」原文（📚 ✍️ 改成線條小圖示，文字不改） */
+const T = [
+ {k:"一", title:"ABC 三大支柱＋DNN 訓練與推理",
+  q:"何謂 ABC？三者關係？何謂 DNN？從訓練與推理剖析核心目標、關鍵演算法與差異。",
+  b:[
+   ["ABC 三大支柱",["Algorithms 演算法｜決定「怎麼學」","Big Data 巨量資料｜決定「學什麼」；資料要清理，避免過擬合","Computing Power 算力｜決定「學多快」：GPU、TPU","三者缺一不可 → 帶動台積電、NVIDIA"]],
+   ["DNN 深度神經網路",["AI ⊃ ML ⊃ DL（層層包含）","輸入層 → 隱藏層 → 輸出層","包含 1 個以上隱藏層（Hidden Layer）","層數再多，仍遠不及人腦"]],
+   ["訓練 Training",["目標：確定所有神經元參數（Parameters）的最佳值","反向傳播 Back-propagation：誤差由後往前傳，算出每個參數要修多少","梯度下降 Gradient Descent：往誤差變小的方向一小步調整（蒙眼下山）","像「讀書」{book}：雲端 GPU／TPU"]],
+   ["推理 Inferring",["訓練完成後，給新輸入 → 輸出結果或預測","例：使用者問 ChatGPT","像「考試」{pen}：手機、筆電裡的 NPU"]]
+  ]},
+ {k:"二", title:"AI 時代人類的先天優勢＋三大能力",
+  q:"如何自保並「利用它們」強化自己？申論應對心態與先天優勢、非理工學生三大能力。",
+  b:[
+   ["心態",["不焦慮、不怕被取代","學會「利用它們」讓自己更強大","AI 靠 ABC 發展，人類靠「先天優勢」"]],
+   ["為什麼需要先天優勢",["AI 會給「看似合理」但不一定正確的答案","人類能理解意義、判斷價值、承擔責任","TEDx「人類邊界」：發明創造、直覺、社交敏銳、情感勇氣、感官想像"]],
+   ["三大必備能力",["數位及數學技能：資料分析＋AI 工具（微積分、線代、機率統計）","AI 還不會的能力：批判性思維、倫理判斷、溝通力、同理心","跨界合作：與理工／AI 專業合作，打造「人文＋科技」"]],
+   ["我的例子＋結論",["實習做交通事故通報平台","AI 寫程式很快，需求與結果對不對要靠自己判斷","結論：AI 越強，判斷力與人性越值錢"]]
+  ]},
+ {k:"三", title:"能隙、摻雜與 IC 的構成",
+  q:"導體／絕緣體／半導體的能隙差異？半導體關鍵特性與如何調控？IC、電晶體、晶片的關係？",
+  b:[
+   ["能隙 Band Gap",["導體 Conductor：價帶導帶重疊 Overlap、無能隙（金銀銅）","絕緣體 Insulator：能隙很寬 Wide Band Gap（玻璃、塑膠）","半導體 Semiconductor：能隙窄；絕對零度像絕緣體，室溫靠熱能導電（矽、鍺）"]],
+   ["關鍵特性：可精準調控導電度",["方法：摻雜 Doping、施加電場、光照","五價（磷）→ N 型：多自由電子","三價（硼）→ P 型：多電洞","P＋N → 二極體；三層 → 電晶體"]],
+   ["IC、晶片、電晶體",["IC 積體電路：千萬個電晶體＋電阻電容集成於矽基板","IC ＝ 晶片 Chip（同一概念）","功能來自大量電晶體（電晶體是磚、IC 是房子）","Intel 4004 約 2,300 個 → Cerebras 數兆個（摩爾定律）"]]
+  ]},
+ {k:"四", title:"CMCC 四大功能＋多元整合",
+  q:"列出 CMCC 英文名稱、功能重點與代表晶片；單一晶片只能一種功能嗎？以 iPhone 為例說明整合趨勢。",
+  b:[
+   ["Computation 計算",["邏輯運算、資料處理（大腦）","CPU、GPU、TPU、MCU、NPU"]],
+   ["Memory 記憶",["資料暫存與永久儲存","DRAM、SRAM／ROM、Flash、HBM"]],
+   ["Connection 連接",["無線通訊、訊號傳輸","4G／5G、WiFi、藍牙、感測器 Sensors"]],
+   ["Control 控制",["系統控制、電源管理","ECU、PMIC、驅動 IC（Driver）"]],
+   ["多元整合趨勢",["一顆 IC 可同時具備多種功能","iPhone 18 Pro 多達 30 多種晶片，涵蓋 CMCC","SoC 系統單晶片：整合計算＋控制＋連接","為何整合：空間小、省電、傳輸距離短、效能高","電動車：自駕晶片、ECU、感測器"]]
+  ]},
+ {k:"五", title:"產業鏈上中下游＋晶圓製造複雜性",
+  q:"上游三要素與重點？中游 Foundry 運作重點與步驟數？下游 OSAT 如何轉成終端產品？",
+  b:[
+   ["前言：專業分工",["IDM 一手包辦 vs 專業分工","Sony 集合日本人才仍追不上台積電"]],
+   ["上游",["IC 設計：EDA、IP Core、光罩 GDSII（聯發科、Fabless）","材料：矽晶圓（石英砂→多晶矽→晶柱→切片拋光）、光阻劑、特殊氣體、CMP 研磨液","設備：微影（EUV 最關鍵）、蝕刻沉積、量測檢驗"]],
+   ["中游 Foundry",["把電路圖變成實體結構（台積電）","約 1,000～1,500 個步驟","8 大製程在同片晶圓反覆循環，一層層 3D 堆疊","無塵室：一粒灰塵就整片報廢"]],
+   ["下游 OSAT",["晶圓切割 Dicing","黏晶 Die Attaching、打線 Wire Bonding、封膠 Molding","最終測試 Final Test／ATE → 終端產品（日月光）"]],
+   ["台灣地位",["設計 18%（世界第 2）","代工 65～70%（第 1）","封測 48～50%（第 1）→ 護國神山"]]
+  ]},
+ {k:"六", title:"超大晶片限制 vs CoWoS 先進封裝",
+  q:"為何不普遍做 Cerebras 那樣的超大晶片，而用 Chiplets＋CoWoS？剖析 CoWoS-S 由上至下 5 層，及如何高頻寬低延遲。",
+  b:[
+   ["為何不做超大晶片",["光罩尺寸限制：一般 GPU 約 800 mm²","Cerebras WSE：整片 300 mm 晶圓、46,225 mm²（50 多倍）","面積越大，一個瑕疵整顆報廢 → 良率低、成本高、難量產","改用小晶片 Chiplets＋HBM，以 CoWoS 整合：突破面積、維持良率"]],
+   ["CoWoS-S 5 層（由上到下）",["① 頂層晶片 Top Dies：Compute／Logic＋HBM（TSV 堆疊，底部 Base Die）","② 微凸塊 µBumps","③ 矽中介層 Silicon Interposer：Short Wires 橫向＋TSV 向下","④ C4 銅凸塊＋封裝基板 Package Substrate","⑤ 封裝錫球 Package Balls＋電路板 PCB"]],
+   ["為何高頻寬、低延遲",["運算晶片與 HBM 並排在同一片中介層","高密度短導線：距離短、通道多","TSV 垂直穿透矽，不用繞遠路"]],
+   ["結論",["延續摩爾定律 Moore's Law 的關鍵","台積電 AI 時代的核心競爭力"]]
+  ]}
+];
+const GRADE = [["名詞精準","35%"],["原理邏輯","30%"],["跨領域舉例","25%"],["結構條理","10%"]];
+
+/* inline SVG 小圖示（線寬 1.5、無填色） */
+const ICON = {
+  book:'<svg class="ic ic-book" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.3 6-1.3 9 .5V19.5c-3-1.8-6-1.8-9-.5z"/><path class="pg" d="M12 6c3-1.8 6-1.8 9-.5V19c-3-1.3-6-1.3-9 .5z"/></svg>',
+  pen:'<svg class="ic ic-pen" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13 7l4 4"/></svg>',
+  swipe:'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg>',
+  check:'<svg class="ic ic-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>',
+  chev:'<svg class="ic ic-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+  tree:'<svg class="ic ic-tree" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4M7 5v14"/><path class="lf" d="M7 5h4m3 0h7"/><path class="lf" d="M7 12h4m3 0h7"/><path class="lf" d="M7 19h4m3 0h7"/></svg>',
+  list:'<svg class="ic ic-list" viewBox="0 0 24 24" aria-hidden="true"><path class="row" d="M4 6h2m4 0h10"/><path class="row" d="M4 12h2m4 0h10"/><path class="row" d="M4 18h2m4 0h10"/></svg>',
+  undo:'<svg class="ic ic-undo" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h11a5 5 0 0 1 0 10H9"/><path d="M8 5L4 9l4 4"/></svg>',
+  aa:'<svg class="ic ic-aa" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19l3.5-8 3.5 8M4.3 16h4.4"/><path class="big" d="M12 19l4.5-14L21 19M13.6 14h5.8"/></svg>',
+  eye:'<svg class="ic ic-eye" viewBox="0 0 24 24" aria-hidden="true"><path class="lid" d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z"/><circle class="pupil" cx="12" cy="12" r="2.6"/><path class="slash" d="M4 4l16 16"/></svg>',
+  sun:'<svg class="ic ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><g class="rays"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg>',
+  moon:'<svg class="ic ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
+  auto:'<svg class="ic ic-auto" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><g class="half"><path d="M12 4v16"/><path d="M12 8h3.5M12 12h4.5M12 16h3.5"/></g></svg>'
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rich = s => esc(s).replace(/\{(book|pen)\}/g, (_, n) => ICON[n]);
+const pad = n => String(n).padStart(2, "0");
+const ROMAN = ["I","II","III","IV","V","VI"];
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+const store = {
+  get(k){ try { return localStorage.getItem("sampleD-" + k); } catch(e){ return null; } },
+  set(k, v){ try { localStorage.setItem("sampleD-" + k, v); } catch(e){} }
+};
+
+/* ── 數字里程表：每一位數字是一條 0–9 的滾筒 ── */
+const DIG = Array.from({length:20}, (_, n) => `<span>${n % 10}</span>`).join("");
+const cells = text => [...text].map(c => /\d/.test(c)
+  ? `<span class="dg"><span class="ph">${c}</span><span class="strip">${DIG}</span></span>`
+  : `<span class="nd">${esc(c)}</span>`).join("");
+const odo = text => `<span class="odo"><span class="sr">${esc(text)}</span><span class="ov" aria-hidden="true">${cells(text)}</span></span>`;
+function roll(o, delay = 0, replay = true){
+  o.querySelectorAll(".dg").forEach((g, i) => {
+    const d = +g.querySelector(".ph").textContent, st = g.querySelector(".strip");
+    if (replay){ st.style.transition = "none"; st.style.transform = "translateY(0)"; void st.offsetHeight; st.style.transition = ""; }
+    st.style.transitionDelay = (delay + i * 110) + "ms";
+    st.style.transform = `translateY(${-(10 + d) * 5}%)`;
+  });
+}
+function setOdo(o, text){
+  const ov = o.querySelector(".ov"), digits = text.replace(/\D/g, "").length;
+  o.querySelector(".sr").textContent = text;
+  if (ov.querySelectorAll(".dg").length !== digits){ ov.innerHTML = cells(text); roll(o); return; }
+  let k = 0; [...text].forEach(c => { if (/\d/.test(c)) ov.querySelectorAll(".dg .ph")[k++].textContent = c; });
+  roll(o, 0, false);
+}
+
+/* ── 狀態 ── */
+let done;
+try { done = new Set(JSON.parse(store.get("done") || "[]")); } catch(e){ done = new Set(); }
+const saveDone = () => store.set("done", JSON.stringify([...done]));
+const fold = {};
+let recite = store.get("recite") === "1";
+let view = store.get("view");
+const curView = () => view || (matchMedia("(max-width: 760px)").matches ? "list" : "tree");
+let cur = 0, turnTok = 0;
+
+/* ── 版面片段 ── */
+function leaf(qi, bi, li, s, n){
+  const k = `${qi}-${bi}-${li}`, d = done.has(k);
+  return `<button type="button" class="leaf${d ? " done" : ""}" data-k="${k}" aria-pressed="${d}" style="--i:${n}">`
+    + `<span class="ln">${bi + 1}.${li + 1}</span><span class="lt">${rich(s)}</span><span class="mk">${ICON.check}</span></button>`;
+}
+function foldBtn(cls, qi, bi, name, f){
+  return `<button type="button" class="${cls} fold" aria-expanded="${!f}" data-f="${qi}-${bi}">`
+    + `<span class="bn">${odo(pad(bi + 1))}</span><span class="bt">${esc(name)}</span>`
+    + `<span class="fx">${ICON.chev}<span class="fx-t">${f ? "展開" : "收合"}</span></span></button>`;
+}
+function treeView(t, qi){
+  let n = 0;
+  const branches = t.b.map(([name, leaves], bi) => {
+    const f = !!fold[`${qi}-${bi}`];
+    return `<li class="t-branch${f ? " folded" : ""}">${foldBtn("t-bl", qi, bi, name, f)}
+      <div class="t-col"><p class="t-more">已收合 · ${leaves.length} 項重點</p>
+        <div class="t-wrap"${f ? " inert" : ""}><ul class="t-leaves">${leaves.map((s, li) => `<li class="t-leaf">${leaf(qi, bi, li, s, n++)}</li>`).join("")}</ul></div></div>
+    </li>`;
+  }).join("");
+  return `<div class="scroll" role="group" aria-label="申論題${t.k}重點樹">
+      <div class="tree">
+        <div class="t-root"><div class="box ln-t ln-b"><span class="eyebrow">申論題${t.k}</span><div class="rn">${ROMAN[qi]}.</div><div class="rt">${esc(t.title)}</div></div></div>
+        <ul class="t-branches">${branches}</ul>
+      </div>
+    </div>
+    <p class="tip">${ICON.swipe}<span>手機上可以左右滑動看整棵樹</span></p>`;
+}
+/* 清單的兩欄是獨立的直向容器（flex column），不是逐列配對的 grid，
+   所以某一分支收合或展開時，只影響自己那一欄的高度，不會波及另一欄。
+   這裡用簡易瀑布流：依分支的「重點數＋1」當重量，依序塞進目前比較輕的那一欄。 */
+function listView(t, qi){
+  let n = 0;
+  const secs = t.b.map(([name, leaves], bi) => {
+    const f = !!fold[`${qi}-${bi}`];
+    const html = `<section class="l-sec${f ? " folded" : ""}" style="--s:${bi}">${foldBtn("l-h", qi, bi, name, f)}
+      <p class="t-more">已收合 · ${leaves.length} 項重點</p>
+      <div class="t-wrap"${f ? " inert" : ""}><ul>${leaves.map((s, li) => `<li>${leaf(qi, bi, li, s, n++)}</li>`).join("")}</ul></div></section>`;
+    return { html, weight: leaves.length + 1 };
+  });
+  const numCols = matchMedia("(max-width:640px)").matches ? 1 : 2;
+  const colW = Array(numCols).fill(0), cols = Array.from({ length: numCols }, () => []);
+  secs.forEach(sec => {
+    let idx = 0;
+    for (let i = 1; i < numCols; i++) if (colW[i] < colW[idx]) idx = i;
+    cols[idx].push(sec.html); colW[idx] += sec.weight;
+  });
+  return `<div class="list">
+    <div class="l-root ln-t ln-b"><span class="eyebrow">申論題${t.k}</span><strong>${esc(t.title)}</strong></div>
+    <div class="list-cols">${cols.map(c => `<div class="list-col">${c.join("")}</div>`).join("")}</div>
+  </div>`;
+}
+const total = qi => T[qi].b.reduce((a, b) => a + b[1].length, 0);
+const doneCount = qi => [...done].filter(k => k.startsWith(qi + "-")).length;
+const progText = qi => `${pad(doneCount(qi))}/${pad(total(qi))}`;
+function chars(s){
+  return (s.match(/[A-Za-z0-9]+|\s+|./g) || []).map((c, i) => /^\s+$/.test(c) ? c : `<span class="cw" style="--i:${i}">${esc(c)}</span>`).join("");
+}
+function sheetHTML(i){
+  const t = T[i];
+  return `<i class="edge" aria-hidden="true"></i>
+    <header class="art-head ln-b">
+      <div class="art-num">${odo(pad(i + 1))}</div>
+      <div class="art-title"><span class="eyebrow">Question ${ROMAN[i]} · 戴副總經理</span><h2><span class="sr">申論題${t.k}｜${esc(t.title)}</span><span aria-hidden="true">${chars(`申論題${t.k}｜${t.title}`)}</span></h2></div>
+      <p class="q"><b>題目要點</b>${esc(t.q)}</p>
+      <div class="prog"><span class="eyebrow">Memorised · 已背</span><span class="pv" id="pv">${odo(progText(i))}</span><span class="pbar" aria-hidden="true"><i id="pbar" style="--p:${doneCount(i) / total(i)}"></i></span><button type="button" class="clr" id="clr"${doneCount(i) ? "" : " disabled"}>${ICON.undo}<span>清除本題</span></button></div>
+    </header>
+    <div class="art-body">${curView() === "list" ? listView(t, i) : treeView(t, i)}</div>`;
+}
+
+/* ── 數字：刊頭、期號、評分比重（換題重播） ── */
+document.getElementById("mast-no").innerHTML = `No. ${odo("001")} — Six Questions`;
+document.getElementById("kick-no").innerHTML = `No. ${odo("001")}`;
+document.getElementById("q-count").innerHTML = `${odo("06")} Questions`;
+document.getElementById("spec").innerHTML = GRADE.map(([n, v], r) => `<tr style="--r:${r}"><th scope="row"><span class="sx">${n}</span></th><td>${odo(v)}</td></tr>`).join("");
+function replayHeader(first){
+  const base = first ? 350 : 0;
+  roll(document.querySelector("#kick-no .odo"), base);
+  document.querySelectorAll("#spec .odo").forEach((o, r) => roll(o, base + 150 + r * 120));
+  if (first){ roll(document.querySelector("#mast-no .odo"), 200); roll(document.querySelector("#q-count .odo"), 500); }
+}
+
+/* 大標題逐字淡入 */
+document.querySelector(".h1-zh").innerHTML = [..."申論題重點樹"].map((c, i) => `<span class="ch" style="--i:${i}">${c}</span>`).join("");
+
+/* ── 顯示某一題（像翻頁） ── */
+const panel = document.getElementById("panel");
+function render(i, cls){
+  panel.classList.toggle("recite", recite);
+  panel.innerHTML = `<div class="sheet ${cls}">${sheetHTML(i)}</div>`;
+  const s = panel.firstElementChild;
+  roll(s.querySelector(".art-num .odo"), 200);
+  roll(s.querySelector("#pv .odo"), 500);
+  s.querySelectorAll(".bn .odo").forEach((o, k) => roll(o, 350 + k * 140));
+}
+function show(i, how = "turn"){
+  const prev = cur; cur = i;
+  document.querySelectorAll(".tab").forEach((b, k) => { b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+  store.set("tab", String(i));
+  const old = panel.firstElementChild, tok = ++turnTok;
+  if (how === "turn" && old && !RM.matches && i !== prev){
+    const fwd = i > prev;
+    old.classList.remove("in-f", "in-b", "in-fade");
+    old.classList.add(fwd ? "out-f" : "out-b");
+    const go = () => { if (tok !== turnTok) return; turnTok++; render(i, fwd ? "in-f" : "in-b"); replayHeader(false); };
+    old.addEventListener("animationend", e => { if (e.target === old) go(); });
+    setTimeout(go, 340);
+  } else {
+    render(i, how === "none" ? "" : "in-fade");
+    if (how !== "none") replayHeader(false);
+  }
+}
+
+/* 點分支收合、點重點標「背過了」、背誦模式翻開 */
+panel.addEventListener("click", e => {
+  const f = e.target.closest(".fold");
+  if (f){
+    const key = f.dataset.f, box = f.closest(".t-branch, .l-sec"), now = !fold[key];
+    fold[key] = now;
+    box.classList.toggle("folded", now);
+    f.setAttribute("aria-expanded", String(!now));
+    f.querySelector(".fx-t").textContent = now ? "展開" : "收合";
+    box.querySelector(".t-wrap").inert = now;
+    return;
+  }
+  const b = e.target.closest(".leaf");
+  if (!b) return;
+  if (recite && !b.classList.contains("rev")){ b.classList.add("rev"); return; }
+  const k = b.dataset.k, on = !done.has(k);
+  on ? done.add(k) : done.delete(k);
+  saveDone();
+  b.classList.toggle("done", on);
+  b.setAttribute("aria-pressed", String(on));
+  updateProg();
+});
+function updateProg(){
+  setOdo(document.querySelector("#pv .odo"), progText(cur));
+  document.getElementById("pbar").style.setProperty("--p", doneCount(cur) / total(cur));
+  const c = document.getElementById("clr"); if (c && !c.classList.contains("arm")) c.disabled = !doneCount(cur);
+}
+/* 清除本題：第一次點變「再點一次確認」，3 秒內再點才清除 */
+let armTimer = 0;
+function disarm(c){ clearTimeout(armTimer); c.classList.remove("arm"); c.querySelector("span").textContent = "清除本題"; c.disabled = !doneCount(cur); }
+panel.addEventListener("click", e => {
+  const c = e.target.closest("#clr"); if (!c) return;
+  if (!c.classList.contains("arm")){
+    c.classList.add("arm"); c.querySelector("span").textContent = "再點一次確認";
+    clearTimeout(armTimer); armTimer = setTimeout(() => disarm(c), 3000); return;
+  }
+  [...done].forEach(k => { if (k.startsWith(cur + "-")) done.delete(k); });
+  saveDone();
+  panel.querySelectorAll(".leaf.done").forEach(l => { l.classList.remove("done"); l.setAttribute("aria-pressed", "false"); });
+  disarm(c); updateProg();
+});
+/* 滑過大號題號、評分數字：數字再滾一次 */
+/* 防抽搐：只在「真的從外面進來」才算；在邊界上快速進出（離開不到 0.8 秒）或上一輪還沒滾完都不重播 */
+const lastRoll = new WeakMap(), lastLeave = new WeakMap();
+document.addEventListener("mouseover", e => {
+  const host = e.target.closest(".art-num, .spec tr"); if (!host) return;
+  if (e.relatedTarget && host.contains(e.relatedTarget)) return;
+  const o = host.querySelector(".odo"), now = Date.now();
+  if (!o || now - (lastLeave.get(host) || 0) < 800 || now - (lastRoll.get(o) || 0) < 1800) return;
+  lastRoll.set(o, now); roll(o);
+});
+document.addEventListener("mouseout", e => {
+  const host = e.target.closest(".art-num, .spec tr"); if (!host) return;
+  if (e.relatedTarget && host.contains(e.relatedTarget)) return;
+  lastLeave.set(host, Date.now());
+});
+
+/* ── 控制列 ── */
+function seg(id, items, isOn, onPick){
+  const box = document.getElementById(id);
+  box.innerHTML = items.map(([v, n, ic]) => `<button type="button" data-v="${v}" aria-pressed="${isOn(v)}">${ic ? ICON[ic] : ""}<span>${n}</span></button>`).join("");
+  box.querySelectorAll("button").forEach(b => b.onclick = () => onPick(b.dataset.v));
+}
+function modeBtns(){
+  seg("mode", [["tree","樹狀圖","tree"],["list","清單","list"]], v => curView() === v, v => { view = v; store.set("view", v); modeBtns(); show(cur, "fade"); });
+}
+function reciteBtns(){
+  seg("recite", [["1", recite ? "遮住中" : "遮住重點", "eye"]], () => recite, () => {
+    recite = !recite; store.set("recite", recite ? "1" : "0"); reciteBtns();
+    panel.querySelectorAll(".leaf.rev").forEach(l => l.classList.remove("rev"));
+    panel.classList.toggle("recite", recite);
+  });
+}
+const SIZES = [["小",16],["中",19],["大",22],["特大",25]];
+let fpx = +(store.get("font") || 19) || 19;
+function applyFont(px){
+  fpx = px; document.documentElement.style.fontSize = px + "px"; store.set("font", String(px));
+  seg("fsz", SIZES.map(([n, v]) => [String(v), n, "aa"]), v => +v === fpx, v => applyFont(+v));
+  document.querySelectorAll("#fsz .ic-aa").forEach((ic, k) => ic.style.setProperty("--aa", [0.8, 0.95, 1.1, 1.25][k] + "em"));
+}
+let theme = store.get("theme") || "auto";
+function applyTheme(v){
+  theme = v; store.set("theme", v);
+  if (v === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", v);
+  seg("theme", [["auto","自動","auto"],["light","淺色","sun"],["dark","深色","moon"]], x => x === theme, applyTheme);
+}
+/* 清單兩欄數跨越 640px 門檻時重新分配（不重播翻頁動畫） */
+matchMedia("(max-width:640px)").addEventListener("change", () => { if (curView() === "list") show(cur, "none"); });
+
+/* 題目分頁 */
+const tabs = document.getElementById("tabs");
+T.forEach((t, i) => {
+  const li = document.createElement("li"); li.setAttribute("role", "presentation");
+  const b = document.createElement("button");
+  b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "panel");
+  b.innerHTML = `<span class="n">${t.k}</span><span class="t">${esc(t.title.split("＋")[0].split(" vs ")[0])}</span>`;
+  b.onclick = () => show(i);
+  b.onkeydown = e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const n = (i + (e.key === "ArrowRight" ? 1 : T.length - 1)) % T.length;
+    show(n); tabs.querySelectorAll(".tab")[n].focus();
+  };
+  li.appendChild(b); tabs.appendChild(li);
+});
+
+applyFont(fpx);
+applyTheme(theme);
+modeBtns();
+reciteBtns();
+cur = Math.min(Math.max(+(store.get("tab") || 0) || 0, 0), T.length - 1);
+show(cur, "none");
+replayHeader(true);
+</script>
+
+<div id="stsw-host"></div>
+<script>
+(function(){
+  try { localStorage.setItem("essay-map-style", "d"); } catch(e) {}
+  const host = document.getElementById("stsw-host");
+  const root = host.attachShadow({mode: "open"});
+  root.innerHTML = `<style>
+    :host{all:initial}
+    .wrap{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:2147483000;font:14px/1.5 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+    button{font:inherit;cursor:pointer;border:1px solid rgba(0,0,0,.15);background:#fff;color:#333;border-radius:999px;padding:7px 14px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+    button:focus-visible,a:focus-visible{outline:2px solid #3570A3;outline-offset:2px}
+    .panel{position:absolute;left:0;bottom:46px;background:#fff;color:#333;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.22);padding:8px;display:flex;flex-direction:column;gap:2px;min-width:170px}
+    .panel[hidden]{display:none}
+    .panel b{font-size:12px;color:#777;padding:2px 8px;font-weight:500}
+    a{display:flex;gap:10px;align-items:center;text-decoration:none;color:#333;padding:7px 10px;border-radius:9px}
+    a:hover{background:#f1efe9}
+    a[aria-current]{background:#ebe6dc;font-weight:700}
+    i{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.15)}
+  </style>
+  <div class="wrap"><div class="panel" hidden><b>選一種風格（會記住）</b><a href="essay-map-a.html" data-k="a" ><i style="background:#8A9E92"></i>精緻莫蘭迪</a><a href="essay-map-b.html" data-k="b" ><i style="background:#F0A6A0"></i>可愛手帳</a><a href="essay-map-c.html" data-k="c" ><i style="background:#2BD97F"></i>晶片科技</a><a href="essay-map-d.html" data-k="d" aria-current="page"><i style="background:#C0392B"></i>雜誌編排</a><a href="essay-map-e.html" data-k="e" ><i style="background:#5E8C4A"></i>森林樹枝</a></div><button type="button" aria-expanded="false">🎨 換風格</button></div>`;
+  const btn = root.querySelector("button"), panel = root.querySelector(".panel");
+  btn.onclick = () => { panel.hidden = !panel.hidden; btn.setAttribute("aria-expanded", String(!panel.hidden)); };
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { panel.hidden = true; btn.setAttribute("aria-expanded", "false"); } });
+})();
+</script>
+</body>
+</html>

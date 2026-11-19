@@ -1,0 +1,1297 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>申論題重點樹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* ===== C. 晶片科技風 v2 ===== 深色＝防焊漆墨綠底＋銅走線；淺色＝白色 PCB／晶圓測試報告 */
+:root{
+  color-scheme:dark;
+  --bg:#0D1311; --grid:rgba(140,180,160,.032); --glow:rgba(123,211,160,.26); --surface:#121A17; --surface-2:#17211D;
+  --ink:#DDE5E0; --muted:#8FA198; --line:#24312C; --line-strong:#36483F;
+  --copper:#D9955B; --copper-ink:#1A0F06; --copper-soft:rgba(217,149,91,.13);
+  --signal:#7BD3A0; --signal-soft:rgba(123,211,160,.12); --power:var(--pd); --spark:#FFFFFF; --chip:#1F2A26; --chip-ink:#E8EEEA; --pin:#9DA9A3;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme:light;
+    --bg:#F3F4F0; --grid:rgba(30,60,45,.04); --glow:rgba(31,138,85,.22); --surface:#FFFFFF; --surface-2:#F7F8F5;
+    --ink:#18211D; --muted:#56645E; --line:#D6DCD7; --line-strong:#B3BEB7;
+    --copper:#A65A1E; --copper-ink:#FFFFFF; --copper-soft:rgba(166,90,30,.09);
+    --signal:#1F8A55; --signal-soft:rgba(31,138,85,.09); --power:var(--pl); --spark:#FFFFFF; --chip:#1E2622; --chip-ink:#F2F4F1; --pin:#8E9993;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#F3F4F0; --grid:rgba(30,60,45,.04); --glow:rgba(31,138,85,.22); --surface:#FFFFFF; --surface-2:#F7F8F5;
+  --ink:#18211D; --muted:#56645E; --line:#D6DCD7; --line-strong:#B3BEB7;
+  --copper:#A65A1E; --copper-ink:#FFFFFF; --copper-soft:rgba(166,90,30,.09);
+  --signal:#1F8A55; --signal-soft:rgba(31,138,85,.09); --power:var(--pl); --spark:#FFFFFF; --chip:#1E2622; --chip-ink:#F2F4F1; --pin:#8E9993;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1311; --grid:rgba(140,180,160,.032); --glow:rgba(123,211,160,.26); --surface:#121A17; --surface-2:#17211D;
+  --ink:#DDE5E0; --muted:#8FA198; --line:#24312C; --line-strong:#36483F;
+  --copper:#D9955B; --copper-ink:#1A0F06; --copper-soft:rgba(217,149,91,.13);
+  --signal:#7BD3A0; --signal-soft:rgba(123,211,160,.12); --power:var(--pd); --spark:#FFFFFF; --chip:#1F2A26; --chip-ink:#E8EEEA; --pin:#9DA9A3;
+}
+/* 通電色：淺色底用 --pl、深色底用 --pd。實際色碼由最下面「通電色」程式寫在 <html style> 上（8 色＋自訂＋我的色卡），這裡只是預設值（電光藍）
+   「每個分支不同色」：每個分支的零件加 .bc，各自帶 --bl／--bd，--power 在零件身上重新算 */
+:root{--pl:#1A73E8; --pd:#6CB8FF}
+.bc{--power:var(--bd)}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .bc{--power:var(--bl)} }
+:root[data-theme="light"] .bc{--power:var(--bl)}
+:root{
+  --mono:"JetBrains Mono","IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{font-size:19px}
+body{
+  margin:0; background-color:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:1rem; line-height:1.75;
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px; background-attachment:fixed;
+}
+/* 滑鼠附近的格點微亮：固定層的格點，用游標位置的圓形遮罩露出來 */
+/* 只在空白背景上出現：滑鼠移到標題、按鈕、面板等 UI 上時整層淡掉（JS 切 .off） */
+#glow{position:fixed;inset:0;pointer-events:none;z-index:0;transition:opacity .3s;
+  background-image:radial-gradient(circle,var(--glow) 0 1px,transparent 1.5px);
+  background-size:24px 24px;background-position:-11.5px -11.5px;
+  -webkit-mask-image:radial-gradient(110px circle at var(--mx,-999px) var(--my,-999px),#000 0,transparent 100%);
+  mask-image:radial-gradient(110px circle at var(--mx,-999px) var(--my,-999px),#000 0,transparent 100%)}
+#glow.off{opacity:0}
+.wrap{position:relative;z-index:1;width:100%;max-width:1600px;margin:0 auto;padding:24px clamp(16px,3vw,40px) 48px;display:flex;flex-direction:column;gap:16px}
+.wrap>*{min-width:0;max-width:100%}
+.mono{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ico{width:1em;height:1em;vertical-align:-.14em;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none}
+.ico *{transform-box:view-box;transform-origin:12px 12px;transition:transform .35s cubic-bezier(.3,.7,.3,1),opacity .2s,stroke-dashoffset .35s}
+:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* ===== 七段顯示器數字 ===== */
+.seg7{height:1.05em;width:auto;vertical-align:-.12em;overflow:visible}
+.seg7 rect{fill:currentColor;opacity:.1}
+.seg7 rect.on{opacity:1}
+
+/* ===== 頁首 ===== */
+header{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line-strong)}
+.wafer{width:64px;height:64px;grid-row:1 / span 2;cursor:default}
+.wafer .edge{fill:var(--surface);stroke:var(--line-strong);stroke-width:1.2;transition:stroke .2s}
+.wafer .die{fill:var(--copper-soft);stroke:var(--copper);stroke-width:.5;transition:fill .3s}
+.wafer .die.hot{fill:var(--copper)}
+.wafer:hover .edge{stroke:var(--signal)}
+/* 探針掃描由 JS 觸發一次（.probe），跑完才能再觸發：滑鼠在邊緣進進出出也不會一直重播而抽搐 */
+.wafer.probe .die{animation:probe .5s steps(1) both;animation-delay:calc(var(--d) * 22ms)}
+@keyframes probe{0%{fill:var(--signal)}100%{}}
+.kick{display:flex;align-items:center;gap:8px;width:max-content;max-width:100%}
+/* 通電狀態燈：待機＝慢慢呼吸；樹上有東西通電時＝亮成目前的通電色（JS 加 .live、寫入顏色） */
+.led{width:7px;height:7px;border-radius:50%;background:var(--signal);flex:none;transition:background .2s,box-shadow .2s;animation:breathe 2.6s ease-in-out infinite}
+.led.live{animation:none;background:var(--lamp,var(--power));box-shadow:0 0 0 2px var(--surface),0 0 8px 1px var(--lamp-g,var(--power))}
+@keyframes breathe{0%,100%{opacity:.3}50%{opacity:1}}
+.kick{cursor:help}
+.kick:hover .mono{color:var(--ink)}
+@keyframes blink{50%{opacity:.15}}
+h1{margin:0;font-size:clamp(1.45rem,4.2vw,2rem);font-weight:700;letter-spacing:.03em;line-height:1.3}
+.sub{grid-column:1 / -1;margin:8px 0 0;color:var(--muted);font-size:.88rem;max-width:68ch}
+.grade{grid-column:1 / -1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:12px;background:var(--line);border:1px solid var(--line)}
+.grade span{background:var(--surface);padding:8px 10px 10px;font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:6px;min-width:0;transition:background .2s,color .2s}
+.grade b{font-family:var(--mono);font-weight:600;color:var(--copper);font-size:1.25rem;letter-spacing:.02em;display:flex;align-items:baseline;gap:4px;line-height:1.1}
+.grade b small{font-size:.7rem;color:var(--muted)}
+.grade i{display:block;height:3px;background:var(--line)}
+.grade i::after{content:"";display:block;height:100%;width:100%;transform:scaleX(var(--w));transform-origin:left;background:var(--copper);transition:transform .9s cubic-bezier(.2,.7,.2,1),background .2s}
+.grade.reset i::after{transform:scaleX(0);transition:none}
+.grade span:hover{background:var(--surface-2);color:var(--ink)}
+.grade span:hover i::after{background:var(--signal)}
+
+/* ===== 題目分頁：排針 ===== */
+.tabs{display:flex;gap:0;overflow-x:auto;border:1px solid var(--line-strong);background:var(--surface);scrollbar-width:thin}
+.tab{flex:1 0 auto;font:inherit;font-size:.82rem;cursor:pointer;border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 14px 9px;display:flex;flex-direction:column;align-items:flex-start;gap:0;text-align:left;position:relative;white-space:nowrap;min-height:44px;transition:background .2s,color .2s}
+.tab:last-child{border-right:0}
+.tab .mono{font-size:.62rem;display:flex;align-items:center;gap:6px;transition:color .2s}
+.tab::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--copper);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.3,.7,.3,1)}
+.tab:hover{color:var(--ink);background:var(--surface-2)}
+.tab:hover::before{transform:scaleX(.35)}
+.tab:hover .mono{color:var(--copper)}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--copper-soft)}
+.tab[aria-selected="true"]::before{transform:scaleX(1)}
+.tab[aria-selected="true"] .mono{color:var(--copper)}
+.tled{width:6px;height:6px;border:1px solid var(--line-strong);display:inline-block;transition:background .3s,border-color .3s}
+.tled.part{border-color:var(--copper);background:var(--copper-soft)}
+.tled.full{border-color:var(--signal);background:var(--signal)}
+
+/* ===== 控制列 ===== */
+.ctl{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center}
+.seg{display:inline-flex;align-items:center;gap:8px}
+.seg .grp{display:inline-flex;border:1px solid var(--line-strong)}
+.seg button,.btn{font:inherit;font-size:.8rem;cursor:pointer;min-height:36px;min-width:40px;padding:0 10px;border:0;border-right:1px solid var(--line);background:var(--surface);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .15s,color .15s}
+.seg button:last-child{border-right:0}
+.seg button:hover,.btn:hover{background:var(--surface-2);color:var(--copper)}
+.seg button[aria-pressed="true"]{background:var(--copper);color:var(--copper-ink);font-weight:500}
+.seg button[aria-pressed="true"]:hover{color:var(--copper-ink);filter:brightness(1.08)}
+/* 按下：只變暗一點，按鈕本身（命中範圍）不位移，觸控時不會抖；圖示這種內層可以下沉 1px */
+.seg button:active,.btn:active{filter:brightness(.9)}
+.seg button:active .ico,.btn:active .ico{transform:translateY(1px)}
+.ctl .theme{margin-left:auto}
+/* 通電色：一排小色點＋隨機（色點滑過有名稱提示、選中有外框；窄螢幕自動換行不爆版） */
+.seg.pwseg{flex-wrap:wrap;row-gap:6px}
+#pwc{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px;border:0}
+#pwc .dot{min-width:30px;width:30px;min-height:30px;padding:0;border:0;border-radius:50%;background:transparent;position:relative}
+#pwc .dot i{display:block;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--c1) 50%,var(--c2) 50%);box-shadow:0 0 0 1px var(--line-strong);transition:transform .15s}
+#pwc .dot:hover{background:var(--surface-2)}
+#pwc .dot:hover i{transform:scale(1.15)}
+#pwc .dot[aria-pressed="true"]{background:transparent;box-shadow:0 0 0 2px var(--ink) inset}
+#pwc .dot[aria-pressed="true"]:hover{filter:none}
+#pwc .rnd{border:1px solid var(--line-strong);margin-left:4px}
+#pwc .rnd .sw{display:inline-block;width:.8em;height:.8em;border-radius:50%;background:conic-gradient(#1A73E8,#7A5CC0,#D6337F,#E0464E,#C99700,#5E9E00,#00B862,#0097A7,#1A73E8);border:1px solid var(--line-strong)}
+#pwc .dot.mine i{border-radius:4px}
+#pwc .cus{border:1px solid var(--line-strong);margin-left:4px}
+#pwc .cus .sw{display:inline-block;width:.8em;height:.8em;border-radius:3px;background:linear-gradient(135deg,var(--c1,#888) 50%,var(--c2,#ccc) 50%);border:1px solid var(--line-strong)}
+#pwc .cus[aria-expanded="true"]{box-shadow:inset 0 -2px 0 var(--copper)}
+#rmode button{font-size:.74rem;min-height:30px;padding:0 8px}
+#rmode.off{opacity:.45}
+#rmode.off button{cursor:not-allowed}
+/* 自訂通電色面板：控制列下方整行（不浮動，手機不會蓋住或爆版） */
+.pwpanel{flex:1 1 100%;min-width:0;border:1px solid var(--line-strong);background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:.8rem}
+.pwpanel[hidden]{display:none}
+.pwpanel .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.pwpanel .lab{min-width:4.5em;color:var(--muted)}
+.pwpanel input[type=color]{width:40px;height:32px;padding:0 2px;border:1px solid var(--line-strong);background:var(--surface-2);cursor:pointer}
+.pwpanel input[type=text]{font:500 .8rem/1 var(--mono);width:8.5em;max-width:100%;min-height:32px;padding:0 8px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--ink);text-transform:uppercase}
+.pwpanel input[type=text][aria-invalid="true"]{border-color:#D93A3A;box-shadow:0 0 0 1px #D93A3A}
+.pwpanel .err{color:#D93A3A;min-height:1.2em;margin:0;font-size:.76rem}
+.pwpanel .err:empty{min-height:0;margin:-5px 0}
+.pwpanel .btn{border:1px solid var(--line-strong);min-height:32px}
+.pwpanel .btn:disabled{opacity:.45;cursor:not-allowed}
+.pwpanel .mine-list{display:flex;flex-wrap:wrap;gap:6px}
+.pwpanel .chipc{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);padding:2px 2px 2px 6px;font:.7rem/1 var(--mono)}
+.pwpanel .chipc i{width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,var(--c1) 50%,var(--c2) 50%)}
+.pwpanel .chipc button{font:inherit;min-width:28px;min-height:28px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.pwpanel .chipc button:hover{color:#D93A3A;background:var(--surface-2)}
+.pwpanel .note{color:var(--muted);font-size:.74rem}
+.hop{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted);cursor:pointer;min-height:30px;user-select:none}
+.hop input{accent-color:var(--copper);width:16px;height:16px;margin:0;cursor:pointer}
+.hop.off{opacity:.45;cursor:not-allowed}
+.hop.off input{cursor:not-allowed}
+#fsz{position:relative}
+#fsz .thumb{position:absolute;left:0;top:0;bottom:0;width:100%;transform:scaleX(0);transform-origin:left;background:var(--copper);transition:transform .32s cubic-bezier(.3,1.3,.5,1);pointer-events:none}
+#fsz button{position:relative;z-index:1;background:transparent}
+#fsz button:hover{background:var(--copper-soft)}
+#fsz button[aria-pressed="true"]{background:transparent;transition:color .2s .1s}
+#fsz button[aria-pressed="true"]:hover{filter:none}
+#fsz .fa{font-family:var(--mono);font-weight:600;font-size:calc(var(--s) * 1em);line-height:1;display:inline-block;transition:transform .2s}
+#fsz button:hover .fa{transform:scale(1.18)}
+#fsz .fa.pop{animation:aPop .3s ease-out}
+@keyframes aPop{0%{transform:scale(.5)}100%{transform:scale(1)}}
+/* 圖示小動畫 */
+button:hover .ico-sun .rays{transform:rotate(45deg)}
+button:hover .ico-sun .core{transform:scale(.8)}
+button:hover .ico-moon .body{transform:rotate(-20deg)}
+button:hover .ico-moon .star{opacity:1;transform:scale(1)}
+.ico-moon .star{opacity:0;transform:scale(.3);transform-origin:18px 6px}
+button:hover .ico-auto .sl{transform:translateY(5px)}
+.ico-tree .br{stroke-dasharray:12;stroke-dashoffset:0}
+button:hover .ico-tree .br{animation:icoDraw .5s ease-out both}
+button:hover .ico-tree .br.b2{animation-delay:.08s}
+button:hover .ico-tree .br.b3{animation-delay:.16s}
+@keyframes icoDraw{from{stroke-dashoffset:12}to{stroke-dashoffset:0}}
+button:hover .ico-list .ln{transform:translateX(2px)}
+button:hover .ico-list .ln.l2{transition-delay:.05s}
+button:hover .ico-list .ln.l3{transition-delay:.1s}
+.ico-eye .lid{transform-origin:12px 12px}
+button:hover .ico-eye .lid{animation:lid .45s ease-in-out}
+@keyframes lid{50%{transform:scaleY(.1)}}
+.ico-eye .slash{stroke-dasharray:24;stroke-dashoffset:24}
+[aria-pressed="true"] .ico-eye .slash{stroke-dashoffset:0}
+.btn:hover .ico-redo .arc{transform:rotate(-60deg)}
+.readout .btn.arm{background:var(--copper-soft);color:var(--copper);box-shadow:inset 0 0 0 1px var(--copper);animation:armPulse 1s ease-in-out infinite}
+.readout .btn.arm .ico-redo .arc{transform:rotate(-60deg)}
+@keyframes armPulse{50%{background:var(--surface-2)}}
+.btn.spin .ico-redo .arc{animation:spin .6s cubic-bezier(.3,.7,.3,1)}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+
+/* ===== 主面板：晶片封裝外框 ===== */
+.panel{position:relative;background:var(--surface);border:1px solid var(--line-strong);padding:20px clamp(14px,2.5vw,28px) 18px;display:flex;flex-direction:column;gap:12px}
+.panel::before{content:"";position:absolute;left:-1px;top:-1px;border-style:solid;border-width:14px 14px 0 0;border-color:var(--copper) transparent transparent transparent}
+.panel .mono.ref{position:absolute;right:12px;top:8px}
+.panel h2{margin:0;font-size:1.18rem;font-weight:700;line-height:1.45;text-wrap:balance;padding-right:56px}
+.q{margin:0;color:var(--muted);font-size:.88rem;max-width:72ch;padding-left:12px;border-left:2px solid var(--line-strong)}
+/* 量測讀數列 */
+.readout{display:flex;flex-wrap:wrap;align-items:stretch;gap:1px;background:var(--line);border:1px solid var(--line)}
+.rd{background:var(--surface-2);padding:6px 12px 7px;display:flex;flex-direction:column;gap:2px;min-width:0;transition:background .2s}
+.rd:hover{background:var(--copper-soft)}
+.rd .v{font-family:var(--mono);font-size:1.15rem;color:var(--copper);display:flex;align-items:baseline;gap:4px;line-height:1.15}
+.rd .v small{font-size:.66rem;color:var(--muted)}
+.rd.pass .v{color:var(--signal)}
+.rd.yield{flex:1 1 180px}
+.ybar{height:3px;background:var(--line);margin-top:4px}
+.ybar i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:var(--signal);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.readout .btn{border:0;background:var(--surface-2);min-height:auto;padding:0 14px}
+.stage{position:relative;overflow:hidden}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:4px 0 6px;scrollbar-width:thin}
+/* 換題掃描線 */
+.scan{position:absolute;left:0;right:0;top:0;height:2px;background:var(--signal);opacity:0;pointer-events:none;z-index:3}
+.scan::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:40px;background:var(--signal-soft)}
+.scan::before{content:"RE-ROUTE";position:absolute;right:4px;top:4px;font:600 9px/1 var(--mono);letter-spacing:.12em;color:var(--signal)}
+.stage.scanning .scan{animation:scan .8s cubic-bezier(.45,0,.25,1) both}
+@keyframes scan{0%{transform:translateY(0);opacity:1}88%{opacity:1}100%{transform:translateY(var(--scan-d,100%));opacity:0}}
+.tip{margin:0;font-size:.76rem;color:var(--muted);display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px}
+.tip span{display:inline-flex;align-items:center;gap:6px}
+.tip span[hidden]{display:none}
+.tip span:hover{color:var(--ink)}
+.tip span:hover .ico-swipe .ar{animation:sway .8s ease-in-out 2}
+@keyframes sway{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+.tip .k{width:8px;height:8px;border:1px solid var(--copper);display:inline-block}
+.tip .k.g{border-color:var(--signal);background:var(--signal)}
+
+/* ===== 樹狀圖：電路走線 ===== */
+svg.tree{display:block}
+svg.tree.morphing{overflow:visible}
+.tree .ghost,.tree .ghost *{pointer-events:none}
+.tree text{font-family:var(--sans)}
+.tree .m{font-family:var(--mono);letter-spacing:.06em}
+.tr{fill:none;stroke:var(--copper);stroke-width:1.6;stroke-linejoin:miter;transition:opacity .2s}
+.tr.l{stroke-width:1.1;opacity:.75}
+.via{fill:var(--surface);stroke:var(--copper);stroke-width:1.4}
+.dot{fill:var(--copper)}
+.chip{fill:var(--chip)}
+.pin{fill:var(--pin);transition:fill .2s}
+.chipt{fill:var(--chip-ink)}
+.ic{fill:var(--copper-soft);stroke:var(--copper);stroke-width:1.2;transition:fill .2s,stroke .2s}
+.notch{fill:var(--surface);stroke:var(--copper);stroke-width:1.2}
+.pad{fill:var(--surface-2);stroke:var(--line-strong);stroke-width:1;transition:fill .18s,stroke .18s}
+.ink{fill:var(--ink)} .cu{fill:var(--copper)} .mut{fill:var(--muted)}
+.tree [tabindex]{cursor:pointer;outline:none}
+.n-root,.n-br,.n-lf{transition:opacity .2s}
+/* 待機：主幹上慢慢跑的訊號 */
+/* 待機：每條主幹上一顆亮點一直慢慢流（pathLength=1，所以長短線都是同一節奏、隨時都看得到），比通電時弱：較細、半透明、單層小光暈 */
+.flow{fill:none;stroke:var(--power);stroke-width:3.2;stroke-linecap:round;stroke-dasharray:.08 1.2;stroke-dashoffset:.08;animation:flow 2.8s linear infinite;opacity:.95;pointer-events:none;filter:drop-shadow(0 0 3px var(--power)) drop-shadow(0 0 1px var(--power));transition:opacity .3s}
+@keyframes flow{from{stroke-dashoffset:.08}to{stroke-dashoffset:-1.2}}
+.tree.hot .flow{opacity:0}
+/* 通電：疊在走線上的訊號線，用 pathLength=1 從頭畫到尾 */
+.pw{fill:none;stroke:var(--power);stroke-width:4.8;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:1;opacity:0;pointer-events:none;filter:drop-shadow(0 0 4px var(--power)) drop-shadow(0 0 1.5px var(--power));transition:stroke-dashoffset .1s linear,opacity .1s}
+.pw.l{stroke-width:4}
+/* 通電後沿線一直跑的亮脈衝：白色亮芯＋綠色光暈 */
+/* 滑鼠停著＝一直跑（infinite），移開才淡出；通電線畫完後降到 .55，讓白色亮點跟底線有明顯反差 */
+/* 每條線 2～3 顆：主幹週期 .34（約 3 顆）、葉線週期 .42（約 2.4 顆） */
+.pz{fill:none;stroke:var(--spark);stroke-width:4;stroke-linecap:round;stroke-dasharray:.08 .26;stroke-dashoffset:.08;opacity:0;pointer-events:none;filter:drop-shadow(0 0 2px var(--power)) drop-shadow(0 0 5px var(--power));transition:opacity .35s}
+.pz.l{stroke-width:3.4;stroke-dasharray:.1 .32;stroke-dashoffset:.1}
+.pz.on{opacity:1;transition:opacity .15s linear var(--dl,0s);animation:zap .9s linear var(--dl,0s) infinite}
+.pz.l.on{animation-name:zapL}
+@keyframes zap{from{stroke-dashoffset:.08}to{stroke-dashoffset:-.26}}
+@keyframes zapL{from{stroke-dashoffset:.1}to{stroke-dashoffset:-.32}}
+.pw{transition:stroke-dashoffset .1s linear,opacity .35s}
+.pw.on{stroke-dashoffset:0;opacity:1;animation:pwDim .5s ease-out calc(var(--dl,0s) + .3s) both;transition:stroke-dashoffset .26s linear var(--dl,0s),opacity 0s linear var(--dl,0s)}
+@keyframes pwDim{from{opacity:1}to{opacity:.82}}
+.pw.l.on{transition-duration:.2s,0s}
+/* 沒通電的走線、元件明顯變暗，讓電流路徑一眼看得出來 */
+.tree.hot .tr,.tree.hot .dot,.tree.hot .via{opacity:.12}
+.tree.hot .n-br:not(.on),.tree.hot .n-lf:not(.on){opacity:.22}
+.tree.hot .pin.src{fill:var(--power)}
+.n-root:hover .chip,.n-root:focus-visible .chip{fill:#2A3833}
+.n-br.on .ic{stroke:var(--power);stroke-width:2.8;filter:drop-shadow(0 0 4px var(--power));transition-delay:var(--dl,0s)}
+.n-br:hover .ic,.n-br:focus-visible .ic{fill:var(--signal-soft)}
+.n-br:focus-visible .ic,.n-lf:focus-visible .pad,.n-root:focus-visible .chip{stroke:var(--signal);stroke-width:2.4}
+.n-lf.on .pad{stroke:var(--power);stroke-width:2.4;filter:drop-shadow(0 0 3px var(--power));transition-delay:var(--dl,0s)}
+.n-lf.on .sd{fill:var(--power);filter:drop-shadow(0 0 4px var(--power)) drop-shadow(0 0 1.5px var(--power));transition-delay:var(--dl,0s)}
+.n-lf:hover .pad{fill:var(--copper-soft)}
+.sd{fill:var(--copper);transition:fill .18s}
+/* IC 上的 LED：亮＝展開（通電），暗＝收合 */
+.bled{fill:var(--signal);stroke:var(--signal);stroke-width:1}
+.n-br.fold .bled{fill:transparent;stroke:var(--muted)}
+.n-br.fold .ic{stroke-dasharray:4 3;fill:transparent}
+.n-br.boot .bled{animation:boot .7s ease-out}
+.n-br.boot .ref{animation:refFlash .7s steps(1)}
+.n-br.boot .ic{animation:icFlash .7s ease-out}
+@keyframes boot{0%{fill:transparent;r:2}35%{fill:var(--signal);r:5.5}100%{r:3.2}}
+@keyframes refFlash{0%,40%{fill:var(--signal)}20%,60%{fill:transparent}80%{fill:var(--signal)}100%{}}
+@keyframes icFlash{0%{stroke:var(--signal);fill:var(--signal-soft)}100%{}}
+.n-br.shut .bled{animation:shut .4s ease-out}
+@keyframes shut{0%{fill:var(--signal);r:4.5}100%{fill:transparent;r:3.2}}
+/* 測試墊狀態：PASS 綠燈 */
+.pled{fill:transparent;stroke:var(--line-strong);stroke-width:1;transition:fill .2s,stroke .2s}
+.n-lf:hover .pled{stroke:var(--copper)}
+.n-lf.pass .pad{stroke:var(--signal);fill:var(--signal-soft)}
+.n-lf.pass .pled{fill:var(--signal);stroke:var(--signal)}
+.badge{opacity:0;transform:scale(.5);transform-box:fill-box;transform-origin:center;transition:opacity .2s,transform .3s cubic-bezier(.3,1.6,.5,1)}
+.badge rect{fill:var(--surface);stroke:var(--signal);stroke-width:1}
+.badge text{fill:var(--signal);font-family:var(--mono);font-weight:600;letter-spacing:.1em}
+.n-lf.pass .badge{opacity:1;transform:none}
+/* 背誦模式：封膠蓋住葉子文字，點一下開封 */
+.mold{display:none;transform-box:fill-box;transform-origin:right center;transition:transform .4s cubic-bezier(.6,0,.3,1),opacity .4s}
+.mold rect{fill:var(--chip)}
+.mold text{fill:var(--chip-ink);opacity:.55;font-family:var(--mono);letter-spacing:.14em;transition:opacity .2s}
+.mold circle{fill:none;stroke:var(--pin);stroke-width:1}
+body.recite .mold{display:inline}
+.n-lf:hover .mold text{opacity:.95}
+.n-lf.open .mold{transform:scaleX(0);opacity:0}
+.tic *{transform-box:view-box;transform-origin:12px 12px;transition:transform .35s}
+.n-lf:hover .tic .pg{transform:scaleX(.55);transform-origin:12px 12px}
+.n-lf:hover .tic .nib{animation:write .6s ease-in-out}
+@keyframes write{25%{transform:rotate(-12deg)}75%{transform:rotate(8deg)}}
+.ticon{fill:none;stroke:var(--copper);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* 換題重新繪線 */
+.tree.draw .tr{stroke-dasharray:1 1;animation:trace .45s ease-out both;animation-delay:var(--ad,0s)}
+.tree.draw .n-root,.tree.draw .n-br,.tree.draw .n-lf,.tree.draw .via,.tree.draw .dot{animation:fadeIn .3s ease-out both;animation-delay:var(--ad,0s)}
+@keyframes trace{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ===== 清單：網表 netlist ===== */
+.list{display:flex;flex-direction:column;gap:14px}
+.list.draw>*{animation:rise .4s ease-out both;animation-delay:calc(var(--i) * 70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.list .root{background:var(--chip);color:var(--chip-ink);padding:10px 14px;font-weight:700;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;cursor:pointer;transition:background .2s;border:0;font:inherit;font-weight:700;text-align:left;width:100%}
+.list .root:hover{background:#2A3833}
+.list .root .mono{color:var(--pin)}
+.list section{border:1px solid var(--line-strong);background:var(--surface-2);transition:border-color .2s}
+.list section:hover{border-color:var(--copper)}
+.list h3{margin:0;font-size:1rem}
+.bh{all:unset;box-sizing:border-box;width:100%;cursor:pointer;padding:8px 14px;background:var(--copper-soft);border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;font-weight:700;transition:background .2s}
+.bh:hover{background:var(--signal-soft)}
+.bh:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.bh .mono{color:var(--copper)}
+.bh .nm{flex:1;min-width:0}
+.bh .cnt{color:var(--muted)}
+.bh .lb{width:8px;height:8px;border-radius:50%;background:var(--signal);flex:none;transition:background .3s}
+.bh .ico{color:var(--muted);transition:transform .3s}
+section.fold .bh{border-bottom-color:transparent;background:transparent}
+section.fold .bh .lb{background:transparent;box-shadow:inset 0 0 0 1px var(--muted)}
+section.fold .bh .ico{transform:rotate(-90deg)}
+section.fold ul{display:none}
+section.boot .bh .lb{animation:lbBoot .7s ease-out}
+section.boot .bh .mono:first-child{animation:blink .35s steps(2) 2}
+@keyframes lbBoot{0%{transform:scale(.4);background:transparent}40%{transform:scale(1.8);background:var(--signal)}100%{transform:none}}
+.list ul{list-style:none;margin:0;padding:8px 8px 10px;display:flex;flex-direction:column;gap:4px}
+.n-li{position:relative;padding:5px 64px 5px 30px;line-height:1.65;cursor:pointer;border:1px solid transparent;transition:background .15s,border-color .15s}
+.n-li::before{content:"";position:absolute;left:10px;top:calc(5px + .62em);width:8px;height:8px;border-radius:50%;background:var(--copper);transition:background .2s}
+.n-li::after{content:"";position:absolute;left:18px;top:calc(5px + .62em + 3.5px);width:7px;height:1px;background:var(--copper);transition:width .2s,background .2s}
+.n-li:hover{background:var(--copper-soft);border-color:var(--line)}
+.n-li:hover::after{width:10px}
+.n-li:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.n-li.pass{background:var(--signal-soft);border-color:var(--signal)}
+.n-li.pass::before,.n-li.pass::after{background:var(--signal)}
+.n-li .ptag{position:absolute;right:8px;top:8px;font:600 .6rem/1.5 var(--mono);letter-spacing:.1em;color:var(--signal);border:1px solid var(--signal);padding:0 4px;opacity:0;transform:scale(.6);transition:opacity .2s,transform .3s cubic-bezier(.3,1.6,.5,1)}
+.n-li.pass .ptag{opacity:1;transform:none}
+.n-li .ico{color:var(--copper)}
+.n-li .t{transition:background-color .35s,color .35s}
+body.recite .n-li:not(.open) .t{background:var(--chip);color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+body.recite .n-li:not(.open) .t .ico{opacity:0}
+body.recite .n-li:not(.open):hover .t{background:#33423C}
+
+/* ===== 萬用寫法：測試程序 ===== */
+.outline{border:1px dashed var(--line-strong);background:var(--surface);padding:14px 16px 16px;font-size:.9rem}
+.outline .hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.outline b{font-weight:700}
+.outline ol{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:2px;counter-reset:s}
+.outline li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:baseline;padding:4px 8px;margin:0 -8px;border-left:2px solid transparent;transition:background .15s,border-color .15s}
+.outline li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:.72rem;color:var(--copper);border:1px solid var(--copper);text-align:center;line-height:1.6;transition:background .15s,color .15s}
+.outline li:hover{background:var(--copper-soft);border-left-color:var(--signal)}
+.outline li:hover::before{background:var(--copper);color:var(--copper-ink)}
+
+@media (max-width:640px){
+  .wrap{padding:16px 16px 32px;gap:14px}
+  .wafer{width:48px;height:48px}
+  .grade{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ctl .theme{margin-left:0}
+  .tab{flex:none}
+  .rd{flex:1 1 30%}
+  .readout .btn{flex:1 1 100%;min-height:40px}
+  .n-li{padding-right:52px}
+}
+@media (hover:none){ #glow{display:none} }
+@media (prefers-reduced-motion: reduce){
+  .flow,.scan{display:none}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+<div id="glow" aria-hidden="true"></div>
+<div class="wrap">
+  <header>
+    <svg class="wafer" viewBox="0 0 64 64" id="wafer" role="img" aria-label="整體背誦進度晶圓"></svg>
+    <div class="kick" title="通電狀態燈：待機時慢慢呼吸；滑鼠移到樹上通電時，亮成目前的通電色"><span class="led" id="lamp" role="img" aria-label="通電狀態燈"></span><span class="mono">SEMI · ESSAY MAP · REV.C</span></div>
+    <h1>申論題重點樹</h1>
+    <p class="sub">戴副總經理 6 題申論｜考試自選 2 題、每題 10 分｜照樹枝順序寫，每個葉子就是一個要寫到的重點</p>
+    <div class="grade" id="grade">
+      <span style="--w:.35" data-v="35">名詞精準 <b></b><i></i></span>
+      <span style="--w:.30" data-v="30">原理邏輯 <b></b><i></i></span>
+      <span style="--w:.25" data-v="25">跨領域舉例 <b></b><i></i></span>
+      <span style="--w:.10" data-v="10">結構條理 <b></b><i></i></span>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs" aria-label="申論題"></div>
+
+  <div class="ctl">
+    <span class="seg"><span class="mono">顯示</span><span class="grp" id="mode"></span></span>
+    <span class="seg"><span class="mono">背誦</span><span class="grp"><button type="button" id="recite" aria-pressed="false"></button></span></span>
+    <span class="seg"><span class="mono">字體</span><span class="grp" id="fsz"></span></span>
+    <span class="seg theme"><span class="mono">主題</span><span class="grp" id="theme"></span></span>
+    <span class="seg pwseg"><span class="mono">通電色</span><span class="grp" id="pwc" role="group" aria-label="通電色"></span><span class="grp" id="rmode" role="group" aria-label="隨機方式"><button type="button" data-r="one">一種顏色</button><button type="button" data-r="multi">每個分支不同色</button></span><label class="hop" id="hopL" title="只在選「隨機」時有效"><input type="checkbox" id="hop">每次滑過都換色</label></span>
+    <div class="pwpanel" id="pwpanel" hidden>
+      <div class="row"><b>自訂通電色</b><span class="note">輸入色碼（#RRGGBB）或用取色器，馬上套用</span></div>
+      <div class="row"><span class="lab">淺色底</span><input type="color" id="cl" aria-label="淺色底取色器"><input type="text" id="cl-t" maxlength="7" spellcheck="false" autocomplete="off" aria-label="淺色底色碼" aria-describedby="cerr"></div>
+      <div class="row"><span class="lab">深色底</span><input type="color" id="cd" aria-label="深色底取色器"><input type="text" id="cd-t" maxlength="7" spellcheck="false" autocomplete="off" aria-label="深色底色碼" aria-describedby="cerr"><label class="hop"><input type="checkbox" id="cauto">自動推算（亮一點）</label></div>
+      <p class="err" id="cerr" aria-live="polite"></p>
+      <div class="row"><button type="button" class="btn" id="csave">存成我的色卡</button><button type="button" class="btn" id="cclose">收起</button><span class="note" id="cnote"></span></div>
+      <div class="row"><span class="lab">我的色卡</span><span class="mine-list" id="mlist"></span></div>
+    </div>
+  </div>
+
+  <section class="panel" id="panel" role="tabpanel"></section>
+
+  <div class="outline">
+    <div class="hd"><b>萬用寫法（每題都套）</b><span class="mono">TEST PROCEDURE</span></div>
+    <ol>
+      <li>前言：一句點題，預告要回答哪幾點</li>
+      <li>照樹的「第一層枝」分段下標題，每段寫葉子的重點</li>
+      <li>名詞寫成「中文（English）」，每點補一句「為什麼」</li>
+      <li>至少一個例子（iPhone、ChatGPT、台積電、自己的經驗）</li>
+      <li>結論：連回「AI × 半導體」或自己的看法</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+/* 原文的 emoji（📚 ✍️）改用私用區字元佔位，畫面上換成 inline SVG 圖示 */
+const ICON = { "": "i-book", "": "i-pen" };
+const T = [
+ {k:"一", title:"ABC 三大支柱＋DNN 訓練與推理",
+  q:"何謂 ABC？三者關係？何謂 DNN？從訓練與推理剖析核心目標、關鍵演算法與差異。",
+  b:[
+   ["ABC 三大支柱",["Algorithms 演算法｜決定「怎麼學」","Big Data 巨量資料｜決定「學什麼」；資料要清理，避免過擬合","Computing Power 算力｜決定「學多快」：GPU、TPU","三者缺一不可 → 帶動台積電、NVIDIA"]],
+   ["DNN 深度神經網路",["AI ⊃ ML ⊃ DL（層層包含）","輸入層 → 隱藏層 → 輸出層","包含 1 個以上隱藏層（Hidden Layer）","層數再多，仍遠不及人腦"]],
+   ["訓練 Training",["目標：確定所有神經元參數（Parameters）的最佳值","反向傳播 Back-propagation：誤差由後往前傳，算出每個參數要修多少","梯度下降 Gradient Descent：往誤差變小的方向一小步調整（蒙眼下山）","像「讀書」：雲端 GPU／TPU"]],
+   ["推理 Inferring",["訓練完成後，給新輸入 → 輸出結果或預測","例：使用者問 ChatGPT","像「考試」：手機、筆電裡的 NPU"]]
+  ]},
+ {k:"二", title:"AI 時代人類的先天優勢＋三大能力",
+  q:"如何自保並「利用它們」強化自己？申論應對心態與先天優勢、非理工學生三大能力。",
+  b:[
+   ["心態",["不焦慮、不怕被取代","學會「利用它們」讓自己更強大","AI 靠 ABC 發展，人類靠「先天優勢」"]],
+   ["為什麼需要先天優勢",["AI 會給「看似合理」但不一定正確的答案","人類能理解意義、判斷價值、承擔責任","TEDx「人類邊界」：發明創造、直覺、社交敏銳、情感勇氣、感官想像"]],
+   ["三大必備能力",["數位及數學技能：資料分析＋AI 工具（微積分、線代、機率統計）","AI 還不會的能力：批判性思維、倫理判斷、溝通力、同理心","跨界合作：與理工／AI 專業合作，打造「人文＋科技」"]],
+   ["我的例子＋結論",["實習做交通事故通報平台","AI 寫程式很快，需求與結果對不對要靠自己判斷","結論：AI 越強，判斷力與人性越值錢"]]
+  ]},
+ {k:"三", title:"能隙、摻雜與 IC 的構成",
+  q:"導體／絕緣體／半導體的能隙差異？半導體關鍵特性與如何調控？IC、電晶體、晶片的關係？",
+  b:[
+   ["能隙 Band Gap",["導體 Conductor：價帶導帶重疊 Overlap、無能隙（金銀銅）","絕緣體 Insulator：能隙很寬 Wide Band Gap（玻璃、塑膠）","半導體 Semiconductor：能隙窄；絕對零度像絕緣體，室溫靠熱能導電（矽、鍺）"]],
+   ["關鍵特性：可精準調控導電度",["方法：摻雜 Doping、施加電場、光照","五價（磷）→ N 型：多自由電子","三價（硼）→ P 型：多電洞","P＋N → 二極體；三層 → 電晶體"]],
+   ["IC、晶片、電晶體",["IC 積體電路：千萬個電晶體＋電阻電容集成於矽基板","IC ＝ 晶片 Chip（同一概念）","功能來自大量電晶體（電晶體是磚、IC 是房子）","Intel 4004 約 2,300 個 → Cerebras 數兆個（摩爾定律）"]]
+  ]},
+ {k:"四", title:"CMCC 四大功能＋多元整合",
+  q:"列出 CMCC 英文名稱、功能重點與代表晶片；單一晶片只能一種功能嗎？以 iPhone 為例說明整合趨勢。",
+  b:[
+   ["Computation 計算",["邏輯運算、資料處理（大腦）","CPU、GPU、TPU、MCU、NPU"]],
+   ["Memory 記憶",["資料暫存與永久儲存","DRAM、SRAM／ROM、Flash、HBM"]],
+   ["Connection 連接",["無線通訊、訊號傳輸","4G／5G、WiFi、藍牙、感測器 Sensors"]],
+   ["Control 控制",["系統控制、電源管理","ECU、PMIC、驅動 IC（Driver）"]],
+   ["多元整合趨勢",["一顆 IC 可同時具備多種功能","iPhone 18 Pro 多達 30 多種晶片，涵蓋 CMCC","SoC 系統單晶片：整合計算＋控制＋連接","為何整合：空間小、省電、傳輸距離短、效能高","電動車：自駕晶片、ECU、感測器"]]
+  ]},
+ {k:"五", title:"產業鏈上中下游＋晶圓製造複雜性",
+  q:"上游三要素與重點？中游 Foundry 運作重點與步驟數？下游 OSAT 如何轉成終端產品？",
+  b:[
+   ["前言：專業分工",["IDM 一手包辦 vs 專業分工","Sony 集合日本人才仍追不上台積電"]],
+   ["上游",["IC 設計：EDA、IP Core、光罩 GDSII（聯發科、Fabless）","材料：矽晶圓（石英砂→多晶矽→晶柱→切片拋光）、光阻劑、特殊氣體、CMP 研磨液","設備：微影（EUV 最關鍵）、蝕刻沉積、量測檢驗"]],
+   ["中游 Foundry",["把電路圖變成實體結構（台積電）","約 1,000～1,500 個步驟","8 大製程在同片晶圓反覆循環，一層層 3D 堆疊","無塵室：一粒灰塵就整片報廢"]],
+   ["下游 OSAT",["晶圓切割 Dicing","黏晶 Die Attaching、打線 Wire Bonding、封膠 Molding","最終測試 Final Test／ATE → 終端產品（日月光）"]],
+   ["台灣地位",["設計 18%（世界第 2）","代工 65～70%（第 1）","封測 48～50%（第 1）→ 護國神山"]]
+  ]},
+ {k:"六", title:"超大晶片限制 vs CoWoS 先進封裝",
+  q:"為何不普遍做 Cerebras 那樣的超大晶片，而用 Chiplets＋CoWoS？剖析 CoWoS-S 由上至下 5 層，及如何高頻寬低延遲。",
+  b:[
+   ["為何不做超大晶片",["光罩尺寸限制：一般 GPU 約 800 mm²","Cerebras WSE：整片 300 mm 晶圓、46,225 mm²（50 多倍）","面積越大，一個瑕疵整顆報廢 → 良率低、成本高、難量產","改用小晶片 Chiplets＋HBM，以 CoWoS 整合：突破面積、維持良率"]],
+   ["CoWoS-S 5 層（由上到下）",["① 頂層晶片 Top Dies：Compute／Logic＋HBM（TSV 堆疊，底部 Base Die）","② 微凸塊 µBumps","③ 矽中介層 Silicon Interposer：Short Wires 橫向＋TSV 向下","④ C4 銅凸塊＋封裝基板 Package Substrate","⑤ 封裝錫球 Package Balls＋電路板 PCB"]],
+   ["為何高頻寬、低延遲",["運算晶片與 HBM 並排在同一片中介層","高密度短導線：距離短、通道多","TSV 垂直穿透矽，不用繞遠路"]],
+   ["結論",["延續摩爾定律 Moore's Law 的關鍵","台積電 AI 時代的核心競爭力"]]
+  ]}
+];
+const NUM = ["1","2","3","4","5","6"];
+const NS = "http://www.w3.org/2000/svg";
+const RM = window.matchMedia("(prefers-reduced-motion: reduce)");
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v === null ? d : v; } catch(e) { return d; } },
+  set(k, v){ try { localStorage.setItem(k, v); } catch(e) {} },
+  getSet(k){ try { const a = JSON.parse(localStorage.getItem(k) || "[]"); return new Set(Array.isArray(a) ? a.map(String) : []); } catch(e) { return new Set(); } },
+  putSet(k, s){ try { localStorage.setItem(k, JSON.stringify([...s])); } catch(e) {} }
+};
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function esc(s){ return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+/* ===== 圖示（全部 inline SVG，零件分開才能各自做動畫） ===== */
+const ICONS = {
+  book: '<path d="M3 5.5c3-1.3 6-1.3 9 .8v13c-3-2.1-6-2.1-9-.8z"/><path class="pg" d="M12 6.3c3-2.1 6-2.1 9-.8v13c-3-1.3-6-1.3-9 .8z"/>',
+  pen: '<g class="nib"><path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13 7l4 4"/></g>',
+  sun: '<circle class="core" cx="12" cy="12" r="4"/><g class="rays"><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g>',
+  moon: '<path class="body" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path class="star" d="M18 3.5v3M16.5 5h3"/>',
+  auto: '<rect x="3" y="4" width="18" height="12"/><path class="sl" d="M6 7.5h12"/><path d="M8 20h8M12 16v4"/>',
+  tree: '<rect x="2.5" y="9.5" width="5" height="5"/><path d="M7.5 12h3"/><path class="br" d="M10.5 12V5h5"/><path class="br b2" d="M10.5 12h5"/><path class="br b3" d="M10.5 12v7h5"/><path d="M17.5 5h4M17.5 12h4M17.5 19h4"/>',
+  list: '<path class="ln" d="M8 6h13"/><path class="ln l2" d="M8 12h13"/><path class="ln l3" d="M8 18h13"/><path d="M3.5 6h.5M3.5 12h.5M3.5 18h.5" stroke-width="2.6"/>',
+  eye: '<g class="lid"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></g><path class="slash" d="M4 4l16 16"/>',
+  redo: '<g class="arc"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.5h-4.5"/></g>',
+  swipe: '<g class="ar"><path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"/></g>',
+  chev: '<path d="M6 9l6 6 6-6"/>'
+};
+const ico = n => `<svg class="ico ico-${n}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
+const ICON_RE = new RegExp("[" + Object.keys(ICON).join("") + "]", "g");
+const ICON_SPLIT = new RegExp("([" + Object.keys(ICON).join("") + "])");
+const iconName = c => ICON[c].replace(/^i-/, "");
+function withIcons(s){ return esc(s).replace(ICON_RE, c => ico(iconName(c))); }
+
+/* ===== 七段顯示器 ===== */
+const SEG = { a:[2,0,6,2], b:[8,2,2,6], c:[8,10,2,6], d:[2,16,6,2], e:[0,10,2,6], f:[0,2,2,6], g:[2,8,6,2] };
+const DIG = ["abcdef","bc","abdeg","abcdg","bcfg","acdfg","acdefg","abc","abcdefg","abcdfg"];
+function seg7(digits){
+  const w = digits * 13 - 3;
+  const svg = el("svg", { class: "seg7", viewBox: `-1 -1 ${w + 2} 20`, "aria-hidden": "true" });
+  const groups = [];
+  for (let i = 0; i < digits; i++) {
+    const g = el("g", { transform: `translate(${i * 13} 0) skewX(-6)` }, svg);
+    const rs = {};
+    for (const k in SEG) { const [x, y, ww, hh] = SEG[k]; rs[k] = el("rect", { x, y, width: ww, height: hh, rx: .6 }, g); }
+    groups.push(rs);
+  }
+  const o = { el: svg, val: 0, raf: 0,
+    set(v){ o.val = v; const s = String(Math.max(0, Math.round(v))).padStart(digits, "0").slice(-digits);
+      groups.forEach((rs, i) => { const on = DIG[+s[i]]; for (const k in rs) rs[k].classList.toggle("on", on.includes(k)); }); } };
+  o.set(0);
+  return o;
+}
+function roll(o, to, from, dur){
+  cancelAnimationFrame(o.raf);
+  if (RM.matches) { o.set(to); return; }
+  const f = from === undefined ? o.val : from, d = dur || 900, t0 = performance.now();
+  const step = now => {
+    const p = Math.min(1, (now - t0) / d), e = 1 - Math.pow(1 - p, 3);
+    o.set(f + (to - f) * e);
+    if (p < 1) o.raf = requestAnimationFrame(step);
+  };
+  o.set(f); o.raf = requestAnimationFrame(step);
+}
+
+/* ===== 狀態 ===== */
+let done = store.getSet("c-chip-done");      // 背過了："題-枝-葉"
+let fold = store.getSet("c-chip-fold");      // 收合的分支："題-枝"
+let recite = store.get("c-chip-recite", "0") === "1";
+const revealed = new Set();                  // 背誦模式下已開封的葉子（不存）
+let cur = 0, hoverT = null, pulseTimer = 0;
+const TOTAL = T.reduce((a, t) => a + t.b.reduce((s, b) => s + b[1].length, 0), 0);
+const passCount = qi => [...done].filter(k => k.startsWith(qi + "-")).length;
+const leafCount = qi => T[qi].b.reduce((s, b) => s + b[1].length, 0);
+
+/* ===== 頁首晶圓：亮起的晶粒數＝整體背誦進度 ===== */
+const waferDies = [];
+(function wafer(){
+  const s = document.getElementById("wafer");
+  el("title", {}, s);
+  el("circle", { cx: 32, cy: 32, r: 30, class: "edge" }, s);
+  const step = 7.2;
+  for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) {
+    const x = 3.2 + i * step, y = 3.2 + j * step, cx = x + step / 2 - 32, cy = y + step / 2 - 32;
+    if (Math.hypot(Math.abs(cx) + step / 2, Math.abs(cy) + step / 2) > 28.5 || y + step > 58) continue;
+    const r = el("rect", { x: x + .6, y: y + .6, width: step - 1.2, height: step - 1.2, class: "die" }, s);
+    waferDies.push({ r, d: Math.hypot(cx, cy + 2) });
+  }
+  waferDies.sort((a, b) => a.d - b.d).forEach((w, k) => w.r.style.setProperty("--d", k));
+  el("path", { d: "M18 59.2 H46", stroke: "var(--line-strong)", "stroke-width": 1.4 }, s);
+  // 探針掃描：滑鼠進來才跑一次，跑完（約 1.5 秒）之前不會重播；只換晶粒顏色，晶圓本身不動不縮放
+  let busy = false;
+  s.addEventListener("pointerenter", e => {
+    if (busy || e.pointerType === "touch") return; busy = true;
+    s.classList.remove("probe"); void s.getBoundingClientRect(); s.classList.add("probe");
+    setTimeout(() => { s.classList.remove("probe"); busy = false; }, 500 + waferDies.length * 22 + 200);
+  });
+})();
+function updateWafer(){
+  const n = done.size, lit = Math.round(n / TOTAL * waferDies.length);
+  waferDies.forEach((w, k) => w.r.classList.toggle("hot", k < lit));
+  const s = document.getElementById("wafer");
+  s.querySelector("title").textContent = `整體已背 ${n} / ${TOTAL} 個重點`;
+  s.setAttribute("aria-label", `整體背誦進度：已背 ${n} / ${TOTAL} 個重點`);
+}
+
+/* ===== 評分比重：七段數字從 0 滾到目標 ===== */
+const gradeSegs = [...document.querySelectorAll("#grade span")].map(sp => {
+  const o = seg7(2), b = sp.querySelector("b");
+  b.appendChild(o.el); b.insertAdjacentHTML("beforeend", "<small>%</small>");
+  b.setAttribute("aria-label", sp.dataset.v + "%");
+  return { o, v: +sp.dataset.v };
+});
+function replayGrade(){
+  const g = document.getElementById("grade");
+  g.classList.add("reset"); void g.offsetWidth; g.classList.remove("reset");
+  gradeSegs.forEach(({ o, v }, i) => setTimeout(() => roll(o, v, 0, 900), RM.matches ? 0 : i * 90));
+}
+
+function wrap(text, max){
+  const toks = text.match(/[A-Za-z0-9.,'’\-\/~²µ+]+|\s+|[^\sA-Za-z0-9.,'’\-\/~²µ+]/g) || [];
+  const tw = s => [...s].reduce((a, c) => a + (c.charCodeAt(0) < 256 || "²µ’".includes(c) ? 0.56 : 1), 0);
+  const lines = []; let line = "", w = 0;
+  for (const tk of toks) {
+    const k = tw(tk);
+    if (w + k > max && line.trim() && !(/^[，。、；：」）？！]$/.test(tk) && w + k <= max + 1)) { lines.push(line.trimEnd()); line = ""; w = 0; if (/^\s+$/.test(tk)) continue; }
+    line += tk; w += k;
+  }
+  if (line.trim()) lines.push(line.trimEnd());
+  return lines;
+}
+/* 一行文字：遇到圖示佔位字元留空位，之後量字寬把 SVG 圖示放上去 */
+function textLine(parent, s, x, y, attrs){
+  const t = el("text", Object.assign({ x, y }, attrs), parent);
+  s.split(ICON_SPLIT).forEach(p => {
+    if (!p) return;
+    const ts = el("tspan", {}, t);
+    if (ICON[p]) { ts.textContent = "  "; ts.dataset.icon = iconName(p); } else ts.textContent = p;
+  });
+  return t;
+}
+function placeIcons(svg){
+  svg.querySelectorAll("tspan[data-icon]").forEach(ts => {
+    const t = ts.parentNode; let before = 0;
+    for (const n of t.childNodes) { if (n === ts) break; before += n.getComputedTextLength(); }
+    const x = +t.getAttribute("x") + before + 1, y = +t.getAttribute("y") - 12, fs = 14;
+    const g = el("g", { transform: `translate(${x} ${y}) scale(${fs / 24})` });
+    const inner = el("g", { class: "tic ticon" }, g); inner.innerHTML = ICONS[ts.dataset.icon];
+    t.parentNode.insertBefore(g, t.nextSibling);
+  });
+}
+
+/* ===== 樹狀圖：寬度跟著框流動 ===== */
+function draw(t, qi, availPx, anim){
+  const FS = 14, LH = 21, PAD = 10, GAP = 10, BGAP = 22; const K = (window.__fontPx || 19) / 15;
+  const MIN_W = 826, W = Math.max(MIN_W, Math.floor(availPx / K)), extra = W - MIN_W;
+  const ROOT_W = 176 + Math.min(extra * .08, 40), BR_W = 196 + Math.min(extra * .14, 70), X0 = 10;
+  const XR = X0 + ROOT_W + 6, XM = XR + 22, X1 = XM + 30, XL = X1 + BR_W + 22, X2 = XL + 22;
+  const LF_W = W - X2 - 8;
+  const leafChars = Math.max(12, Math.floor((LF_W - 62) / FS));
+  let y = 10; const branches = [];
+  t.b.forEach(([name, leaves], bi) => {
+    const bl = wrap(name, Math.floor((BR_W - 24) / 15));
+    const bh = bl.length * LH + PAD * 2 + 16;
+    const folded = fold.has(qi + "-" + bi);
+    const items = folded ? [] : leaves.map((s, li) => { const ls = wrap(s, leafChars); return { li, ls, h: ls.length * LH + PAD * 2 }; });
+    const span = items.reduce((a, it) => a + it.h + GAP, 0) - (items.length ? GAP : 0);
+    // 先把測試墊相對排好，再決定 IC 中線 cy：
+    // 奇數個＝IC 中線對準正中間那個測試墊的中線（接線一直線不轉折）；偶數個＝對準整組的中間
+    let rel = 0; items.forEach(it => { it.r = rel; rel += it.h + GAP; });
+    const mid = items.length % 2 ? items[(items.length - 1) / 2] : null;
+    const m = mid ? mid.r + mid.h / 2 : span / 2;          // 從第一個測試墊頂端量到 IC 中線的距離
+    const up = Math.max(m, bh / 2), down = Math.max(span - m, bh / 2), top = y, cy = top + up;
+    items.forEach(it => { it.y = cy - m + it.r; });
+    if (mid) mid.y = cy - mid.h / 2;                       // 消掉浮點誤差，保證正中間那條是完全水平
+    branches.push({ bi, name: bl, items, n: leaves.length, folded, cy, bh, ref: "U" + (bi + 2) });
+    y = top + up + down + BGAP;
+  });
+  const rootLines = wrap(t.title, Math.floor((ROOT_W - 20) / 16));
+  const rh = Math.max(rootLines.length * 22 + 62, 100);
+  const H = Math.max(y - BGAP + 10, 140, rh + 20);
+  const svg = el("svg", { class: "tree" + (anim ? " draw" : ""), viewBox: `0 0 ${W} ${H}`, width: Math.floor(W * K), height: Math.round(H * K), role: "group", "aria-label": `申論題${t.k}重點樹：${t.title}` });
+  const ry = H / 2 - rh / 2;
+  const ad = (yy, base, span) => (base + (yy / H) * span).toFixed(3) + "s";
+
+  // 走線（直角）：根 → 匯流排 → 分支；分支 → 匯流排 → 葉子。每條都疊一條「通電」線
+  // data-k＝每個零件的固定代號，收合／展開時拿新舊兩版同代號的零件對照，做平滑移動（見 morph）
+  svg.dataset.x1e = X1 + BR_W; svg.dataset.xl = XL; svg.dataset.x2 = X2;
+  branches.forEach(b => {
+    const d = `M${XR},${H / 2} H${XM} V${b.cy} H${X1}`, B = b.bi;
+    el("path", { d, class: "tr", pathLength: 1, "data-b": B, "data-k": "t" + B, style: `--ad:${ad(b.cy, .05, .3)}` }, svg);
+    el("path", { d, class: "pw t", pathLength: 1, "data-b": B, "data-k": "tw" + B }, svg);
+    el("path", { d, class: "pz t", pathLength: 1, "data-k": "tz" + B }, svg);
+    if (b.folded) {
+      el("path", { d: `M${X1 + BR_W},${b.cy} H${X1 + BR_W + 12}`, class: "tr l", pathLength: 1, "data-k": "s" + B, "data-b": B, style: `--ad:${ad(b.cy, .3, .35)}` }, svg);
+    }
+    b.items.forEach(it => {
+      const ly = it.y + it.h / 2, dl = `M${X1 + BR_W},${b.cy} H${XL} V${ly} H${X2}`, L = B + "-" + it.li;
+      el("path", { d: dl, class: "tr l", pathLength: 1, "data-b": B, "data-k": "l" + L, style: `--ad:${ad(ly, .3, .35)}` }, svg);
+      el("path", { d: dl, class: "pw l", pathLength: 1, "data-b": B, "data-l": it.li, "data-k": "lw" + L }, svg);
+      el("path", { d: dl, class: "pz l", pathLength: 1, "data-b": B, "data-k": "lz" + L }, svg);
+      if (b.items.length > 1 && Math.abs(ly - b.cy) > 1) el("circle", { cx: XL, cy: ly, r: 2.4, class: "dot", "data-b": B, "data-k": "d" + L, style: `--ad:${ad(ly, .35, .35)}` }, svg);
+    });
+    if (!b.folded) el("circle", { cx: XL, cy: b.cy, r: 3.4, class: "via", "data-b": B, "data-k": "vl" + B, style: `--ad:${ad(b.cy, .3, .3)}` }, svg);
+    el("circle", { cx: XM, cy: b.cy, r: 3.6, class: "via", "data-k": "vm" + B, style: `--ad:${ad(b.cy, .08, .3)}` }, svg);
+  });
+  el("circle", { cx: XM, cy: H / 2, r: 3, class: "dot", "data-k": "c" }, svg);
+  branches.forEach((b, i) => el("path", { d: `M${XR},${H / 2} H${XM} V${b.cy} H${X1}`, class: "flow", pathLength: 1, "data-k": "tf" + b.bi, style: `animation-delay:${(i * .7).toFixed(2)}s` }, svg));
+
+  // 根：晶片封裝
+  const gr = el("g", { class: "n-root", tabindex: 0, role: "button", "data-k": "root", "data-y": ry, "aria-label": `申論題${t.k}：點一下全部收合或展開` }, svg);
+  const pins = Math.max(3, Math.floor((rh - 20) / 14));
+  for (let i = 0; i < pins; i++) {
+    const py = ry + 10 + i * ((rh - 26) / (pins - 1));
+    el("rect", { x: X0 - 6, y: py, width: 6, height: 6, class: "pin" }, gr);
+    el("rect", { x: X0 + ROOT_W, y: py, width: 6, height: 6, class: "pin src" }, gr);
+  }
+  el("rect", { x: X0, y: ry, width: ROOT_W, height: rh, rx: 2, class: "chip" }, gr);
+  el("circle", { cx: X0 + 12, cy: ry + 12, r: 3.2, fill: "none", stroke: "var(--pin)", "stroke-width": 1.2 }, gr);
+  textLine(gr, `申論題${t.k}`, X0 + ROOT_W / 2, ry + 30, { "text-anchor": "middle", "font-size": 12, class: "chipt", opacity: .75, "letter-spacing": 2 });
+  rootLines.forEach((s, i) => textLine(gr, s, X0 + ROOT_W / 2, ry + 54 + i * 22, { "text-anchor": "middle", "font-size": 16, "font-weight": 700, class: "chipt" }));
+  textLine(gr, "U1", X0 + ROOT_W - 10, ry + rh - 10, { "text-anchor": "end", "font-size": 9.5, class: "m chipt", opacity: .55 });
+  bindNode(gr, { kind: "root" });
+
+  // 分支＝小 IC（LED＋編號）；葉子＝測試墊（狀態燈＋PASS 標籤＋背誦封膠）
+  branches.forEach(b => {
+    const by = b.cy - b.bh / 2;
+    const g = el("g", { class: "n-br" + (b.folded ? " fold" : ""), "data-b": b.bi, "data-k": "b" + b.bi, "data-y": by, "data-cy": b.cy, tabindex: 0, role: "button",
+      "aria-expanded": String(!b.folded), "aria-label": `${b.ref} ${b.name.join("")}，${b.n} 個重點，點一下${b.folded ? "展開" : "收合"}`, style: `--ad:${ad(b.cy, .15, .35)}` }, svg);
+    el("rect", { x: X1, y: by, width: BR_W, height: b.bh, rx: 1, class: "ic" }, g);
+    el("path", { d: `M${X1 + BR_W / 2 - 7},${by} A7,7 0 0 0 ${X1 + BR_W / 2 + 7},${by}`, class: "notch" }, g);
+    textLine(g, b.ref, X1 + 12, by + PAD + 9, { "font-size": 9.5, class: "m cu ref", "font-weight": 600 });
+    textLine(g, (b.folded ? "收合 " : "PADS ") + String(b.n).padStart(2, "0"), X1 + BR_W - 24, by + PAD + 9, { "font-size": 9, class: "m mut", "text-anchor": "end" });
+    el("circle", { cx: X1 + BR_W - 13, cy: by + PAD + 5.5, r: 3.2, class: "bled" }, g);
+    b.name.forEach((s, i) => textLine(g, s, X1 + 12, by + PAD + 31 + i * LH, { "font-size": 15, "font-weight": 700, class: "ink" }));
+    bindNode(g, { kind: "br", b: b.bi });
+
+    b.items.forEach(it => {
+      const key = `${qi}-${b.bi}-${it.li}`, ly = it.y + it.h / 2, px = X2 + 8, pw = LF_W - 8;
+      const lg = el("g", { class: "n-lf" + (done.has(key) ? " pass" : "") + (revealed.has(key) ? " open" : ""), "data-b": b.bi, "data-l": it.li, "data-k": `f${b.bi}-${it.li}`, "data-y": it.y + it.h / 2,
+        tabindex: 0, role: "button", "aria-pressed": String(done.has(key)), "aria-label": t.b[b.bi][1][it.li].replace(ICON_RE, "") + "（點一下標成背過了）", style: `--ad:${ad(ly, .4, .35)}` }, svg);
+      el("circle", { cx: X2, cy: ly, r: 4, class: "sd" }, lg);
+      el("rect", { x: px, y: it.y, width: pw, height: it.h, rx: 1, class: "pad" }, lg);
+      el("rect", { x: px + 10, y: it.y + PAD + 5, width: 7, height: 7, class: "pled" }, lg);
+      it.ls.forEach((s, i) => textLine(lg, s, px + 26, it.y + PAD + 15 + i * LH, { "font-size": FS, class: "ink" }));
+      const bd = el("g", { class: "badge" }, lg);
+      el("rect", { x: px + pw - 44, y: it.y - 6, width: 36, height: 12, rx: 1 }, bd);
+      const bt = el("text", { x: px + pw - 26, y: it.y + 3.2, "font-size": 8.5, "text-anchor": "middle" }, bd); bt.textContent = "PASS";
+      const mg = el("g", { class: "mold" }, lg);
+      el("rect", { x: px + 22, y: it.y + 5, width: pw - 30, height: it.h - 10, rx: 1 }, mg);
+      el("circle", { cx: px + 30, cy: it.y + 13, r: 2.4 }, mg);
+      const mt = el("text", { x: px + 22 + (pw - 30) / 2, y: it.y + it.h / 2 + 3.5, "font-size": 9.5, "text-anchor": "middle" }, mg); mt.textContent = "MOLDED · 點一下開封";
+      bindNode(lg, { kind: "lf", b: b.bi, l: it.li });
+    });
+  });
+  PW.paint(svg); // 「每個分支不同色」時，幫每個分支的零件上各自的顏色
+  return svg;
+}
+
+/* ===== 通電：根 → 分支 → 測試墊依序亮起 ===== */
+function curSvg(){ return document.querySelector("#sc svg.tree"); }
+function on(e, d){
+  if (!e) return; e.style.setProperty("--dl", d.toFixed(3) + "s"); e.classList.add("on");
+  const z = e.nextElementSibling; // 通電線後面緊跟著的亮脈衝：等電流畫到底再開始跑
+  if (e.classList.contains("pw") && z && z.classList.contains("pz")) { z.style.setProperty("--dl", (d + .22).toFixed(3) + "s"); z.classList.add("on"); }
+}
+function power(svg, b, l){
+  if (!svg) return;
+  svg.classList.add("hot"); PW.lamp(b);
+  svg.querySelectorAll(".pw.on,.pz.on,.n-br.on,.n-lf.on").forEach(e => { e.style.setProperty("--dl", "0s"); e.classList.remove("on"); });
+  const all = b < 0, bs = all ? T[cur].b.map((_, i) => i) : [b];
+  bs.forEach((bi, k) => {
+    const base = all ? k * .07 : 0;
+    on(svg.querySelector(`.pw.t[data-b="${bi}"]`), base);
+    on(svg.querySelector(`.n-br[data-b="${bi}"]`), base + .22);
+    let j = 0;
+    svg.querySelectorAll(`.pw.l[data-b="${bi}"]`).forEach(p => {
+      const li = +p.dataset.l; if (l !== undefined && l !== li) return;
+      const d = base + .26 + j++ * .07;
+      on(p, d); on(svg.querySelector(`.n-lf[data-b="${bi}"][data-l="${li}"]`), d + .18);
+    });
+  });
+}
+function unpower(svg){
+  if (!svg) return;
+  svg.classList.remove("hot"); PW.lamp(null);
+  svg.querySelectorAll(".on").forEach(e => { e.style.setProperty("--dl", "0s"); e.classList.remove("on"); });
+}
+/* ===== 收合／展開的平滑過場 =====
+   新舊兩版樹用 data-k 對照：同一個零件 → 從舊位置滑到新位置（走線用 d 補間）；
+   新出現的測試墊 → 從 IC 那邊滑出、走線從 IC 端長出；消失的 → 留一個殘影縮回 IC 再刪掉。 */
+const MD = 420, ME = "cubic-bezier(.3,.7,.3,1)";
+function morph(old, s){
+  if (!old || !s || RM.matches || !s.animate) return;
+  const om = new Map(); old.querySelectorAll("[data-k]").forEach(e => om.set(e.dataset.k, e));
+  const A = (e, kf, o) => { try { return e.animate(kf, Object.assign({ duration: MD, easing: ME, fill: "backwards" }, o)); } catch (_) { return null; } };
+  const newCy = bi => { const g = s.querySelector(`.n-br[data-b="${bi}"]`); return g ? +g.dataset.cy : 0; };
+  const { x1e, xl, x2 } = s.dataset;
+  const stub = cy => `path("M${x1e},${cy} H${xl} V${cy} H${x2}")`;
+  const cyOf = e => e.tagName === "circle" ? +e.getAttribute("cy") : +e.dataset.y;
+  s.querySelectorAll("[data-k]").forEach(e => {
+    const k = e.dataset.k, o = om.get(k), tag = e.tagName;
+    if (o) { // 兩版都有：平滑移到新位置
+      om.delete(k);
+      if (tag === "path") { const a = o.getAttribute("d"), b = e.getAttribute("d"); if (a !== b) A(e, [{ d: `path("${a}")` }, { d: `path("${b}")` }]); }
+      else { const dy = cyOf(o) - cyOf(e); if (Math.abs(dy) > .5) A(e, [{ transform: `translate(0px,${dy}px)` }, { transform: "translate(0px,0px)" }]); }
+      return;
+    }
+    if (e.dataset.b === undefined) return;
+    const cy = newCy(e.dataset.b), li = +(e.dataset.l || 0), dl = 60 + li * 40;
+    if (k[0] === "s") A(e, [{ opacity: 0 }, { opacity: 1 }], { delay: MD * .6, duration: 200 }); // 收合後的短接頭
+    else if (tag === "g") A(e, [{ opacity: 0, transform: `translate(-24px,${(cy - cyOf(e)) * .7}px)` }, { opacity: 1, transform: "translate(0px,0px)" }], { delay: dl });
+    else if (tag === "path" && e.classList.contains("tr")) A(e, [{ d: stub(cy), strokeDasharray: "1 1", strokeDashoffset: 1 }, { d: `path("${e.getAttribute("d")}")`, strokeDasharray: "1 1", strokeDashoffset: 0 }], { delay: dl - 40 });
+    else if (tag === "circle") A(e, [{ opacity: 0 }, { opacity: 1 }], { delay: dl + 120, duration: 240 });
+  });
+  // 舊版才有的（被收起來的測試墊、走線）：搬進新圖當殘影，縮回 IC 後刪掉
+  const first = s.querySelector(".n-root"), ghosts = [];
+  om.forEach(o => {
+    if (o.dataset.b === undefined) return;
+    const cy = newCy(o.dataset.b), li = +(o.dataset.l || 0), tag = o.tagName, from = cyOf(o), isStub = o.dataset.k[0] === "s", op0 = getComputedStyle(o).opacity;
+    [o, ...o.querySelectorAll("*")].forEach(n => { ["data-k", "data-b", "data-l", "tabindex", "role", "aria-label", "aria-pressed"].forEach(a => n.removeAttribute(a)); });
+    o.classList.add("ghost"); o.setAttribute("aria-hidden", "true");
+    s.insertBefore(o, first); ghosts.push(o);
+    const opt = { fill: "forwards", delay: li * 25 };
+    if (isStub) A(o, [{ opacity: op0 }, { opacity: 0 }], { fill: "forwards", duration: 140 });
+    else if (tag === "g") A(o, [{ opacity: op0, transform: "translate(0px,0px)" }, { opacity: 0, transform: `translate(-24px,${(cy - from) * .7}px)` }], Object.assign(opt, { duration: MD * .8 }));
+    else if (tag === "path" && o.classList.contains("tr")) A(o, [{ d: `path("${o.getAttribute("d")}")`, strokeDasharray: "1 1", strokeDashoffset: 0 }, { d: stub(cy), strokeDasharray: "1 1", strokeDashoffset: 1 }], opt);
+    else if (tag === "circle") A(o, [{ opacity: 1, transform: "translate(0px,0px)" }, { opacity: 0, transform: `translate(0px,${cy - from}px)` }], Object.assign(opt, { duration: MD * .6 }));
+    else A(o, [{ opacity: op0 }, { opacity: 0 }], { fill: "forwards", duration: 160 });
+  });
+  s.classList.add("morphing");
+  setTimeout(() => { ghosts.forEach(g => g.remove()); s.classList.remove("morphing"); }, MD + 260);
+}
+const PW = { hop(){}, paint(){}, lamp(){} }; // 通電色程式會換成真的函式：hop＝每次滑過換色、paint＝分支上色、lamp＝狀態燈
+function target(n){ return n.kind === "root" ? [-1] : [n.b, n.kind === "lf" ? n.l : undefined]; }
+function pulse(n){
+  clearTimeout(pulseTimer);
+  PW.hop(); const s = curSvg(); power(s, ...target(n));
+  pulseTimer = setTimeout(() => { const s2 = curSvg(); if (hoverT) power(s2, ...target(hoverT)); else unpower(s2); }, 1300);
+}
+function bindNode(g, n){
+  const enter = () => { hoverT = n; clearTimeout(pulseTimer); PW.hop(); power(curSvg(), ...target(n)); };
+  const leave = () => { if (hoverT === n) hoverT = null; clearTimeout(pulseTimer); unpower(curSvg()); };
+  g.addEventListener("pointerenter", enter); g.addEventListener("pointerleave", leave);
+  g.addEventListener("focus", enter); g.addEventListener("blur", leave);
+  g.addEventListener("click", () => act(n, g));
+  g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(n, g); } });
+}
+
+/* ===== 點擊動作（樹與清單共用） ===== */
+function act(n, node){
+  if (n.kind === "lf") {
+    const key = `${cur}-${n.b}-${n.l}`;
+    if (recite && !revealed.has(key)) { revealed.add(key); node.classList.add("open"); }
+    else {
+      const before = passCount(cur);
+      done.has(key) ? done.delete(key) : done.add(key);
+      store.putSet("c-chip-done", done);
+      node.classList.toggle("pass", done.has(key)); node.setAttribute("aria-pressed", String(done.has(key)));
+      updateProgress(before);
+    }
+    if (node.closest("svg")) pulse(n);
+  } else if (n.kind === "br") {
+    const key = `${cur}-${n.b}`, opening = fold.has(key);
+    opening ? fold.delete(key) : fold.add(key);
+    store.putSet("c-chip-fold", fold);
+    renderBody({ boot: [n.b], opening, focus: n, morph: true });
+  } else {
+    const anyOpen = T[cur].b.some((_, bi) => !fold.has(`${cur}-${bi}`));
+    T[cur].b.forEach((_, bi) => anyOpen ? fold.add(`${cur}-${bi}`) : fold.delete(`${cur}-${bi}`));
+    store.putSet("c-chip-fold", fold);
+    renderBody({ boot: T[cur].b.map((_, i) => i), opening: !anyOpen, focus: n, morph: true });
+  }
+}
+
+/* ===== 清單：網表 ===== */
+function listView(t, qi, anim){
+  const box = document.createElement("div"); box.className = "list" + (anim ? " draw" : "");
+  box.innerHTML = `<button type="button" class="root" style="--i:0"><span class="mono">U1</span><span>申論題${esc(t.k)}｜${esc(t.title)}</span></button>` +
+    t.b.map(([name, leaves], bi) => {
+      const f = fold.has(`${qi}-${bi}`);
+      return `<section data-b="${bi}" class="${f ? "fold" : ""}" style="--i:${bi + 1}"><h3><button type="button" class="bh" aria-expanded="${!f}"><span class="mono">U${bi + 2}</span><span class="nm">${esc(name)}</span><span class="mono cnt">PADS ${String(leaves.length).padStart(2, "0")}</span><span class="lb"></span>${ico("chev")}</button></h3><ul>${
+        leaves.map((s, li) => { const k = `${qi}-${bi}-${li}`;
+          return `<li class="n-li${done.has(k) ? " pass" : ""}${revealed.has(k) ? " open" : ""}" data-b="${bi}" data-l="${li}" tabindex="0" role="button" aria-pressed="${done.has(k)}"><span class="t">${withIcons(s)}</span><span class="ptag">PASS</span></li>`; }).join("")
+      }</ul></section>`; }).join("");
+  box.querySelector(".root").onclick = () => act({ kind: "root" });
+  box.querySelectorAll(".bh").forEach(h => h.onclick = () => act({ kind: "br", b: +h.closest("section").dataset.b }));
+  box.querySelectorAll(".n-li").forEach(li => {
+    const n = { kind: "lf", b: +li.dataset.b, l: +li.dataset.l };
+    li.onclick = () => act(n, li);
+    li.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(n, li); } };
+  });
+  return box;
+}
+
+/* ===== 讀數列 ===== */
+let RO = {};
+function updateProgress(before){
+  const p = passCount(cur), n = leafCount(cur);
+  if (RO.pass) roll(RO.pass, p, before === undefined ? 0 : before, 500);
+  if (RO.yld) roll(RO.yld, Math.round(p / n * 100), before === undefined ? 0 : Math.round(before / n * 100), 500);
+  const bar = document.getElementById("ybar"); if (bar) bar.style.transform = `scaleX(${n ? p / n : 0})`;
+  updateTabLeds(); updateWafer();
+}
+function updateTabLeds(){
+  document.querySelectorAll(".tab").forEach((b, i) => {
+    const p = passCount(i), n = leafCount(i), led = b.querySelector(".tled");
+    led.className = "tled" + (p === 0 ? "" : p >= n ? " full" : " part");
+    b.title = `已背 ${p} / ${n}`;
+  });
+}
+
+let view = store.get("c-chip-view", null);
+function curView(){ return view || (window.matchMedia("(max-width: 760px)").matches ? "list" : "tree"); }
+function modeBtns(){
+  const b = document.getElementById("mode");
+  b.innerHTML = [["tree","樹狀圖"],["list","清單"]].map(([k, n]) => `<button type="button" data-v="${k}" aria-pressed="${curView() === k}">${ico(k)}${n}</button>`).join("");
+  b.querySelectorAll("button").forEach(x => x.onclick = () => { view = x.dataset.v; store.set("c-chip-view", view); modeBtns(); renderBody({ anim: true }); });
+}
+
+let lastW = 0;
+function renderBody(o){
+  o = o || {};
+  const sc = document.getElementById("sc"); if (!sc) return;
+  const t = T[cur], tree = curView() !== "list";
+  const keep = sc.scrollLeft, hadFocus = sc.contains(document.activeElement);
+  const old = o.morph ? sc.querySelector("svg.tree") : null, st = document.getElementById("stage"), h0 = st ? st.offsetHeight : 0;
+  if (old) [...sc.children].forEach(c => { if (c !== old) c.remove(); }); else sc.innerHTML = "";
+  lastW = sc.clientWidth;
+  const anim = o.anim && !RM.matches;
+  if (tree) {
+    const s = draw(t, cur, sc.clientWidth, anim); sc.appendChild(s); placeIcons(s);
+    if (old) { // 舊圖先留著給 morph 對照位置，對照完才拿掉；外框高度也從舊高度平滑變到新高度
+      morph(old, s); old.remove();
+      const h1 = st.offsetHeight;
+      if (Math.abs(h1 - h0) > 1 && !RM.matches) st.animate([{ height: h0 + "px" }, { height: h1 + "px" }], { duration: MD, easing: ME });
+    }
+    if (anim) setTimeout(() => s.classList.remove("draw"), 1400);
+    (o.boot || []).forEach(bi => { const g = s.querySelector(`.n-br[data-b="${bi}"]`); if (g) g.classList.add(o.opening ? "boot" : "shut"); });
+    if (o.focus) {
+      const sel = o.focus.kind === "root" ? ".n-root" : `.n-br[data-b="${o.focus.b}"]`, g = s.querySelector(sel);
+      if (g && hadFocus) g.focus({ preventScroll: true });
+    }
+    // 滑鼠還停在原本的節點上：新圖直接接著通電（不用等滑鼠再動一下）
+    if (hoverT && hoverT.kind !== "lf") power(s, ...target(hoverT));
+    else if (o.focus && o.opening) setTimeout(() => pulse(o.focus), 120);
+  } else {
+    const l = listView(t, cur, anim); sc.appendChild(l);
+    (o.boot || []).forEach(bi => { const se = l.querySelector(`section[data-b="${bi}"]`); if (se && o.opening) se.classList.add("boot"); });
+    if (o.focus && o.focus.kind === "br") { const h = l.querySelector(`section[data-b="${o.focus.b}"] .bh`); if (h && hadFocus) h.focus({ preventScroll: true }); }
+  }
+  sc.scrollLeft = keep;
+  const sw = document.getElementById("swipe");
+  if (sw) sw.hidden = !tree || sc.scrollWidth <= sc.clientWidth + 1;
+  const hint = document.getElementById("hint");
+  if (hint) hint.innerHTML = tree ? "<i class=\"k\"></i>滑鼠移到 IC 看通電路徑｜點 IC 收合展開｜點測試墊標成背過了 <i class=\"k g\"></i>" : "<i class=\"k\"></i>點分支標題收合展開｜點項目標成背過了 <i class=\"k g\"></i>";
+}
+
+function show(i, anim){
+  cur = i; revealed.clear(); hoverT = null;
+  document.querySelectorAll(".tab").forEach((b, k) => { b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+  { const bar = document.getElementById("tabs"), tb = bar.children[i];
+    const x = tb ? tb.offsetLeft - bar.offsetLeft : 0;
+    if (tb && (x < bar.scrollLeft || x + tb.offsetWidth > bar.scrollLeft + bar.clientWidth)) bar.scrollLeft = x - 16; }
+  const t = T[i], p = document.getElementById("panel");
+  p.innerHTML = `<span class="mono ref">Q${NUM[i]} / 06</span><h2>申論題${esc(t.k)}｜${esc(t.title)}</h2><p class="q">題目要點：${esc(t.q)}</p>
+    <div class="readout">
+      <div class="rd"><span class="mono">分支 BR</span><span class="v" id="r-br"></span></div>
+      <div class="rd"><span class="mono">重點 PADS</span><span class="v" id="r-pd"></span></div>
+      <div class="rd pass"><span class="mono">背過 PASS</span><span class="v" id="r-ps"></span></div>
+      <div class="rd yield"><span class="mono">良率 YIELD</span><span class="v" id="r-y"></span><div class="ybar"><i id="ybar"></i></div></div>
+      <button type="button" class="btn" id="retest">${ico("redo")}重測本題</button>
+    </div>
+    <div class="stage" id="stage"><div class="scan" aria-hidden="true"></div><div class="scroll" id="sc"></div></div>
+    <p class="tip"><span id="hint"><i class="k"></i>滑鼠移到 IC 看通電路徑｜點 IC 收合展開｜點測試墊標成背過了 <i class="k g"></i></span><span id="swipe" hidden>${ico("swipe")}手機上可以左右滑動看整棵樹</span></p>`;
+  RO = { br: seg7(2), pd: seg7(2), pass: seg7(2), yld: seg7(3) };
+  const put = (id, o, unit) => { const v = document.getElementById(id); v.appendChild(o.el); if (unit) v.insertAdjacentHTML("beforeend", `<small>${unit}</small>`); };
+  put("r-br", RO.br); put("r-pd", RO.pd); put("r-ps", RO.pass, "/ " + String(leafCount(i)).padStart(2, "0")); put("r-y", RO.yld, "%");
+  const rt = document.getElementById("retest");
+  let armT = 0;
+  const disarm = () => { clearTimeout(armT); rt.classList.remove("arm"); rt.innerHTML = ico("redo") + "重測本題"; };
+  rt.onclick = () => {
+    if (!rt.classList.contains("arm")) { // 第一次點：只進入確認狀態，3 秒內再點才清除
+      rt.classList.add("arm"); rt.innerHTML = ico("redo") + "再點一次確認"; armT = setTimeout(disarm, 3000); return;
+    }
+    disarm();
+    const before = passCount(cur);
+    [...done].forEach(k => { if (k.startsWith(cur + "-")) done.delete(k); });
+    store.putSet("c-chip-done", done);
+    rt.classList.remove("spin"); void rt.offsetWidth; rt.classList.add("spin");
+    document.querySelectorAll("#sc .pass").forEach(n => { n.classList.remove("pass"); n.setAttribute("aria-pressed", "false"); });
+    updateProgress(before);
+  };
+  renderBody({ anim });
+  const a = anim !== false;
+  roll(RO.br, t.b.length, 0, a ? 700 : 1); roll(RO.pd, leafCount(i), 0, a ? 900 : 1);
+  updateProgress(a ? undefined : passCount(i));
+  if (a) replayGrade();
+  if (anim && !RM.matches) { const st = document.getElementById("stage"); st.style.setProperty("--scan-d", st.offsetHeight + "px"); st.classList.remove("scanning"); void st.offsetWidth; st.classList.add("scanning"); }
+  store.set("c-chip-tab", String(i));
+}
+
+const tabs = document.getElementById("tabs");
+T.forEach((t, i) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab");
+  b.innerHTML = `<span class="mono">Q${NUM[i]}<i class="tled"></i></span><span>${esc(`${t.k}｜${t.title.split("＋")[0].split(" vs ")[0]}`)}</span>`;
+  b.onclick = () => { if (i !== cur) show(i, true); };
+  b.onkeydown = e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const n = (i + (e.key === "ArrowRight" ? 1 : -1) + T.length) % T.length;
+    show(n, true); tabs.children[n].focus();
+  };
+  tabs.appendChild(b);
+});
+
+/* 背誦模式 */
+(function(){
+  const b = document.getElementById("recite");
+  function apply(v, user){
+    recite = v; store.set("c-chip-recite", v ? "1" : "0");
+    document.body.classList.toggle("recite", v);
+    b.setAttribute("aria-pressed", String(v));
+    b.innerHTML = ico("eye") + (v ? "背誦模式：開" : "背誦模式：關");
+    if (user) { revealed.clear(); document.querySelectorAll("#sc .open").forEach(n => n.classList.remove("open")); }
+  }
+  b.onclick = () => apply(!recite, true);
+  apply(recite, false);
+})();
+
+/* 字體：小中大特大 */
+(function(){
+  const SIZES = [["小",16],["中",19],["大",22],["特大",25]];
+  const box = document.getElementById("fsz");
+  /* 選中底色是一塊會滑過去的方塊 */
+  function moveThumb(){
+    const th = box.querySelector(".thumb"), b = box.querySelector('[aria-pressed="true"]');
+    if (!th || !b) return;
+    const bw = box.offsetWidth || 1;
+    th.style.transform = `translateX(${b.offsetLeft}px) scaleX(${b.offsetWidth / bw})`;
+  }
+  window.addEventListener("resize", moveThumb);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveThumb);
+  function apply(px, redraw){
+    document.documentElement.style.fontSize = px + "px"; window.__fontPx = px;
+    store.set("c-chip-font", String(px));
+    box.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.px === px)));
+    requestAnimationFrame(moveThumb);
+    if (redraw) renderBody();
+  }
+  box.innerHTML = '<span class="thumb" aria-hidden="true"></span>' + SIZES.map(([n, px], i) => `<button type="button" data-px="${px}" aria-label="字體${n}"><span class="fa" style="--s:${.68 + i * .16}" aria-hidden="true">A</span>${n}</button>`).join("");
+  box.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const a = b.querySelector(".fa"); a.classList.remove("pop"); void a.offsetWidth; a.classList.add("pop");
+    apply(+b.dataset.px, true);
+  });
+  apply(+store.get("c-chip-font", 19) || 19, false);
+})();
+
+/* 主題：自動／淺色／深色 */
+(function(){
+  const OPTS = [["auto","自動","auto"],["light","淺色","sun"],["dark","深色","moon"]];
+  const box = document.getElementById("theme");
+  function apply(k){
+    if (k === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", k);
+    store.set("c-chip-theme", k);
+    box.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.t === k)));
+  }
+  box.innerHTML = OPTS.map(([k, n, ic]) => `<button type="button" data-t="${k}">${ico(ic)}${n}</button>`).join("");
+  box.querySelectorAll("button").forEach(b => b.onclick = () => apply(b.dataset.t));
+  apply(store.get("c-chip-theme", "auto"));
+})();
+
+/* 通電色：8 顆小色點＋我的色卡＋「自訂」＋「隨機」。選擇記在 localStorage
+   隨機：每次載入（重新整理）都重抽，而且跟上一次載入的結果不同（上一次的結果記在 localStorage）；再按一次「隨機」也會重抽
+   隨機方式：「一種顏色」＝全部同色；「每個分支不同色」＝每個 IC 分支（含走線、測試墊、亮點）各一色，同一題不重複
+   「每次滑過都換色」（預設關）：只在選「隨機」時有效，每次通電都重抽
+   自訂：取色器＋色碼文字框（#RRGGBB），即時套用；深色底預設自動推算亮一點的版本；可存成「我的色卡」（最多 6 個） */
+(function(){
+  const PRESET = [ // [代號, 名稱, 淺色底色碼, 深色底色碼]；琥珀改偏黃的「琥珀金」避開銅色走線
+    ["blue","電光藍","#1A73E8","#6CB8FF"], ["violet","低調紫","#7A5CC0","#B9A6F2"], ["green","亮綠","#00B862","#7CFFB0"],
+    ["cyan","青色","#0097A7","#5CE1E6"], ["amber","琥珀金","#C99700","#FFD54A"], ["magenta","洋紅粉","#D6337F","#FF7EC0"],
+    ["lime","萊姆綠","#5E9E00","#C6F35A"], ["coral","珊瑚紅","#E0464E","#FF8C8C"]
+  ].map(([k, n, l, d]) => ({ k, n, l, d }));
+  const MAX_MINE = 6, $ = id => document.getElementById(id), root = document.documentElement;
+  const norm = s => { const m = /^#?([0-9a-f]{6})$/i.exec(String(s == null ? "" : s).trim()); return m ? "#" + m[1].toUpperCase() : null; };
+  const readJSON = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch(e) { return d; } };
+  const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
+  /* 深色底版本：同色相，亮度往白色推一段（落在 66%～86%），在墨綠底上才夠亮 */
+  function lighten(hex){
+    const n = parseInt(hex.slice(1), 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), L = (mx + mn) / 2, D = mx - mn;
+    let h = 0, s = 0;
+    if (D) { s = D / (1 - Math.abs(2 * L - 1)); h = mx === r ? ((g - b) / D) % 6 : mx === g ? (b - r) / D + 2 : (r - g) / D + 4; h *= 60; if (h < 0) h += 360; }
+    const L2 = Math.min(.86, Math.max(.66, L + (1 - L) * .45)), C = (1 - Math.abs(2 * L2 - 1)) * s, X = C * (1 - Math.abs((h / 60) % 2 - 1)), m = L2 - C / 2;
+    const [a, bb, c] = h < 60 ? [C, X, 0] : h < 120 ? [X, C, 0] : h < 180 ? [0, C, X] : h < 240 ? [0, X, C] : h < 300 ? [X, 0, C] : [C, 0, X];
+    return "#" + [a, bb, c].map(v => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+  }
+  let mine = readJSON("c-chip-power-mine", []);
+  mine = (Array.isArray(mine) ? mine : []).map(c => c && { l: norm(c.l), d: norm(c.d) }).filter(c => c && c.l && c.d).slice(0, MAX_MINE);
+  let custom = readJSON("c-chip-power-custom", null);
+  custom = custom && norm(custom.l) ? { l: norm(custom.l), d: norm(custom.d) || lighten(norm(custom.l)), auto: custom.auto !== false } : { l: "#1A73E8", d: lighten("#1A73E8"), auto: true };
+  if (custom.auto) custom.d = lighten(custom.l);
+  const mineKey = c => "m" + c.l + c.d;
+  const all = () => PRESET.concat(mine.map((c, i) => ({ k: mineKey(c), n: "我的色卡 " + (i + 1), l: c.l, d: c.d })));
+  const byKey = k => all().find(c => c.k === k);
+  let sel = "random", rmode = store.get("c-chip-power-rmode", "one") === "multi" ? "multi" : "one", one = null, brs = [];
+  const multiOn = () => sel === "random" && rmode === "multi" && brs.length > 0;
+  const sig = a => a.slice(0, 6).map(c => c.k).join(",");
+  const rollOne = not => { const pool = all().filter(c => c.k !== not); return pool[Math.floor(Math.random() * pool.length)]; };
+  const rollMulti = not => { let a = []; for (let t = 0; t < 8; t++) { a = all().slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } if (sig(a) !== not) break; } return a; };
+  const isDark = () => getComputedStyle(root).colorScheme.indexOf("dark") >= 0;
+  const box = $("pwc"), rmBox = $("rmode"), hop = $("hop"), hopL = $("hopL"), panel = $("pwpanel"), lampEl = $("lamp");
+  const cl = $("cl"), clt = $("cl-t"), cd = $("cd"), cdt = $("cd-t"), cauto = $("cauto"), cerr = $("cerr"), csave = $("csave"), cnote = $("cnote"), mlist = $("mlist");
+
+  function setRoot(c){ root.style.setProperty("--pl", c.l); root.style.setProperty("--pd", c.d); root.setAttribute("data-power", c.k); }
+  /* 每個分支不同色：分支 bi 的零件（data-b，以及沒有 data-b 的主幹亮點 tz／待機亮點 tf）加 .bc 和各自的 --bl／--bd */
+  function paint(svg){
+    if (!svg) return;
+    const on = multiOn();
+    svg.querySelectorAll("[data-b],[data-k^='tz'],[data-k^='tf']").forEach(e => {
+      if (!on) { e.classList.remove("bc"); e.style.removeProperty("--bl"); e.style.removeProperty("--bd"); return; }
+      const bi = e.dataset.b !== undefined ? +e.dataset.b : +e.dataset.k.slice(2), c = brs[bi % brs.length];
+      e.classList.add("bc"); e.style.setProperty("--bl", c.l); e.style.setProperty("--bd", c.d);
+    });
+  }
+  /* 狀態燈：b＝null 待機；b＝-1 整棵通電；其他＝某個分支通電 */
+  function lamp(b){
+    const L = lampEl; if (!L) return;
+    L.style.removeProperty("--lamp"); L.style.removeProperty("--lamp-g");
+    if (b === null || b === undefined) { L.classList.remove("live"); return; }
+    if (multiOn()) {
+      const col = c => isDark() ? c.d : c.l;
+      if (b < 0) { const cs = T[cur].b.map((_, i) => col(brs[i % brs.length])); L.style.setProperty("--lamp", `conic-gradient(${cs.join(",")},${cs[0]})`); L.style.setProperty("--lamp-g", cs[0]); }
+      else { const c = col(brs[b % brs.length]); L.style.setProperty("--lamp", c); L.style.setProperty("--lamp-g", c); }
+    }
+    L.classList.add("live");
+  }
+  function ui(){
+    box.querySelectorAll("button[data-p]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === sel)));
+    const cus = box.querySelector(".cus"); if (cus) { cus.setAttribute("aria-expanded", String(!panel.hidden)); cus.style.setProperty("--c1", custom.l); cus.style.setProperty("--c2", custom.d); }
+    const off = sel !== "random";
+    rmBox.classList.toggle("off", off);
+    rmBox.querySelectorAll("button").forEach(b => { b.setAttribute("aria-pressed", String(b.dataset.r === rmode)); b.disabled = off; b.title = off ? "先選「隨機」才能用" : (b.dataset.r === "multi" ? "每個分支各用一種隨機顏色通電" : "整棵樹用同一種隨機顏色"); });
+    hop.disabled = off; hopL.classList.toggle("off", off);
+    hopL.title = off ? "先選「隨機」才能用" : "開啟後，每次通電都重新抽顏色";
+    const r = box.querySelector(".rnd");
+    if (r) r.title = rmode === "multi" ? "隨機・每個分支不同色（這次：" + brs.slice(0, T[cur].b.length).map(c => c.n).join("、") + "）" : "隨機・一種顏色（這次抽到：" + (one ? one.n : "") + "）";
+    paint(curSvg());
+  }
+  function apply(k, reroll){
+    if (k !== "random" && k !== "custom" && !byKey(k)) k = "random";
+    sel = k; store.set("c-chip-power", k);
+    if (k === "random") {
+      if (rmode === "multi") {
+        if (reroll || !brs.length) { brs = rollMulti(brs.length ? sig(brs) : store.get("c-chip-power-lastm", "")); store.set("c-chip-power-lastm", sig(brs)); }
+        setRoot(brs[0]);
+      } else {
+        if (reroll || !one) { one = rollOne(one ? one.k : store.get("c-chip-power-last", "")); store.set("c-chip-power-last", one.k); }
+        setRoot(one);
+      }
+    } else if (k === "custom") setRoot({ k: "custom", l: custom.l, d: custom.d });
+    else setRoot(byKey(k));
+    ui();
+  }
+  function renderDots(){
+    const dot = (c, cls) => `<button type="button" class="dot${cls}" data-p="${c.k}" title="${c.n}${cls ? "（淺 " + c.l + "／深 " + c.d + "）" : ""}" aria-label="${c.n}" style="--c1:${c.l};--c2:${c.d}"><i aria-hidden="true"></i></button>`;
+    box.innerHTML = PRESET.map(c => dot(c, "")).join("") + all().slice(PRESET.length).map(c => dot(c, " mine")).join("")
+      + `<button type="button" class="cus" data-p="custom" aria-controls="pwpanel" aria-expanded="false" title="自訂顏色：取色器或輸入色碼"><i class="sw" aria-hidden="true"></i>自訂</button>`
+      + `<button type="button" class="rnd" data-p="random"><i class="sw" aria-hidden="true"></i>隨機</button>`;
+    box.querySelectorAll("button[data-p]").forEach(b => b.onclick = () => {
+      if (b.dataset.p === "custom") { panel.hidden = !panel.hidden; if (!panel.hidden) { fill(); apply("custom"); clt.focus(); } else ui(); return; }
+      apply(b.dataset.p, true);
+    });
+  }
+  function renderMine(){
+    mlist.innerHTML = mine.length ? mine.map((c, i) => `<span class="chipc" style="--c1:${c.l};--c2:${c.d}"><i aria-hidden="true"></i>${c.l}<button type="button" data-i="${i}" title="刪除這個色卡" aria-label="刪除我的色卡 ${i + 1}">×</button></span>`).join("")
+      : `<span class="note">還沒有。調好顏色後按「存成我的色卡」，最多 ${MAX_MINE} 個</span>`;
+    mlist.querySelectorAll("button").forEach(b => b.onclick = () => {
+      const c = mine[+b.dataset.i]; if (!c) return;
+      const was = sel === mineKey(c);
+      mine.splice(+b.dataset.i, 1); writeJSON("c-chip-power-mine", mine);
+      cnote.textContent = "已刪除 " + c.l;
+      renderDots(); renderMine(); apply(was ? "custom" : sel, false);
+    });
+    csave.disabled = mine.length >= MAX_MINE;
+    csave.title = csave.disabled ? `色卡已滿 ${MAX_MINE} 個，先刪掉一個` : "把目前的自訂顏色加到色點列";
+  }
+  /* 自訂面板 */
+  const bad = { l: false, d: false };
+  function showErr(){ cerr.textContent = bad.l || bad.d ? "色碼格式不對（還沒套用）：要是 # 加 6 位 0–9 或 A–F，例如 #1A73E8" : ""; }
+  function fill(){
+    cl.value = custom.l.toLowerCase(); clt.value = custom.l; cd.value = custom.d.toLowerCase(); cdt.value = custom.d; cauto.checked = custom.auto;
+    bad.l = bad.d = false; clt.setAttribute("aria-invalid", "false"); cdt.setAttribute("aria-invalid", "false"); showErr();
+  }
+  function commit(){ writeJSON("c-chip-power-custom", custom); apply("custom"); }
+  function setL(v){ custom.l = v; cl.value = v.toLowerCase(); if (clt.value.toUpperCase() !== v) clt.value = v; if (custom.auto) { custom.d = lighten(v); cd.value = custom.d.toLowerCase(); cdt.value = custom.d; bad.d = false; cdt.setAttribute("aria-invalid", "false"); } commit(); }
+  function setD(v){ custom.d = v; custom.auto = false; cauto.checked = false; cd.value = v.toLowerCase(); if (cdt.value.toUpperCase() !== v) cdt.value = v; commit(); }
+  function textField(inp, which, set){
+    const check = final => {
+      const v = norm(inp.value), raw = inp.value.trim();
+      bad[which] = !v && (final || raw.length >= 7 || /[^#0-9a-f]/i.test(raw) || raw.indexOf("#") > 0);
+      inp.setAttribute("aria-invalid", String(bad[which])); showErr();
+      if (v) set(v);
+    };
+    inp.addEventListener("input", () => check(false));
+    inp.addEventListener("change", () => check(true));
+  }
+  textField(clt, "l", setL); textField(cdt, "d", setD);
+  cl.addEventListener("input", () => { bad.l = false; clt.setAttribute("aria-invalid", "false"); showErr(); setL(norm(cl.value)); });
+  cd.addEventListener("input", () => { bad.d = false; cdt.setAttribute("aria-invalid", "false"); showErr(); setD(norm(cd.value)); });
+  cauto.onchange = () => { custom.auto = cauto.checked; if (custom.auto) custom.d = lighten(custom.l); fill(); commit(); };
+  csave.onclick = () => {
+    if (mine.length >= MAX_MINE) { cnote.textContent = `色卡已滿 ${MAX_MINE} 個，先刪掉一個`; return; }
+    if (mine.some(c => c.l === custom.l && c.d === custom.d)) { cnote.textContent = "這組顏色已經在色卡裡了"; return; }
+    mine.push({ l: custom.l, d: custom.d }); writeJSON("c-chip-power-mine", mine);
+    cnote.textContent = `已存成第 ${mine.length} 個色卡（色點列最後面）`;
+    renderDots(); renderMine(); apply(mineKey(mine[mine.length - 1]), false);
+  };
+  const closePanel = () => { panel.hidden = true; ui(); const c = box.querySelector(".cus"); if (c) c.focus(); };
+  $("cclose").onclick = closePanel;
+  panel.addEventListener("keydown", e => { if (e.key === "Escape") closePanel(); });
+  rmBox.querySelectorAll("button").forEach(b => b.onclick = () => { if (sel !== "random") return; rmode = b.dataset.r; store.set("c-chip-power-rmode", rmode); apply("random", true); });
+  hop.checked = store.get("c-chip-power-hop", "0") === "1";
+  hop.onchange = () => store.set("c-chip-power-hop", hop.checked ? "1" : "0");
+  PW.hop = () => {
+    if (sel !== "random" || !hop.checked) return;
+    if (rmode === "multi") { brs = rollMulti(sig(brs)); store.set("c-chip-power-lastm", sig(brs)); setRoot(brs[0]); paint(curSvg()); }
+    else { one = rollOne(one && one.k); store.set("c-chip-power-last", one.k); setRoot(one); }
+  };
+  PW.paint = paint; PW.lamp = lamp;
+  renderDots(); renderMine();
+  apply(store.get("c-chip-power", "random"), true); // 每次載入都重抽（跟上次不同）
+})();
+
+/* 背景格點：滑鼠附近微亮 */
+(function(){
+  const g = document.getElementById("glow"); let raf = 0, x = -999, y = -999;
+  const paint = () => { raf = 0; g.style.setProperty("--mx", x + "px"); g.style.setProperty("--my", y + "px"); };
+  const UI = "header,.tabs,.ctl,.panel,.outline,button";
+  document.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    g.classList.toggle("off", !!(e.target.closest && e.target.closest(UI))); // 滑鼠在 UI 元件上就不亮
+    x = e.clientX; y = e.clientY; if (!raf) raf = requestAnimationFrame(paint);
+  });
+  document.documentElement.addEventListener("pointerleave", () => { x = y = -999; if (!raf) raf = requestAnimationFrame(paint); });
+})();
+
+/* 寬度改變就重排樹（不重播動畫） */
+let rsT = 0;
+window.addEventListener("resize", () => { clearTimeout(rsT); rsT = setTimeout(() => { const sc = document.getElementById("sc"); if (sc && Math.abs(sc.clientWidth - lastW) > 4) renderBody(); }, 120); });
+
+modeBtns();
+show(Math.min(+store.get("c-chip-tab", 0) || 0, T.length - 1), true);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderBody());
+</script>
+
+<div id="stsw-host"></div>
+<script>
+(function(){
+  try { localStorage.setItem("essay-map-style", "c"); } catch(e) {}
+  const host = document.getElementById("stsw-host");
+  const root = host.attachShadow({mode: "open"});
+  root.innerHTML = `<style>
+    :host{all:initial}
+    .wrap{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:2147483000;font:14px/1.5 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+    button{font:inherit;cursor:pointer;border:1px solid rgba(0,0,0,.15);background:#fff;color:#333;border-radius:999px;padding:7px 14px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+    button:focus-visible,a:focus-visible{outline:2px solid #3570A3;outline-offset:2px}
+    .panel{position:absolute;left:0;bottom:46px;background:#fff;color:#333;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.22);padding:8px;display:flex;flex-direction:column;gap:2px;min-width:170px}
+    .panel[hidden]{display:none}
+    .panel b{font-size:12px;color:#777;padding:2px 8px;font-weight:500}
+    a{display:flex;gap:10px;align-items:center;text-decoration:none;color:#333;padding:7px 10px;border-radius:9px}
+    a:hover{background:#f1efe9}
+    a[aria-current]{background:#ebe6dc;font-weight:700}
+    i{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.15)}
+  </style>
+  <div class="wrap"><div class="panel" hidden><b>選一種風格（會記住）</b><a href="essay-map-a.html" data-k="a" ><i style="background:#8A9E92"></i>精緻莫蘭迪</a><a href="essay-map-b.html" data-k="b" ><i style="background:#F0A6A0"></i>可愛手帳</a><a href="essay-map-c.html" data-k="c" aria-current="page"><i style="background:#2BD97F"></i>晶片科技</a><a href="essay-map-d.html" data-k="d" ><i style="background:#C0392B"></i>雜誌編排</a><a href="essay-map-e.html" data-k="e" ><i style="background:#5E8C4A"></i>森林樹枝</a></div><button type="button" aria-expanded="false">🎨 換風格</button></div>`;
+  const btn = root.querySelector("button"), panel = root.querySelector(".panel");
+  btn.onclick = () => { panel.hidden = !panel.hidden; btn.setAttribute("aria-expanded", String(!panel.hidden)); };
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { panel.hidden = true; btn.setAttribute("aria-expanded", "false"); } });
+})();
+</script>
+</body>
+</html>

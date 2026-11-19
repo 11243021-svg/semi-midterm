@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>申論題手帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=LXGW+WenKai+TC:wght@400;700&display=swap">
+<style>
+/* ===== 色票：淺色＝白天的書桌 ===== */
+:root{
+  color-scheme:light;
+  --desk:#E9DFCC; --paper:#FFFCF5; --card:#FFFEFA;
+  --grid:rgba(110,150,175,.16); --margin:#F0A6A0; --hole:#E9DFCC;
+  --ink:#3B3631; --ink-soft:#6E655B; --muted:#7A6F63;
+  --sticky:#FFEB99; --sticky-ink:#4A3F1E;
+  --hl:#FFE36B; --tape-ink:#3B3631; --stripe:rgba(255,255,255,.5);
+  --shadow-hard:rgba(80,60,30,.16);
+  --a-tape:#BFE6CF; --a-ink:#2F7D5B; --a-hl:#C6F0D8;
+  --b-tape:#FFCDB8; --b-ink:#C0573D; --b-hl:#FFD9C9;
+  --c-tape:#C5DEF2; --c-ink:#3570A3; --c-hl:#CFE6F8;
+  --d-tape:#FBE7A1; --d-ink:#9A7A12; --d-hl:#FFF0A0;
+  --e-tape:#DDD3F0; --e-ink:#6D58A0; --e-hl:#E6DDF6;
+  --f-tape:#F6CFE0; --f-ink:#B04A7A; --f-hl:#F9DAE7;
+  --chip:#BFE6CF; --chip-ink:#2F5D48; --cheek:#F6A9A0;
+}
+/* ===== 深色＝夜燈下的筆記本 ===== */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --desk:#191816; --paper:#24221F; --card:#2B2925;
+    --grid:rgba(230,220,200,.07); --margin:#8A4E4A; --hole:#191816;
+    --ink:#EDE6DA; --ink-soft:#C4BAAC; --muted:#A99F92;
+    --sticky:#4B4126; --sticky-ink:#F5E9C4;
+    --hl:rgba(255,214,80,.32); --tape-ink:#F2ECE2; --stripe:rgba(255,255,255,.08);
+    --shadow-hard:rgba(0,0,0,.45);
+    --a-tape:#2E5A48; --a-ink:#8FD6B2; --a-hl:rgba(120,220,170,.25);
+    --b-tape:#6A3A2C; --b-ink:#F4A88F; --b-hl:rgba(255,150,120,.25);
+    --c-tape:#2C4A66; --c-ink:#9CC6EC; --c-hl:rgba(120,180,240,.25);
+    --d-tape:#5E4E1A; --d-ink:#E8CF6E; --d-hl:rgba(240,210,100,.25);
+    --e-tape:#463B5E; --e-ink:#C2B2E8; --e-hl:rgba(190,170,240,.25);
+    --f-tape:#5C3248; --f-ink:#EFA6C6; --f-hl:rgba(240,160,200,.25);
+    --chip:#2E5A48; --chip-ink:#CFF0DF; --cheek:#C9756C;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --desk:#191816; --paper:#24221F; --card:#2B2925;
+  --grid:rgba(230,220,200,.07); --margin:#8A4E4A; --hole:#191816;
+  --ink:#EDE6DA; --ink-soft:#C4BAAC; --muted:#A99F92;
+  --sticky:#4B4126; --sticky-ink:#F5E9C4;
+  --hl:rgba(255,214,80,.32); --tape-ink:#F2ECE2; --stripe:rgba(255,255,255,.08);
+  --shadow-hard:rgba(0,0,0,.45);
+  --a-tape:#2E5A48; --a-ink:#8FD6B2; --a-hl:rgba(120,220,170,.25);
+  --b-tape:#6A3A2C; --b-ink:#F4A88F; --b-hl:rgba(255,150,120,.25);
+  --c-tape:#2C4A66; --c-ink:#9CC6EC; --c-hl:rgba(120,180,240,.25);
+  --d-tape:#5E4E1A; --d-ink:#E8CF6E; --d-hl:rgba(240,210,100,.25);
+  --e-tape:#463B5E; --e-ink:#C2B2E8; --e-hl:rgba(190,170,240,.25);
+  --f-tape:#5C3248; --f-ink:#EFA6C6; --f-hl:rgba(240,160,200,.25);
+  --chip:#2E5A48; --chip-ink:#CFF0DF; --cheek:#C9756C;
+}
+
+/* ===== 基礎 ===== */
+*{box-sizing:border-box}
+html{font-size:19px}
+body{
+  margin:0; background:var(--desk); color:var(--ink);
+  font-family:"LXGW WenKai TC","Huninn","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-size:1rem; line-height:1.75; overflow-x:clip;
+}
+.hand-title,h1,h2,h3,button,.tape-label{font-family:"Huninn","LXGW WenKai TC","PingFang TC",sans-serif}
+/* 寬度隨視窗流動，大螢幕上限 1600px */
+.desk{width:100%;max-width:1600px;margin:0 auto;padding:32px clamp(16px,3vw,40px) 56px}
+
+/* ===== 手繪感外框（不規則圓角） ===== */
+.rough{border-radius:255px 14px 225px 14px / 14px 225px 14px 255px}
+
+/* ===== 紙膠帶 ===== */
+.tape{
+  --t:var(--d-tape);
+  display:inline-block; padding:2px 16px; color:var(--tape-ink);
+  background-color:var(--t);
+  background-image:repeating-linear-gradient(45deg,var(--stripe) 0 4px,transparent 4px 10px);
+  clip-path:polygon(0 0,100% 0,calc(100% - 5px) 25%,100% 50%,calc(100% - 5px) 75%,100% 100%,0 100%,5px 75%,0 50%,5px 25%);
+}
+
+/* 手機觸控：不閃藍色點擊框、不等雙擊縮放（點下去就反應，不抖） */
+.tab,.btn,.br-btn,.list li.leaf,.tree .br,.tree .leaf,.mascot-btn,.outline .star{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* ===== 索引分頁 ===== */
+.tabs{
+  display:flex; gap:6px; padding:0 18px 0 76px; margin:0;
+  overflow-x:auto; scrollbar-width:thin; position:relative; z-index:2;
+}
+.tab{
+  flex:none; cursor:pointer; border:0; font-size:.82rem; color:var(--tape-ink); white-space:nowrap;
+  padding:8px 14px 6px; margin-top:8px; border-radius:12px 12px 0 0;
+  background:var(--t); opacity:.85; line-height:1.3;
+  transition:margin-top .18s ease, opacity .18s ease;
+}
+/* 防抽搐：頁籤本身不旋轉／位移；上提用 margin-top（下緣固定、只往上長，滑鼠不會掉出邊界），微歪只轉裡面的字 */
+.tab:hover{margin-top:3px;opacity:1}
+.tab .tab-in{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top;transition:transform .18s ease}
+.tab:hover .tab-in{transform:rotate(-2deg) translateY(-1px)}
+.tab[aria-selected="true"] .tab-in{transform:none}
+.tab[aria-selected="true"]{margin-top:0;padding-bottom:12px;opacity:1;background:var(--paper);color:var(--ink);font-weight:700;transform:none}
+.tab:focus-visible{outline:2px dashed var(--ink);outline-offset:-4px}
+/* 寬螢幕：6 個頁籤一排放下、不捲動（字級用 px，不跟著「字體」按鈕放大） */
+@media (min-width:900px){
+  .tabs{overflow:visible;gap:4px;padding:0 12px 0 70px}
+  .tab{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:clamp(12.5px,1.08vw,16px);padding:8px clamp(8px,.9vw,14px) 6px}
+}
+
+/* ===== 筆記本紙張 ===== */
+.notebook{
+  position:relative; background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  border-radius:6px 14px 14px 6px;
+  box-shadow:4px 5px 0 var(--shadow-hard);
+  padding:28px clamp(16px,3vw,40px) 36px 92px;
+  display:flex; flex-direction:column; gap:24px;
+}
+.notebook::before{content:""; position:absolute; top:0; bottom:0; left:64px;
+  border-left:1.5px solid var(--margin); border-right:1.5px solid var(--margin); width:5px;}
+.notebook::after{content:""; position:absolute; top:12px; bottom:12px; left:14px; width:24px;
+  background:radial-gradient(circle at 12px 18px,var(--hole) 7px,transparent 8px) 0 0/24px 40px repeat-y;}
+.notebook>*{min-width:0;max-width:100%}
+
+/* ===== 頁首 ===== */
+header{position:relative;padding-right:132px}
+.kicker{font-size:.8rem;color:var(--muted);letter-spacing:.12em;margin:0 0 4px}
+h1{margin:0;font-size:clamp(1.6rem,4.2vw,2.2rem);font-weight:400;line-height:1.3;display:inline-block;position:relative;cursor:default}
+.marker{background:linear-gradient(transparent 55%,var(--hl) 55%,var(--hl) 90%,transparent 90%);padding:0 .15em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.squiggle{display:block;width:min(220px,60%);height:12px;margin-top:2px;color:var(--b-ink)}
+.sub{margin:10px 0 0;color:var(--ink-soft);font-size:.92rem;max-width:60ch}
+.grade{display:flex;flex-wrap:wrap;gap:10px 8px;margin:14px 0 0;padding:0;list-style:none}
+/* 防抽搐：li 是固定的命中範圍，上提轉正只動裡面那段膠帶 */
+.grade li{font-size:.8rem;cursor:default;display:block}
+.grade li>.tape{transition:transform .18s ease}
+.grade li:nth-child(odd)>.tape{transform:rotate(-1.2deg)}
+.grade li:nth-child(even)>.tape{transform:rotate(1deg)}
+.grade li:hover>.tape{transform:translateY(-3px) rotate(0)}
+.grade b{font-family:"Huninn",sans-serif;font-weight:400;font-size:1.05em;margin-left:4px;font-variant-numeric:tabular-nums}
+
+/* ===== 貼紙角色 ===== */
+.mwrap{position:absolute;right:0;top:-6px;width:112px;height:112px;z-index:3}
+.mascot-btn{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer;transform:rotate(6deg);border-radius:50%}
+.mascot-btn:focus-visible{outline:2px dashed var(--ink);outline-offset:2px}
+.mascot-btn svg{display:block;width:100%;height:100%;overflow:visible}
+.m-txt{font-family:"Huninn",sans-serif}
+.m-eye,.m-spark,.m-roll,.m-sweat,.m-cell{transform-box:fill-box;transform-origin:center}
+.m-all{transform-origin:60px 104px}
+.m-sweat{opacity:0}
+.bubble{
+  position:absolute; right:calc(100% + 6px); top:8px; width:max-content; max-width:min(260px,62vw);
+  background:var(--card); color:var(--ink); border:1.6px solid var(--ink-soft);
+  padding:8px 12px; font-family:"Huninn",sans-serif; font-size:.8rem; line-height:1.5;
+  border-radius:16px 16px 4px 16px; box-shadow:3px 3px 0 var(--shadow-hard);
+  opacity:0; transform:translateY(4px) scale(.92); transform-origin:right top;
+  pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+}
+.bubble.show{opacity:1;transform:none}
+.spark{position:absolute;left:50%;top:45%;width:18px;height:18px;margin:-9px;pointer-events:none}
+.spark svg{width:100%;height:100%;display:block}
+
+/* ===== 控制列 ===== */
+.ctl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.grp{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.grp .lbl{font-family:"Huninn",sans-serif;margin-right:2px}
+.btn{
+  font-size:.85rem; cursor:pointer; color:var(--ink); background:transparent;
+  border:1.6px solid var(--ink-soft); padding:4px 12px; min-height:36px;
+  display:inline-flex; align-items:center; gap:6px; line-height:1;
+  transition:transform .15s ease;
+}
+.btn[aria-pressed="true"]{
+  border-color:var(--ink); font-weight:700;
+  background:linear-gradient(transparent 30%,var(--hl) 30%,var(--hl) 88%,transparent 88%);
+}
+/* 防抽搐：按鈕外框不動，只讓裡面的圖示＋字微微上提歪一下 */
+.btn>*{transition:transform .15s ease}
+.btn:hover{border-style:dashed}
+.btn:hover>*{transform:translateY(-1px) rotate(-2deg)}
+.btn:active>*{transform:translateY(1px)}
+.btn:focus-visible{outline:2px dashed var(--c-ink);outline-offset:3px}
+.theme-btn{margin-left:auto}
+
+/* ===== 會動的小圖示 ===== */
+.ic{width:18px;height:18px;flex:none;overflow:visible}
+.ic .rays,.ic .body,.ic .half,.ic .pen,.ic .strip,.ic .pg{transform-origin:12px 12px}
+.ic .pen{transform-origin:5px 19px}
+.ic .strip{transform-origin:3px 12px}
+.ic .nd,.ic .dot,.ic .core,.ic .tw{transform-box:fill-box;transform-origin:center}
+
+/* ===== 本題區 ===== */
+.panel{display:flex;flex-direction:column;gap:16px}
+.panel h2{margin:0;font-size:1.35rem;font-weight:400;line-height:1.4;text-wrap:balance}
+.panel h2 .no{display:inline-block;font-size:.75em;color:var(--paper);background:var(--ink);padding:0 9px;margin:0 4px 0 3px;transform:rotate(-3deg);border-radius:4px 10px 6px 12px;transition:transform .2s ease}
+.panel h2:hover .no{transform:rotate(4deg) translateY(-2px)}
+.q{margin:0;padding:12px 16px;border:1.6px dashed var(--ink-soft);font-size:.92rem;position:relative;background:var(--card);transition:border-color .2s ease, transform .2s ease}
+.q:hover{border-color:var(--c-ink)}
+.q .qt{transition:transform .2s ease}
+.q:hover .qt{transform:translateX(2px)}
+.q .tape{position:absolute;top:-14px;left:14px;font-size:.75rem;transform:rotate(-2deg);--t:var(--c-tape);transition:transform .2s ease}
+.q:hover .tape{transform:rotate(3deg) translateY(-2px)}
+.q span.qt{display:block;margin-top:4px}
+.prog{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin:0;font-family:"Huninn",sans-serif;font-size:.85rem;color:var(--ink-soft)}
+.prog .ic{color:var(--a-ink);width:20px;height:20px}
+.prog b{font-weight:400;font-size:1.15rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{position:relative;display:inline-block;width:min(220px,40vw);height:14px;border:1.6px solid var(--ink-soft);overflow:hidden;vertical-align:middle;transition:transform .2s ease}
+.prog:hover .bar{transform:rotate(-1deg) scaleY(1.15)}
+.bar i{position:absolute;left:0;top:0;bottom:0;width:0;background-color:var(--a-tape);
+  background-image:repeating-linear-gradient(45deg,var(--stripe) 0 4px,transparent 4px 10px);transition:width .5s ease}
+.prog .yay{color:var(--a-ink)}
+.prog .clr{min-height:30px;font-size:.78rem;padding:3px 10px;margin-left:4px}
+.prog .clr .ic{color:currentColor;width:16px;height:16px}
+.prog .clr[disabled]{opacity:.45;cursor:default;transform:none;border-style:solid}
+.prog .clr[disabled]>*{transform:none}
+.prog .clr.armed{color:var(--b-ink);border-color:var(--b-ink);border-style:dashed;font-weight:700;background:linear-gradient(transparent 30%,var(--b-hl) 30%,var(--b-hl) 88%,transparent 88%)}
+.ic .er{transform-origin:12px 12px}
+@media (prefers-reduced-motion: no-preference){
+  .ic.play .er{animation:ic-rub .6s ease}
+  @keyframes ic-rub{20%{transform:translate(-2px,1px) rotate(-8deg)}45%{transform:translate(2px,-1px) rotate(6deg)}70%{transform:translate(-1px,1px) rotate(-4deg)}}
+  .prog .clr.armed{animation:armed 1s ease-in-out infinite}
+  @keyframes armed{50%{transform:rotate(-2deg) translateY(-1px)}}
+  .sec-open li{animation:li-in .32s ease-out both;animation-delay:calc(var(--i) * 70ms + 80ms)}
+  @keyframes li-in{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:6px 2px 8px;scrollbar-width:thin}
+.scroll svg.tree{display:block;max-width:none}
+.tip{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0;font-size:.8rem;color:var(--muted)}
+.tip .ic{width:28px;height:14px;color:var(--muted)}
+
+/* ===== 樹狀圖 ===== */
+.tree text{font-family:"LXGW WenKai TC","PingFang TC",sans-serif;fill:var(--ink)}
+.tree .t-br,.tree .t-root,.tree .t-badge,.tree .t-cover{font-family:"Huninn","LXGW WenKai TC",sans-serif}
+.tree .t-br,.tree .t-cover{fill:var(--tape-ink)}
+.tree .t-root{fill:var(--sticky-ink)}
+.tree .t-kick{fill:var(--sticky-ink);opacity:.75;font-family:"Huninn",sans-serif}
+.tree .sticky{fill:var(--sticky)}
+.tree .sticky-tape{fill:var(--e-tape);opacity:.9}
+.tree .shadow{fill:var(--shadow-hard)}
+.tree .card{fill:var(--card);transition:fill .18s ease}
+.tree .icon{color:var(--ink-soft)}
+/* 防抽搐：根／枝／葉各有一塊固定不動的透明命中區（.hit），hover 時只動裡面的 .root-in／.br-in／.lf-in */
+.tree .hit{fill:transparent;stroke:none;pointer-events:all}
+.tree .root-in,.tree .br-in,.tree .lf-in{pointer-events:none}
+.tree .root-in{transform-box:fill-box;transform-origin:center;transition:transform .25s ease}
+.tree .root-g{cursor:default}
+.tree .root-g:hover .root-in{transform:rotate(2.5deg) translateY(-2px)}
+/* 枝 */
+.tree .br{cursor:pointer;outline:none}
+.tree .br-in{transition:transform .18s ease}
+.tree .br:hover .br-in,.tree .br:focus-visible .br-in{transform:translateY(-3px)}
+.tree .br-sh{fill:var(--shadow-hard);opacity:0;transition:opacity .18s ease}
+.tree .br:hover .br-sh,.tree .br:focus-visible .br-sh{opacity:1}
+.tree .br:focus-visible .tp{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:4 3}
+.tree .badge-in{transform-box:fill-box;transform-origin:center;transition:transform .2s ease}
+.tree .br:hover .badge-in,.tree .br:focus-visible .badge-in{transform:scale(1.1)}
+.tree .br:hover .is-folded .badge-in,.tree .br:focus-visible .is-folded .badge-in{transform:scale(1.15)}
+.tree .lines path{transition:stroke-width .15s ease, opacity .15s ease}
+.tree .lines.hot path{stroke-width:3;opacity:1}
+/* 葉 */
+.tree .leaf{cursor:pointer;outline:none}
+.tree .lf-in{transition:transform .18s ease}
+.tree .leaf:hover .lf-in,.tree .leaf:focus-visible .lf-in{transform:translate(4px,-1px)}
+.tree .leaf:hover .card,.tree .leaf.done .card{fill:var(--lh)}
+.tree .lf-edge{transition:stroke-width .15s ease}
+.tree .leaf:hover .lf-edge{stroke-width:2.2}
+.tree .leaf:focus-visible .lf-edge{stroke-dasharray:5 3;stroke-width:2}
+.tree .stamp-hint{opacity:0;transition:opacity .18s ease}
+.tree .leaf:not(.done):hover .stamp-hint{opacity:.7}
+.stamp-in{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(1.8) rotate(25deg);transition:opacity .2s ease, transform .3s cubic-bezier(.3,1.5,.5,1)}
+.done .stamp-in{opacity:1;transform:scale(1) rotate(-10deg)}
+.tree .cover{transform-box:fill-box;transform-origin:right top;transition:transform .45s ease, opacity .45s ease}
+.tree .leaf:hover .cover{transform:rotate(-1deg) translateY(-2px)}
+.tree .peeled .cover,.tree .leaf.peeled:hover .cover{transform:translate(34px,-16px) rotate(9deg);opacity:0;pointer-events:none}
+
+/* ===== 清單 ===== */
+.list{display:flex;flex-direction:column;gap:22px}
+.list .root{
+  align-self:flex-start; background:var(--sticky); color:var(--sticky-ink);
+  font-family:"Huninn",sans-serif; padding:14px 20px 12px; transform:rotate(-1.2deg);
+  box-shadow:3px 4px 0 var(--shadow-hard); position:relative; max-width:100%; transition:box-shadow .25s ease;
+}
+/* 防抽搐：便利貼本身不動，滑過時硬陰影加深、頂端膠帶轉一下 */
+.list .root:hover{box-shadow:5px 7px 0 var(--shadow-hard)}
+.list .root::before{content:"";position:absolute;top:-10px;left:50%;width:72px;height:20px;margin-left:-36px;background:var(--e-tape);opacity:.9;transform:rotate(3deg);transition:transform .25s ease}
+.list .root:hover::before{transform:rotate(-3deg)}
+.list .root small{display:block;font-size:.72rem;opacity:.75;letter-spacing:.15em}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:24px 32px;align-items:start}
+.list section{padding-left:4px;min-width:0}
+.list h3{margin:0 0 8px;font-size:1.02rem;font-weight:400}
+.br-btn{--t:var(--bt);border:0;cursor:pointer;font-size:1.02rem;padding:3px 18px;display:inline-flex;align-items:center;gap:8px;line-height:1.5;text-align:left;transition:transform .18s ease}
+.list section:nth-child(odd) .br-btn{transform:rotate(-1deg)}
+.list section:nth-child(even) .br-btn{transform:rotate(.8deg)}
+/* 防抽搐：膠帶標籤本身不動，滑過時斜紋往旁邊滑、數字圈放大 */
+.br-btn{background-position:0 0;transition:background-position .35s ease}
+.list section .br-btn:hover{background-position:10px 0}
+.br-btn .cnt{transition:transform .2s ease}
+.list section .br-btn:hover .cnt{transform:scale(1.15) rotate(-8deg)}
+.br-btn:focus-visible{outline:2px dashed var(--ink);outline-offset:3px}
+.br-btn .cnt{font-size:.72rem;min-width:1.7em;height:1.7em;display:inline-grid;place-items:center;border-radius:50%;background:var(--card);color:var(--bi);border:1.4px solid var(--bi)}
+.br-btn .ic{width:16px;height:16px;transition:transform .25s ease}
+.folded .br-btn .ic{transform:rotate(-90deg)}
+.fold{display:grid;grid-template-rows:1fr;transition:grid-template-rows .3s ease}
+.folded .fold{grid-template-rows:0fr}
+.fold>ul{min-height:0;overflow:hidden}
+.list ul{margin:0;padding:0 0 0 6px;list-style:none;display:flex;flex-direction:column;gap:4px}
+.list li.leaf{position:relative;padding:4px 36px 4px 24px;cursor:pointer;border-radius:255px 14px 225px 14px / 14px 225px 14px 255px;transition:background-color .18s ease, transform .18s ease;outline:none}
+/* 防抽搐：整行（命中範圍）不動，只讓裡面的字右移 */
+.list li.leaf:hover{background-color:var(--bh)}
+.list li.leaf .lt{display:block;transition:transform .18s ease}
+.list li.leaf:hover .lt{transform:translateX(3px)}
+.list li.leaf.done{background-color:color-mix(in srgb,var(--bh) 45%,transparent)}
+.list li.leaf:focus-visible{outline:2px dashed var(--bi);outline-offset:1px}
+.list li::before{content:"";position:absolute;left:5px;top:calc(4px + .62em);width:9px;height:9px;border:2px solid var(--bi);border-radius:60% 40% 55% 45%;transition:transform .2s ease, background-color .2s ease}
+.list li:hover::before{transform:rotate(60deg) scale(1.2);background-color:var(--bi)}
+.list mark{background:linear-gradient(transparent 50%,var(--bh) 50%,var(--bh) 92%,transparent 92%);color:inherit;padding:0 .1em}
+.list .stamp{position:absolute;right:4px;top:50%;width:26px;height:26px;margin-top:-13px;pointer-events:none}
+.list .stamp svg{width:100%;height:100%;display:block;overflow:visible}
+.list .cover{
+  position:absolute; left:18px; right:32px; top:2px; bottom:2px;
+  display:flex; align-items:center; padding-left:14px; font-family:"Huninn",sans-serif; font-size:.72rem; color:var(--tape-ink);
+  background-color:var(--bt); background-image:repeating-linear-gradient(45deg,var(--stripe) 0 4px,transparent 4px 10px);
+  clip-path:polygon(0 0,100% 0,calc(100% - 5px) 25%,100% 50%,calc(100% - 5px) 75%,100% 100%,0 100%,5px 75%,0 50%,5px 25%);
+  transform-origin:right top; transition:transform .45s ease, opacity .45s ease;
+}
+.list li.leaf:hover .cover{transform:rotate(-.6deg) translateY(-1px)}
+.list .peeled .cover,.list li.leaf.peeled:hover .cover{transform:translate(28px,-12px) rotate(7deg);opacity:0;pointer-events:none}
+.inline-ic{width:1.1em;height:1.1em;vertical-align:-.2em;color:var(--ink-soft);margin:0 .1em}
+
+/* ===== 萬用寫法便利貼 ===== */
+.outline{
+  position:relative; background:var(--sticky); color:var(--sticky-ink);
+  padding:26px 32px 22px 24px; transform:rotate(-.4deg);
+  box-shadow:4px 5px 0 var(--shadow-hard);
+}
+.outline::before{content:"";position:absolute;top:-12px;left:28px;width:92px;height:24px;background:var(--a-tape);
+  background-image:repeating-linear-gradient(45deg,var(--stripe) 0 4px,transparent 4px 10px);opacity:.92;transform:rotate(-4deg)}
+.outline b{font-family:"Huninn",sans-serif;font-weight:400;font-size:1.1rem}
+.outline ol{margin:8px 0 0;padding:0;list-style:none;counter-reset:n;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:6px 28px}
+.outline li{counter-increment:n;position:relative;padding:2px 6px 2px 34px;cursor:default;
+  background:linear-gradient(transparent 52%,var(--b-hl) 52%,var(--b-hl) 92%,transparent 92%) no-repeat 0 0/0% 100%;
+  transition:background-size .35s ease, transform .2s ease}
+.outline li:hover{background-size:100% 100%}
+.outline li>span{display:block;transition:transform .2s ease}
+.outline li:hover>span{transform:translateX(3px)}
+.outline li::before{content:counter(n);position:absolute;left:0;top:.2em;width:24px;height:24px;display:grid;place-items:center;
+  font-family:"Huninn",sans-serif;font-size:.8rem;border:1.6px solid currentColor;border-radius:52% 48% 45% 55%;transition:transform .25s ease, background-color .25s ease}
+.outline li:hover::before{transform:rotate(-20deg) scale(1.12);background-color:var(--card)}
+.outline .star{position:absolute;right:-10px;bottom:-14px;width:54px;height:54px;transform:rotate(12deg);cursor:pointer}
+.outline .star-in{transform-origin:30px 30px}
+
+/* ===== 動畫（只在使用者沒關動畫時） ===== */
+@media (prefers-reduced-motion: no-preference){
+  .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .7s ease-out forwards}
+  .pop{opacity:0;animation:pop .35s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes pop{to{opacity:1}}
+  /* 防抽搐：星星外框固定（命中範圍不轉），只晃裡面那層 */
+  .outline .star:hover .star-in{animation:wiggle .5s ease-in-out}
+  @keyframes wiggle{25%{transform:rotate(-12deg)}50%{transform:rotate(10deg)}75%{transform:rotate(-4deg)}}
+  .panel-in{animation:pagein .3s ease-out}
+  @keyframes pagein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h1:hover + .squiggle path{animation:redraw .6s ease-out}
+  @keyframes redraw{from{stroke-dasharray:240;stroke-dashoffset:240}to{stroke-dasharray:240;stroke-dashoffset:0}}
+
+  /* 小圖示：滑過或點擊時 JS 加上 .play */
+  .ic.play .rays{animation:ic-spin .7s cubic-bezier(.5,0,.3,1)}
+  .ic.play .core{animation:ic-pulse .7s ease}
+  .ic.play .body{animation:ic-rock .7s ease}
+  .ic.play .tw{animation:ic-twinkle .7s ease}
+  .ic.play .half{animation:ic-half .7s ease}
+  .ic.play .ln{animation:ic-draw .45s ease both}
+  .ic.play .nd,.ic.play .dot{animation:ic-pop .4s ease both}
+  .ic-list.play .ln{animation:ic-slide .4s ease both}
+  .ic.play .d1{animation-delay:.08s}.ic.play .d2{animation-delay:.18s}.ic.play .d3{animation-delay:.28s}
+  .ic.play .pen{animation:ic-write .8s ease}
+  .ic.play .ink{animation:ic-draw .55s .15s ease both}
+  .ic.play .strip{animation:ic-peel .8s ease}
+  .ic.play .arrL{animation:ic-left .7s ease}
+  .ic.play .arrR{animation:ic-right .7s ease}
+  .ic.play .pg{animation:ic-flip .6s ease}
+  .ic.play .ck{animation:ic-draw .45s .05s ease both}
+  .ic.play .cv{animation:ic-nod .45s ease}
+  @keyframes ic-spin{to{transform:rotate(90deg)}}
+  @keyframes ic-pulse{50%{transform:scale(.75)}}
+  @keyframes ic-rock{30%{transform:rotate(-18deg)}65%{transform:rotate(8deg)}}
+  @keyframes ic-twinkle{0%{transform:scale(1)}40%{transform:scale(0)}75%{transform:scale(1.4)}100%{transform:scale(1)}}
+  @keyframes ic-half{to{transform:rotate(180deg)}}
+  @keyframes ic-draw{from{stroke-dasharray:1;stroke-dashoffset:1}to{stroke-dasharray:1;stroke-dashoffset:0}}
+  @keyframes ic-pop{0%{transform:scale(0)}65%{transform:scale(1.3)}100%{transform:scale(1)}}
+  @keyframes ic-slide{from{transform:translateX(-7px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes ic-write{20%{transform:rotate(-12deg)}40%{transform:rotate(6deg) translateX(2px)}60%{transform:rotate(-8deg) translateX(4px)}80%{transform:rotate(3deg) translateX(2px)}}
+  @keyframes ic-peel{35%{transform:rotate(-24deg) translateY(-1px)}70%{transform:rotate(-24deg) translateY(-1px)}}
+  @keyframes ic-left{40%{transform:translateX(-4px)}}
+  @keyframes ic-right{40%{transform:translateX(4px)}}
+  @keyframes ic-flip{40%{transform:scaleX(.15)}}
+  @keyframes ic-nod{50%{transform:translateY(3px)}}
+
+  /* 貼紙角色 */
+  .m-eye{animation:m-blink 5s infinite}
+  .mascot-btn:hover .m-eye{animation:m-blink2 1.4s infinite}
+  .mascot-btn:hover .m-all{animation:m-sway 1.1s ease-in-out infinite}
+  .mascot-btn:hover .m-bob{animation:m-bob .5s ease-in-out infinite alternate}
+  .mascot-btn:hover .m-spark{animation:m-twinkle 1.1s ease-in-out infinite}
+  .mascot-btn:hover .m-hop{animation:m-hop .8s ease-in-out infinite}
+  .mascot-btn:hover .m-cell{animation:m-cell 1.6s infinite}
+  .mascot-btn:hover .m-chip{animation:m-belt 1.6s linear infinite}
+  .mascot-btn:hover .m-smoke{animation:m-puff 1.6s ease-out infinite}
+  .mascot-btn:hover .m-roll{animation:m-roll .8s linear infinite}
+  .mascot-btn:hover .m-sweat{animation:m-drip 1.4s ease-in infinite}
+  .mascot-btn svg.jump{animation:m-jump .6s ease;transform-origin:50% 100%}
+  .mwrap.leave .mascot-btn{animation:m-leave .22s ease-in forwards}
+  .mwrap.enter .mascot-btn{animation:m-enter .5s cubic-bezier(.3,1.4,.5,1)}
+  .spark{animation:spark .7s ease-out forwards}
+  @keyframes m-blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  @keyframes m-blink2{0%,40%,100%{transform:scaleY(1)}48%{transform:scaleY(.1)}56%{transform:scaleY(1)}}
+  @keyframes m-sway{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+  @keyframes m-bob{to{transform:translateY(-3px)}}
+  @keyframes m-twinkle{50%{transform:scale(1.35) rotate(45deg)}}
+  @keyframes m-hop{0%,100%{transform:translateY(0)}45%{transform:translate(4px,-14px)}}
+  @keyframes m-cell{0%,40%,100%{fill:var(--card)}10%,30%{fill:var(--fl)}}
+  @keyframes m-belt{0%{transform:translateX(-46px)}65%,100%{transform:translateX(0)}}
+  @keyframes m-puff{0%{transform:translateY(4px);opacity:.2}60%{opacity:1}100%{transform:translateY(-6px);opacity:0}}
+  @keyframes m-roll{to{transform:rotate(360deg)}}
+  @keyframes m-drip{0%{opacity:0;transform:translateY(-4px)}30%{opacity:1}100%{opacity:0;transform:translateY(10px)}}
+  @keyframes m-jump{0%{transform:none}30%{transform:translateY(-18px) rotate(-6deg)}55%{transform:translateY(0) scale(1.08,.92)}75%{transform:translateY(-5px)}100%{transform:none}}
+  @keyframes m-leave{to{transform:rotate(-16deg) translateY(16px) scale(.5);opacity:0}}
+  @keyframes m-enter{from{transform:rotate(30deg) scale(.3);opacity:0}70%{transform:rotate(2deg) scale(1.08);opacity:1}to{transform:rotate(6deg) scale(1)}}
+  @keyframes spark{from{transform:translate(0,0) scale(.3) rotate(0);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(1) rotate(120deg);opacity:0}}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important}
+}
+
+/* ===== 手機 ===== */
+@media (max-width:640px){
+  .desk{padding:16px 16px 40px}
+  .tabs{padding:0 6px}
+  .notebook{padding:22px 16px 28px 30px;gap:20px;border-radius:4px 10px 10px 4px}
+  .notebook::before{left:16px}
+  .notebook::after{display:none}
+  header{padding-right:0}
+  .mwrap{width:68px;height:68px;top:-14px;right:-6px}
+  .bubble{right:0;top:calc(100% + 4px);border-radius:16px 4px 16px 16px}
+  h1,.kicker{padding-right:60px}
+  .theme-btn{margin-left:0}
+  .outline{padding:24px 16px 18px}
+  .outline .star{right:-4px;width:44px;height:44px}
+}
+</style>
+</head>
+<body>
+
+<!-- 共用定義：樹裡的書／筆小圖示、貼紙模切白邊濾鏡 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="stk" x="-20%" y="-20%" width="140%" height="140%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="4.5" result="d"/>
+      <feFlood style="flood-color:var(--card)" result="w"/>
+      <feComposite in="w" in2="d" operator="in" result="border"/>
+      <feOffset in="d" dx="3" dy="4" result="so"/>
+      <feFlood style="flood-color:var(--shadow-hard)"/>
+      <feComposite in2="so" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="border"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<div class="desk">
+  <nav class="tabs" role="tablist" id="tabs" aria-label="申論題分頁"></nav>
+
+  <main class="notebook">
+    <header>
+      <p class="kicker">SEMICONDUCTOR NOTE ／ 申論篇</p>
+      <h1><span class="marker">申論題重點樹</span></h1>
+      <svg class="squiggle" viewBox="0 0 220 12" aria-hidden="true"><path d="M3 7c14-6 22 5 36 0s22-6 36 0 22 5 36 0 22-6 36 0 22 5 36 0 16-4 30-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <p class="sub">戴副總經理 6 題申論｜考試自選 2 題、每題 10 分｜照樹枝順序寫，每個葉子就是一個要寫到的重點</p>
+      <ul class="grade" aria-label="評分比重">
+        <li><span class="tape" style="--t:var(--a-tape)">名詞精準<b data-n="35">35%</b></span></li>
+        <li><span class="tape" style="--t:var(--b-tape)">原理邏輯<b data-n="30">30%</b></span></li>
+        <li><span class="tape" style="--t:var(--c-tape)">跨領域舉例<b data-n="25">25%</b></span></li>
+        <li><span class="tape" style="--t:var(--d-tape)">結構條理<b data-n="10">10%</b></span></li>
+      </ul>
+      <div class="mwrap" id="mwrap">
+        <button type="button" class="mascot-btn" id="mascot"></button>
+        <div class="bubble" id="bubble" role="status" aria-live="polite"></div>
+      </div>
+    </header>
+
+    <div class="ctl">
+      <span class="grp" id="mode"></span>
+      <span class="grp" id="rec"></span>
+      <span class="grp" id="fsz"></span>
+      <button type="button" class="btn rough theme-btn" id="theme" aria-label="切換淺色／深色"></button>
+    </div>
+
+    <section class="panel" id="panel" role="tabpanel"></section>
+
+    <aside class="outline">
+      <b>萬用寫法（每題都套）</b>
+      <ol>
+        <li><span>前言：一句點題，預告要回答哪幾點</span></li>
+        <li><span>照樹的「第一層枝」分段下標題，每段寫葉子的重點</span></li>
+        <li><span>名詞寫成「中文（English）」，每點補一句「為什麼」</span></li>
+        <li><span>至少一個例子（iPhone、ChatGPT、台積電、自己的經驗）</span></li>
+        <li><span>結論：連回「AI × 半導體」或自己的看法</span></li>
+      </ol>
+      <svg class="star" viewBox="0 0 60 60" aria-hidden="true"><g class="star-in">
+        <path d="M30 6l6.6 14.4 15.4 1.8-11.4 10.6 3.1 15.4L30 40.4l-13.7 7.8 3.1-15.4L8 22.2l15.4-1.8z" fill="var(--card)" stroke="var(--card)" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M30 6l6.6 14.4 15.4 1.8-11.4 10.6 3.1 15.4L30 40.4l-13.7 7.8 3.1-15.4L8 22.2l15.4-1.8z" fill="var(--b-tape)" stroke="var(--b-ink)" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="25" cy="28" r="1.8" fill="var(--b-ink)"/><circle cx="35" cy="28" r="1.8" fill="var(--b-ink)"/>
+        <path d="M27 33c2 2 4 2 6 0" fill="none" stroke="var(--b-ink)" stroke-width="1.8" stroke-linecap="round"/>
+      </g></svg>
+    </aside>
+  </main>
+</div>
+
+<script>
+/* 內容照原文；原文的兩個 emoji 以 {book} {pen} 標記，改畫成手繪 SVG 小圖示 */
+const T = [
+ {k:"一", title:"ABC 三大支柱＋DNN 訓練與推理",
+  q:"何謂 ABC？三者關係？何謂 DNN？從訓練與推理剖析核心目標、關鍵演算法與差異。",
+  b:[
+   ["ABC 三大支柱",["Algorithms 演算法｜決定「怎麼學」","Big Data 巨量資料｜決定「學什麼」；資料要清理，避免過擬合","Computing Power 算力｜決定「學多快」：GPU、TPU","三者缺一不可 → 帶動台積電、NVIDIA"]],
+   ["DNN 深度神經網路",["AI ⊃ ML ⊃ DL（層層包含）","輸入層 → 隱藏層 → 輸出層","包含 1 個以上隱藏層（Hidden Layer）","層數再多，仍遠不及人腦"]],
+   ["訓練 Training",["目標：確定所有神經元參數（Parameters）的最佳值","反向傳播 Back-propagation：誤差由後往前傳，算出每個參數要修多少","梯度下降 Gradient Descent：往誤差變小的方向一小步調整（蒙眼下山）","像「讀書」{book}：雲端 GPU／TPU"]],
+   ["推理 Inferring",["訓練完成後，給新輸入 → 輸出結果或預測","例：使用者問 ChatGPT","像「考試」{pen}：手機、筆電裡的 NPU"]]
+  ]},
+ {k:"二", title:"AI 時代人類的先天優勢＋三大能力",
+  q:"如何自保並「利用它們」強化自己？申論應對心態與先天優勢、非理工學生三大能力。",
+  b:[
+   ["心態",["不焦慮、不怕被取代","學會「利用它們」讓自己更強大","AI 靠 ABC 發展，人類靠「先天優勢」"]],
+   ["為什麼需要先天優勢",["AI 會給「看似合理」但不一定正確的答案","人類能理解意義、判斷價值、承擔責任","TEDx「人類邊界」：發明創造、直覺、社交敏銳、情感勇氣、感官想像"]],
+   ["三大必備能力",["數位及數學技能：資料分析＋AI 工具（微積分、線代、機率統計）","AI 還不會的能力：批判性思維、倫理判斷、溝通力、同理心","跨界合作：與理工／AI 專業合作，打造「人文＋科技」"]],
+   ["我的例子＋結論",["實習做交通事故通報平台","AI 寫程式很快，需求與結果對不對要靠自己判斷","結論：AI 越強，判斷力與人性越值錢"]]
+  ]},
+ {k:"三", title:"能隙、摻雜與 IC 的構成",
+  q:"導體／絕緣體／半導體的能隙差異？半導體關鍵特性與如何調控？IC、電晶體、晶片的關係？",
+  b:[
+   ["能隙 Band Gap",["導體 Conductor：價帶導帶重疊 Overlap、無能隙（金銀銅）","絕緣體 Insulator：能隙很寬 Wide Band Gap（玻璃、塑膠）","半導體 Semiconductor：能隙窄；絕對零度像絕緣體，室溫靠熱能導電（矽、鍺）"]],
+   ["關鍵特性：可精準調控導電度",["方法：摻雜 Doping、施加電場、光照","五價（磷）→ N 型：多自由電子","三價（硼）→ P 型：多電洞","P＋N → 二極體；三層 → 電晶體"]],
+   ["IC、晶片、電晶體",["IC 積體電路：千萬個電晶體＋電阻電容集成於矽基板","IC ＝ 晶片 Chip（同一概念）","功能來自大量電晶體（電晶體是磚、IC 是房子）","Intel 4004 約 2,300 個 → Cerebras 數兆個（摩爾定律）"]]
+  ]},
+ {k:"四", title:"CMCC 四大功能＋多元整合",
+  q:"列出 CMCC 英文名稱、功能重點與代表晶片；單一晶片只能一種功能嗎？以 iPhone 為例說明整合趨勢。",
+  b:[
+   ["Computation 計算",["邏輯運算、資料處理（大腦）","CPU、GPU、TPU、MCU、NPU"]],
+   ["Memory 記憶",["資料暫存與永久儲存","DRAM、SRAM／ROM、Flash、HBM"]],
+   ["Connection 連接",["無線通訊、訊號傳輸","4G／5G、WiFi、藍牙、感測器 Sensors"]],
+   ["Control 控制",["系統控制、電源管理","ECU、PMIC、驅動 IC（Driver）"]],
+   ["多元整合趨勢",["一顆 IC 可同時具備多種功能","iPhone 18 Pro 多達 30 多種晶片，涵蓋 CMCC","SoC 系統單晶片：整合計算＋控制＋連接","為何整合：空間小、省電、傳輸距離短、效能高","電動車：自駕晶片、ECU、感測器"]]
+  ]},
+ {k:"五", title:"產業鏈上中下游＋晶圓製造複雜性",
+  q:"上游三要素與重點？中游 Foundry 運作重點與步驟數？下游 OSAT 如何轉成終端產品？",
+  b:[
+   ["前言：專業分工",["IDM 一手包辦 vs 專業分工","Sony 集合日本人才仍追不上台積電"]],
+   ["上游",["IC 設計：EDA、IP Core、光罩 GDSII（聯發科、Fabless）","材料：矽晶圓（石英砂→多晶矽→晶柱→切片拋光）、光阻劑、特殊氣體、CMP 研磨液","設備：微影（EUV 最關鍵）、蝕刻沉積、量測檢驗"]],
+   ["中游 Foundry",["把電路圖變成實體結構（台積電）","約 1,000～1,500 個步驟","8 大製程在同片晶圓反覆循環，一層層 3D 堆疊","無塵室：一粒灰塵就整片報廢"]],
+   ["下游 OSAT",["晶圓切割 Dicing","黏晶 Die Attaching、打線 Wire Bonding、封膠 Molding","最終測試 Final Test／ATE → 終端產品（日月光）"]],
+   ["台灣地位",["設計 18%（世界第 2）","代工 65～70%（第 1）","封測 48～50%（第 1）→ 護國神山"]]
+  ]},
+ {k:"六", title:"超大晶片限制 vs CoWoS 先進封裝",
+  q:"為何不普遍做 Cerebras 那樣的超大晶片，而用 Chiplets＋CoWoS？剖析 CoWoS-S 由上至下 5 層，及如何高頻寬低延遲。",
+  b:[
+   ["為何不做超大晶片",["光罩尺寸限制：一般 GPU 約 800 mm²","Cerebras WSE：整片 300 mm 晶圓、46,225 mm²（50 多倍）","面積越大，一個瑕疵整顆報廢 → 良率低、成本高、難量產","改用小晶片 Chiplets＋HBM，以 CoWoS 整合：突破面積、維持良率"]],
+   ["CoWoS-S 5 層（由上到下）",["① 頂層晶片 Top Dies：Compute／Logic＋HBM（TSV 堆疊，底部 Base Die）","② 微凸塊 µBumps","③ 矽中介層 Silicon Interposer：Short Wires 橫向＋TSV 向下","④ C4 銅凸塊＋封裝基板 Package Substrate","⑤ 封裝錫球 Package Balls＋電路板 PCB"]],
+   ["為何高頻寬、低延遲",["運算晶片與 HBM 並排在同一片中介層","高密度短導線：距離短、通道多","TSV 垂直穿透矽，不用繞遠路"]],
+   ["結論",["延續摩爾定律 Moore's Law 的關鍵","台積電 AI 時代的核心競爭力"]]
+  ]}
+];
+const HUES = ["a","b","c","d","e","f"];
+const NS = "http://www.w3.org/2000/svg";
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+const motion = () => !RM.matches;
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} },
+  json(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch(e){ return d; } }
+};
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const plain = s => s.replace(/\{book\}|\{pen\}/g, "");
+
+/* ---------- 會動的手繪小圖示（inline SVG，才能讓裡面每一筆各自動） ---------- */
+const G = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+const ICONS = {
+  book:`<g ${G}><path d="M3.5 5.2c2.8-.9 5.6-.7 8.4 1v13c-2.8-1.6-5.6-1.9-8.4-1z"/><path class="pg" d="M20.5 5.2c-2.8-.9-5.6-.7-8.6 1v13c2.9-1.6 5.8-1.9 8.6-1z"/><path class="ln" pathLength="1" d="M6 9.2c1.4-.2 2.7 0 3.9.6M6 12.4c1.4-.2 2.7 0 3.9.6"/></g>`,
+  pen:`<g ${G}><g class="pen"><path d="M15.6 4.3l4.1 4.1L9 19.1l-5 1 1-5z"/><path d="M13.6 6.4l4 4"/></g><path class="ink" pathLength="1" d="M4.6 20.4c3-.4 4.6.8 7.2.3"/></g>`,
+  tree:`<g ${G}><rect x="2.5" y="9.5" width="5" height="5" rx="1.2"/><path class="ln" pathLength="1" d="M7.5 12c4 0 4-6.5 9-6.5"/><path class="ln d1" pathLength="1" d="M7.5 12h9"/><path class="ln d2" pathLength="1" d="M7.5 12c4 0 4 6.5 9 6.5"/><rect class="nd d1" x="16.5" y="3.5" width="5" height="4" rx="1"/><rect class="nd d2" x="16.5" y="10" width="5" height="4" rx="1"/><rect class="nd d3" x="16.5" y="16.5" width="5" height="4" rx="1"/></g>`,
+  list:`<g ${G}><circle class="dot" cx="4.5" cy="6" r="1.6"/><circle class="dot d1" cx="4.5" cy="12" r="1.6"/><circle class="dot d2" cx="4.5" cy="18" r="1.6"/><path class="ln" d="M9 6.2c3.6-.3 7.4.2 11 0"/><path class="ln d1" d="M9 12c3.6.2 7.4-.2 11 0"/><path class="ln d2" d="M9 18c3.4-.3 6.6.2 9 0"/></g>`,
+  sun:`<g ${G}><circle class="core" cx="12" cy="12" r="4.2"/><g class="rays"><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></g></g>`,
+  moon:`<g ${G}><path class="body" d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.9 7.9 0 1 0 10.1 10.1z"/><path class="tw" d="M16 4.5l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6z"/></g>`,
+  auto:`<g ${G}><circle cx="12" cy="12" r="8.2"/><path class="half" d="M12 3.8a8.2 8.2 0 0 1 0 16.4z" fill="currentColor"/></g>`,
+  tape:`<g ${G}><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M7.5 11h9M7.5 15h6"/><path class="strip" d="M2.5 10.5l15.5-5 1.6 4.4-15.5 5z" fill="var(--b-tape)" stroke-width="1.6"/></g>`,
+  check:`<g ${G}><circle cx="12" cy="12" r="8.6"/><path class="ck" pathLength="1" d="M7.8 12.3l2.9 3 5.5-6.2"/></g>`,
+  eraser:`<g ${G}><g class="er"><path d="M14.5 4.5l5 5-8.5 8.5H6.5l-3-3z"/><path d="M9.5 9.5l5 5"/></g><path class="ink" pathLength="1" d="M12.5 20.5h8"/></g>`,
+  chev:`<g ${G}><path class="cv" d="M6.5 9.5l5.5 5.5 5.5-5.5"/></g>`,
+  swipe:`<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7c7-1.2 16-1.2 24 0"/><path class="arrL" d="M6 3.5L2 7l4 3.5"/><path class="arrR" d="M22 3.5L26 7l-4 3.5"/></g>`
+};
+const ic = (n, cls = "") => `<svg class="ic ic-${n} ${cls}" viewBox="${n === "swipe" ? "0 0 28 14" : "0 0 24 24"}" aria-hidden="true">${ICONS[n]}</svg>`;
+function play(host){
+  if (!motion() || !host) return;
+  host.querySelectorAll("svg.ic").forEach(s => { s.classList.remove("play"); void s.getBoundingClientRect(); s.classList.add("play"); clearTimeout(s._t); s._t = setTimeout(() => s.classList.remove("play"), 1000); });
+}
+const HOSTS = ".btn,.tab,.leaf,.prog,.tip,.q,.br-btn";
+document.addEventListener("pointerover", e => {
+  const h = e.target.closest && e.target.closest(HOSTS);
+  if (h && !(e.relatedTarget && h.contains(e.relatedTarget))) play(h);
+});
+
+/* 背過了貼紙（樹和清單共用） */
+const STAMP = h => `<g class="stamp-in"><circle r="13" fill="var(--card)"/><circle r="11" style="fill:var(--${h}-tape);stroke:var(--${h}-ink)" stroke-width="1.6"/><path d="M-5 .2l3.4 3.6L5.6-4.2" fill="none" style="stroke:var(--${h}-ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+
+/* ---------- 數字從 0 滾到目標 ---------- */
+function countUp(node, to, from = 0, suffix = "", dur = 750){
+  if (!motion()){ node.textContent = to + suffix; return; }
+  cancelAnimationFrame(node._raf);
+  const t0 = performance.now();
+  const step = now => {
+    const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    node.textContent = Math.round(from + (to - from) * e) + suffix;
+    if (p < 1) node._raf = requestAnimationFrame(step);
+  };
+  node._raf = requestAnimationFrame(step);
+}
+const grades = () => document.querySelectorAll(".grade b").forEach((b, k) => setTimeout(() => countUp(b, +b.dataset.n, 0, "%"), k * 90));
+
+/* ---------- 量字寬 ---------- */
+const cv = document.createElement("canvas").getContext("2d");
+function mw(s, size, fam){ cv.font = `${size}px ${fam}`; return cv.measureText(s).width; }
+const BODY = '"LXGW WenKai TC","PingFang TC","Microsoft JhengHei",sans-serif';
+const HAND = '"Huninn","LXGW WenKai TC","PingFang TC",sans-serif';
+const TOKICON = {"{book}":"book","{pen}":"pen"};
+function tokW(tk, size, fam){ return TOKICON[tk] ? size * 1.2 : mw(tk, size, fam); }
+function wrap(text, max, size, fam){
+  const toks = text.match(/\{book\}|\{pen\}|[A-Za-z0-9.,'’\-\/~²µ+]+|\s+|[^\sA-Za-z0-9.,'’\-\/~²µ+]/g) || [];
+  const lines = []; let line = "", w = 0;
+  for (const tk of toks){
+    const k = tokW(tk, size, fam);
+    if (w + k > max && line.trim()){ lines.push(line.trimEnd()); line = ""; w = 0; if (/^\s+$/.test(tk)) continue; }
+    line += tk; w += k;
+  }
+  if (line.trim()) lines.push(line.trimEnd());
+  return lines;
+}
+
+/* ---------- 手繪線條 ---------- */
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function roughRect(x, y, w, h, R, amp = 1.4){
+  const j = () => (R() - .5) * 2 * amp;
+  const p = [[x + j(), y + j()], [x + w + j(), y + j()], [x + w + j(), y + h + j()], [x + j(), y + h + j()]];
+  let d = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  for (let i = 1; i <= 4; i++){
+    const a = p[i - 1], b = p[i % 4];
+    const mx = (a[0] + b[0]) / 2 + j(), my = (a[1] + b[1]) / 2 + j();
+    d += ` Q${mx.toFixed(1)},${my.toFixed(1)} ${b[0].toFixed(1)},${b[1].toFixed(1)}`;
+  }
+  return d + "Z";
+}
+function roughCurve(x1, y1, x2, y2, R){
+  const j = () => (R() - .5) * 6, dx = (x2 - x1) * .5;
+  return `M${x1},${y1} C${(x1 + dx + j()).toFixed(1)},${(y1 + j()).toFixed(1)} ${(x2 - dx + j()).toFixed(1)},${(y2 + j()).toFixed(1)} ${x2},${y2}`;
+}
+function tapePoly(x, y, w, h){
+  const pts = [], n = Math.max(3, Math.round(h / 7));
+  for (let i = 0; i <= n; i++) pts.push([x + (i % 2 ? 5 : 0), y + h * i / n]);
+  for (let i = n; i >= 0; i--) pts.push([x + w - (i % 2 ? 5 : 0), y + h * i / n]);
+  return pts.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
+}
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function keyOf(s){ const m = s.match(/^[^｜：]+[｜：]/); return m && m[0].length <= 26 ? m[0].slice(0, -1) : null; }
+
+/* ---------- 狀態：背過了、收合、背誦模式 ---------- */
+let done = store.json("b-sample-done", {});
+if (typeof done !== "object" || Array.isArray(done)) done = {};
+let fold = new Set(store.json("b-sample-fold", []));
+let recite = store.get("b-sample-recite") === "1";
+const peeled = new Set();
+const saveDone = () => store.set("b-sample-done", JSON.stringify(done));
+const saveFold = () => store.set("b-sample-fold", JSON.stringify([...fold]));
+
+function leafA11y(n, text){
+  const covered = recite && !peeled.has(n.dataset.k);
+  n.setAttribute("aria-label", covered ? "遮住的重點，按下撕開紙膠帶" : text + (done[n.dataset.k] ? "（背過了，按下取消）" : "（按下標成背過了）"));
+  n.setAttribute("aria-pressed", String(!!done[n.dataset.k]));
+}
+function leafAct(n){
+  const k = n.dataset.k;
+  if (recite && !peeled.has(k)){ peeled.add(k); n.classList.add("peeled"); leafA11y(n, n.dataset.t); return; }
+  if (done[k]) delete done[k]; else done[k] = 1;
+  n.classList.toggle("done", !!done[k]); saveDone(); leafA11y(n, n.dataset.t); updateProg(true);
+}
+function bindView(box){
+  box.addEventListener("click", e => {
+    const lf = e.target.closest(".leaf"); if (lf) return leafAct(lf);
+    const br = e.target.closest(".br,.br-btn"); if (br) toggleFold(+br.dataset.b);
+  });
+  box.addEventListener("keydown", e => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const n = e.target.closest(".leaf,.br"); if (!n) return;
+    e.preventDefault(); n.classList.contains("leaf") ? leafAct(n) : toggleFold(+n.dataset.b);
+  });
+}
+function toggleFold(bi){
+  const key = `${cur}-${bi}`, nowFolded = !fold.has(key);
+  nowFolded ? fold.add(key) : fold.delete(key); saveFold();
+  if (curView() === "list"){
+    const s = document.querySelector(`.list section[data-b="${bi}"]`);
+    s.classList.toggle("folded", nowFolded);
+    const btn = s.querySelector(".br-btn"); btn.setAttribute("aria-expanded", String(!nowFolded)); play(btn);
+    s.querySelector(".fold>ul").inert = nowFolded;
+    s.classList.remove("sec-open");
+    if (!nowFolded && motion()){ s.querySelectorAll("li").forEach((li, k) => li.style.setProperty("--i", k)); void s.offsetWidth; s.classList.add("sec-open"); clearTimeout(s._t); s._t = setTimeout(() => s.classList.remove("sec-open"), 900); }
+  } else {
+    const hadFocus = document.activeElement && document.activeElement.closest && document.activeElement.closest(".br");
+    const svg = document.querySelector("#sc .tree");
+    const finish = () => {
+      // FLIP：記下舊位置 → 重畫 → 從舊位置滑到新位置
+      const old = {}; if (svg) svg.querySelectorAll("[data-fk]").forEach(n => old[n.dataset.fk] = +n.dataset.fy);
+      renderView({});
+      const nsvg = document.querySelector("#sc .tree");
+      if (hadFocus){ const b = nsvg.querySelector(`.br[data-b="${bi}"]`); if (b) b.focus({ preventScroll: true }); }
+      if (!motion() || !nsvg) return;
+      nsvg.querySelectorAll("[data-fk]").forEach(n => {
+        const o = old[n.dataset.fk]; if (o == null) return;
+        const dy = o - +n.dataset.fy; if (Math.abs(dy) < .5) return;
+        n.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 360, easing: "cubic-bezier(.3,.8,.4,1)" });
+      });
+      if (!nowFolded){ // 展開：葉子依序滑出、連線畫出來
+        nsvg.querySelectorAll(`.leaf[data-b="${bi}"] .lf-in`).forEach((n, k) =>
+          n.animate([{ opacity: 0, transform: "translateX(-22px)" }, { opacity: 1, transform: "none" }], { duration: 320, delay: 120 + k * 70, easing: "ease-out", fill: "backwards" }));
+        nsvg.querySelectorAll(`[data-fk="l${bi}"] path.ll`).forEach((p, k) =>
+          p.animate([{ strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDasharray: 1, strokeDashoffset: 0 }], { duration: 380, delay: 60 + k * 70, easing: "ease-out", fill: "backwards" }));
+        nsvg.querySelectorAll(`[data-fk="l${bi}"] circle.ll`).forEach((c, k) =>
+          c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 300 + k * 70, fill: "backwards" }));
+      }
+    };
+    if (nowFolded && svg && motion()){ // 收合：葉子往樹枝縮回去、連線收回，再重排
+      const lv = [...svg.querySelectorAll(`.leaf[data-b="${bi}"] .lf-in`)].reverse();
+      lv.forEach((n, k) => n.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(-26px) scale(.96)" }], { duration: 240, delay: k * 45, easing: "ease-in", fill: "forwards" }));
+      svg.querySelectorAll(`[data-fk="l${bi}"] .ll`).forEach(p => p.animate(p.tagName === "path" ? [{ strokeDasharray: 1, strokeDashoffset: 0 }, { strokeDasharray: 1, strokeDashoffset: 1 }] : [{ opacity: 1 }, { opacity: 0 }], { duration: 260, delay: 60, easing: "ease-in", fill: "forwards" }));
+      svg.style.pointerEvents = "none";
+      setTimeout(finish, 240 + lv.length * 45);
+    } else finish();
+  }
+}
+
+/* ---------- 樹狀圖（寬度跟著外框流動） ---------- */
+function draw(t, ti, opt = {}){
+  const FS = 15, LH = 23, PAD = 11, GAP = 10, BGAP = 24;
+  const K = (window.__fontPx || 19) / 17;
+  const sc = document.getElementById("sc");
+  const avail = ((sc ? sc.clientWidth : 0) - 4) / K;
+  const MIN = 826, ex = Math.max(0, avail - MIN);
+  const X0 = 12, ROOT_W = 168 + Math.min(ex * .08, 56), G1 = 56 + Math.min(ex * .05, 32);
+  const BR_W = 178 + Math.min(ex * .12, 84), G2 = 48 + Math.min(ex * .05, 32);
+  const X1 = X0 + ROOT_W + G1, X2 = X1 + BR_W + G2, W = Math.max(MIN, avail), LF_W = W - X2 - 14;
+  const A = bi => opt.anim === true || opt.animB === bi;
+  let y = 16; const branches = [];
+  t.b.forEach(([name, leaves], bi) => {
+    const folded = fold.has(`${ti}-${bi}`);
+    const bl = wrap(name, BR_W - 64, 16, HAND), bh = bl.length * 24 + 20;
+    let items = [], cy;
+    if (folded){ cy = y + bh / 2; y += bh + BGAP; }
+    else {
+      items = leaves.map((s, li) => { const ls = wrap(s, LF_W - 52, FS, BODY); return { s, li, ls, h: ls.length * LH + PAD * 2 }; });
+      const top = y;
+      items.forEach(it => { it.y = y; y += it.h + GAP; });
+      cy = (top + y - GAP) / 2; y += BGAP;
+    }
+    branches.push({ name, bl, bh, items, cy, hue: HUES[bi], folded, n: leaves.length });
+  });
+  const rl = wrap(t.title, ROOT_W - 34, 17, HAND), rh = rl.length * 25 + 46;
+  const H = Math.max(y - BGAP + 16, rh + 40);
+  const svg = el("svg", { class: "tree", viewBox: `0 0 ${W.toFixed(1)} ${H}`, width: Math.round(W * K), height: Math.round(H * K), role: "group", "aria-label": `申論題${t.k}重點樹：${t.title}` });
+  const defs = el("defs", {}, svg);
+  HUES.forEach(h => {
+    const p = el("pattern", { id: `tp-${h}`, width: 10, height: 10, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, defs);
+    el("rect", { width: 10, height: 10, style: `fill:var(--${h}-tape)` }, p);
+    el("rect", { width: 4, height: 10, style: "fill:var(--stripe)" }, p);
+  });
+  const R = rng(7);
+  let delay = 0;
+  const lineGs = [];
+  branches.forEach((b, bi) => {
+    const g = el("g", { class: "lines", fill: "none", "stroke-linecap": "round", "data-fk": "l" + bi, "data-fy": b.cy }, svg); lineGs.push(g);
+    [1, .45].forEach((op, pass) => {
+      const p = el("path", { d: roughCurve(X0 + ROOT_W, H / 2, X1, b.cy, R), style: `stroke:var(--${b.hue}-ink)`, "stroke-width": pass ? 1 : 2, opacity: op, pathLength: 1, class: opt.anim ? "draw" : "" }, g);
+      p.style.animationDelay = delay + "ms";
+    });
+    b.items.forEach(it => {
+      const ly = it.y + it.h / 2;
+      el("path", { d: roughCurve(X1 + BR_W, b.cy, X2, ly, R), style: `stroke:var(--${b.hue}-ink)`, "stroke-width": 1.5, opacity: .8, pathLength: 1, class: "ll" + (opt.anim ? " draw" : "") }, g).style.animationDelay = (opt.anim ? delay + 250 : 0) + "ms";
+      el("circle", { cx: X2 - 1, cy: ly, r: 3, style: `fill:var(--${b.hue}-ink)`, class: "ll" }, g);
+    });
+    delay += 120;
+  });
+  // 根：便利貼
+  const ry = H / 2 - rh / 2;
+  const rootMv = el("g", { "data-fk": "root", "data-fy": H / 2 }, svg);
+  const rootG = el("g", { transform: `rotate(-2 ${X0 + ROOT_W / 2} ${H / 2})`, class: "root-g" + (opt.anim ? " pop" : "") }, rootMv);
+  el("rect", { x: X0, y: ry - 9, width: ROOT_W + 4, height: rh + 14, class: "hit" }, rootG);
+  const root = el("g", { class: "root-in" }, rootG);
+  el("rect", { x: X0 + 4, y: ry + 5, width: ROOT_W, height: rh, class: "shadow" }, root);
+  el("rect", { x: X0, y: ry, width: ROOT_W, height: rh, class: "sticky" }, root);
+  el("rect", { x: X0 + ROOT_W / 2 - 34, y: ry - 9, width: 68, height: 18, class: "sticky-tape", transform: `rotate(4 ${X0 + ROOT_W / 2} ${ry})` }, root);
+  el("text", { x: X0 + ROOT_W / 2, y: ry + 30, "text-anchor": "middle", "font-size": 12, "letter-spacing": 3, class: "t-kick" }, root).textContent = `申論題${t.k}`;
+  rl.forEach((s, i) => { el("text", { x: X0 + ROOT_W / 2, y: ry + 56 + i * 25, "text-anchor": "middle", "font-size": 17, class: "t-root" }, root).textContent = s; });
+  // 枝與葉
+  branches.forEach((b, bi) => {
+    const by = b.cy - b.bh / 2;
+    const tg = el("g", { transform: `rotate(${bi % 2 ? 1.2 : -1.2} ${X1 + BR_W / 2} ${b.cy})`, class: "br" + (opt.anim ? " pop" : ""), tabindex: 0, role: "button", "data-b": bi, "aria-expanded": String(!b.folded), "aria-label": `${b.name}（${b.folded ? `已收合 ${b.n} 個重點，按下展開` : "按下收合"}）` }, el("g", { "data-fk": "b" + bi, "data-fy": b.cy }, svg));
+    el("rect", { x: X1, y: by, width: BR_W, height: b.bh, class: "hit" }, tg);
+    const tin = el("g", { class: "br-in" }, tg);
+    el("polygon", { points: tapePoly(X1 + 3, by + 4, BR_W, b.bh), class: "br-sh" }, tin);
+    el("polygon", { points: tapePoly(X1, by, BR_W, b.bh), fill: `url(#tp-${b.hue})`, opacity: .95, class: "tp" }, tin);
+    b.bl.forEach((s, i) => { el("text", { x: X1 + 17, y: by + 27 + i * 24, "font-size": 16, class: "t-br" }, tin).textContent = s; });
+    const bx = X1 + BR_W - 22, byc = b.cy;
+    // 圓徽章：展開＝白底「−」（畫線，不靠字型）；收合＝放大、筆跡色實心圓＋被收起的數量
+    const bg = el("g", { class: "badge" + (b.folded ? " is-folded" : "") }, tin);
+    const bb = el("g", { class: "badge-in" }, bg);
+    if (b.folded){
+      el("circle", { cx: bx, cy: byc, r: 15, style: `fill:var(--${b.hue}-ink);stroke:var(--card)`, "stroke-width": 2 }, bb);
+      el("text", { x: bx, y: byc, "text-anchor": "middle", "dominant-baseline": "central", "font-size": 15, class: "t-badge", style: "fill:var(--card)" }, bb).textContent = String(b.n);
+    } else {
+      el("circle", { cx: bx, cy: byc, r: 12, style: `fill:var(--card);stroke:var(--${b.hue}-ink)`, "stroke-width": 1.6 }, bb);
+      el("path", { d: `M${bx - 5} ${byc}h10`, style: `stroke:var(--${b.hue}-ink)`, "stroke-width": 2.2, "stroke-linecap": "round", fill: "none" }, bb);
+    }
+    const hot = on => lineGs[bi].classList.toggle("hot", on);
+    tg.addEventListener("pointerenter", () => hot(true)); tg.addEventListener("pointerleave", () => hot(false));
+    tg.addEventListener("focus", () => hot(true)); tg.addEventListener("blur", () => hot(false));
+
+    b.items.forEach((it, ii) => {
+      const key = `${ti}-${bi}-${it.li}`;
+      const lg = el("g", { class: "leaf" + (done[key] ? " done" : "") + (peeled.has(key) ? " peeled" : ""), tabindex: 0, role: "button", "data-k": key, "data-t": plain(it.s), "data-b": bi, "data-fk": key, "data-fy": it.y, style: `--lh:var(--${b.hue}-hl)` }, svg);
+      el("rect", { x: X2, y: it.y, width: LF_W, height: it.h, class: "hit" }, lg);
+      const lin = el("g", { class: "lf-in" + (opt.anim ? " pop" : "") }, lg);
+      if (opt.anim) lin.style.animationDelay = (bi * 120 + ii * 50 + 200) + "ms";
+      const Rc = rng(100 + bi * 10 + ii);
+      el("path", { d: roughRect(X2, it.y, LF_W, it.h, Rc), class: "card" }, lin);
+      const kw = keyOf(it.s);
+      if (kw && it.ls[0].startsWith(kw)){
+        el("path", { d: roughRect(X2 + 14, it.y + PAD + 9, mw(kw, FS, BODY) + 6, 10, Rc, .8), style: `fill:var(--${b.hue}-hl)` }, lin);
+      }
+      el("path", { d: roughRect(X2, it.y, LF_W, it.h, Rc), fill: "none", style: `stroke:var(--${b.hue}-ink)`, "stroke-width": 1.3, "stroke-linejoin": "round", class: "lf-edge" }, lin);
+      it.ls.forEach((line, li) => {
+        let cx = X2 + 17; const ty = it.y + PAD + 16 + li * LH;
+        line.split(/(\{book\}|\{pen\})/).forEach(seg => {
+          if (!seg) return;
+          if (TOKICON[seg]){
+            const s = el("svg", { x: cx + 1, y: ty - 15, width: 18, height: 18, viewBox: "0 0 24 24", class: `ic ic-${TOKICON[seg]} icon`, overflow: "visible" }, lin);
+            s.innerHTML = ICONS[TOKICON[seg]]; cx += FS * 1.2;
+          } else { el("text", { x: cx, y: ty, "font-size": FS }, lin).textContent = seg; cx += mw(seg, FS, BODY); }
+        });
+      });
+      // 背過了貼紙
+      const st = el("g", { class: "stamp", transform: `translate(${(X2 + LF_W - 16).toFixed(1)} ${(it.y + it.h / 2).toFixed(1)})` }, lin);
+      el("circle", { r: 10, fill: "none", style: `stroke:var(--${b.hue}-ink)`, "stroke-width": 1.4, "stroke-dasharray": "3 3", class: "stamp-hint" }, st);
+      st.insertAdjacentHTML("beforeend", STAMP(b.hue));
+      // 背誦模式：紙膠帶遮住
+      if (recite){
+        const cg = el("g", { class: "cover" }, lin);
+        el("polygon", { points: tapePoly(X2 + 6, it.y + 4, LF_W - 40, it.h - 8), fill: `url(#tp-${b.hue})` }, cg);
+        el("text", { x: X2 + 20, y: it.y + it.h / 2 + 4.5, "font-size": 12, class: "t-cover", opacity: .8 }, cg).textContent = "點一下撕開";
+      }
+      leafA11y(lg, plain(it.s));
+    });
+  });
+  bindView(svg);
+  return svg;
+}
+
+/* ---------- 清單 ---------- */
+function leafHTML(s){
+  const key = keyOf(s);
+  let h = key ? `<mark>${esc(key)}</mark>${esc(s.slice(key.length))}` : esc(s);
+  return h.replace(/\{(book|pen)\}/g, (_, n) => ic(n, "inline-ic"));
+}
+function listView(t, ti){
+  const box = document.createElement("div"); box.className = "list";
+  box.innerHTML = `<div class="root"><small>申論題${t.k}</small>${esc(t.title)}</div><div class="lgrid">` + t.b.map(([name, leaves], bi) => {
+    const h = HUES[bi], f = fold.has(`${ti}-${bi}`);
+    return `<section data-b="${bi}" class="${f ? "folded" : ""}" style="--bt:var(--${h}-tape);--bi:var(--${h}-ink);--bh:var(--${h}-hl)">
+      <h3><button type="button" class="tape br-btn" data-b="${bi}" aria-expanded="${!f}">${esc(name)}<span class="cnt">${leaves.length}</span>${ic("chev")}</button></h3>
+      <div class="fold"><ul>${leaves.map((s, li) => {
+        const k = `${ti}-${bi}-${li}`;
+        return `<li class="leaf${done[k] ? " done" : ""}${peeled.has(k) ? " peeled" : ""}" tabindex="0" role="button" data-k="${k}" data-t="${esc(plain(s))}"><span class="lt">${leafHTML(s)}</span><span class="stamp" aria-hidden="true"><svg viewBox="-14 -14 28 28">${STAMP(h)}</svg></span>${recite ? `<span class="cover" aria-hidden="true">點一下撕開</span>` : ""}</li>`;
+      }).join("")}</ul></div></section>`;
+  }).join("") + `</div>`;
+  box.querySelectorAll(".leaf").forEach(n => leafA11y(n, n.dataset.t));
+  box.querySelectorAll("section.folded .fold>ul").forEach(u => u.inert = true);
+  bindView(box);
+  return box;
+}
+
+/* ---------- 進度：這題背過幾個 ---------- */
+let shownN = 0;
+function updateProg(animate){
+  const p = document.querySelector(".prog"); if (!p) return;
+  const total = T[cur].b.reduce((a, b) => a + b[1].length, 0);
+  const n = Object.keys(done).filter(k => k.startsWith(cur + "-")).length;
+  const b = p.querySelector("b"), bar = p.querySelector(".bar i");
+  if (animate) countUp(b, n, shownN, "", 450); else b.textContent = n;
+  shownN = n;
+  p.querySelector(".tot").textContent = total;
+  bar.style.width = (n / total * 100) + "%";
+  p.querySelector(".yay").textContent = n === total ? "這題全部背完了" : "";
+  const clr = p.querySelector(".clr");
+  if (clr){ clr.disabled = n === 0; if (n === 0) disarm(clr); }
+}
+/* 清空本題：點第一次變「再點一次確認」，3 秒內再點才清除 */
+function disarm(b){ clearTimeout(b._t); b.classList.remove("armed"); b.querySelector("span").textContent = "清空本題"; b.setAttribute("aria-label", "清空本題的背過了記號"); }
+document.addEventListener("click", e => {
+  const b = e.target.closest && e.target.closest(".prog .clr"); if (!b || b.disabled) return;
+  if (!b.classList.contains("armed")){
+    b.classList.add("armed"); b.querySelector("span").textContent = "再點一次確認";
+    b.setAttribute("aria-label", "再按一次確認清空本題"); clearTimeout(b._t); b._t = setTimeout(() => disarm(b), 3000);
+    return;
+  }
+  Object.keys(done).forEach(k => { if (k.startsWith(cur + "-")) delete done[k]; });
+  saveDone();
+  document.querySelectorAll("#sc .leaf.done").forEach(n => { n.classList.remove("done"); leafA11y(n, n.dataset.t); });
+  disarm(b); updateProg(true);
+});
+
+/* ---------- 貼紙角色：每題一個 ---------- */
+const eyes = (pts, r, ink) => pts.map(([x, y]) => `<g class="m-eye"><circle cx="${x}" cy="${y}" r="${r}" fill="${ink}"/><circle cx="${x + r * .35}" cy="${y - r * .35}" r="${r * .32}" fill="#fff" opacity=".9"/></g>`).join("");
+const cheeks = (pts, rx) => pts.map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${rx * .6}" fill="var(--cheek)" opacity=".8"/>`).join("");
+const smile = (x, y, w, ink, sw = 2.4) => `<path d="M${x - w / 2} ${y}c${w * .3} ${w * .45} ${w * .7} ${w * .45} ${w} 0" fill="none" stroke="${ink}" stroke-width="${sw}" stroke-linecap="round"/>`;
+const MASCOTS = [
+  { name: "撐起 AI 的 A、B、C 三根小柱子", lines: ["演算法、巨量資料、算力，三者缺一不可！", "訓練像讀書，推理像考試！", "我們三根撐起整個 AI 喔！"], svg: () => {
+    const ink = "var(--a-ink)", f = "var(--a-tape)";
+    return `<g class="m-all" filter="url(#stk)">
+      <path d="M14 45L60 14l46 31z" fill="var(--sticky)" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>
+      <text x="60" y="38" text-anchor="middle" font-size="12" class="m-txt" fill="${ink}">AI</text>
+      <rect x="15" y="43" width="90" height="9" rx="3" fill="${f}" stroke="${ink}" stroke-width="3"/>
+      ${[["A", 22], ["B", 50], ["C", 78]].map(([L, x], k) => `<g class="m-bob" style="animation-delay:${k * .15}s"><rect x="${x}" y="54" width="20" height="38" rx="5" fill="${f}" stroke="${ink}" stroke-width="3"/>${eyes([[x + 6, 65], [x + 14, 65]], 2.3, ink)}${smile(x + 10, 71, 5, ink, 1.8)}<text x="${x + 10}" y="87" text-anchor="middle" font-size="11" class="m-txt" fill="${ink}">${L}</text></g>`).join("")}
+      <rect x="13" y="92" width="94" height="9" rx="3" fill="${f}" stroke="${ink}" stroke-width="3"/>
+    </g>`; } },
+  { name: "有先天優勢的小腦袋", lines: ["不焦慮、不怕被取代！", "AI 越強，判斷力與人性越值錢！", "我會理解意義、判斷價值喔！"], svg: () => {
+    const ink = "var(--b-ink)", f = "var(--b-tape)";
+    return `<g class="m-all" filter="url(#stk)">
+      <path d="M50 88l-2 10M70 88l2 10M43 99h7M70 99h7" stroke="${ink}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M30 70C18 66 18 48 30 44C28 30 44 22 54 28C58 20 72 20 76 28C88 24 100 34 96 46C106 52 104 68 92 72C92 84 78 90 68 84C62 92 46 92 42 84C32 88 24 80 30 70Z" fill="${f}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M36 44c3-4 9-5 12-1M70 34c3 1 6 4 6 8M84 50c3 0 6 2 7 5M30 56c3 1 5 3 5 6M60 30c-1 4 1 7 4 8" fill="none" stroke="${ink}" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+      ${eyes([[48, 60], [72, 60]], 4, ink)}${cheeks([[40, 69], [80, 69]], 5)}${smile(60, 68, 10, ink)}
+      <path class="m-spark" d="M101 6l2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6 6.4-2.6z" fill="var(--d-tape)" stroke="var(--d-ink)" stroke-width="2" stroke-linejoin="round"/>
+    </g>`; } },
+  { name: "跳過能隙的電子小球", lines: ["能隙窄窄的，室溫我就跳得過去！", "摻五價變 N 型，摻三價變 P 型！", "導體、絕緣體、半導體，差在能隙！"], svg: () => {
+    const ink = "var(--c-ink)", f = "var(--c-tape)";
+    return `<g class="m-all" filter="url(#stk)">
+      <rect x="58" y="18" width="50" height="16" rx="4" fill="${f}" stroke="${ink}" stroke-width="3"/>
+      <rect x="12" y="88" width="50" height="16" rx="4" fill="${f}" stroke="${ink}" stroke-width="3"/>
+      <path d="M66 26h34M20 96h34" stroke="${ink}" stroke-width="1.6" stroke-dasharray="2 4" stroke-linecap="round" opacity=".6"/>
+      <path d="M98 40v42M94 45l4-5 4 5M94 77l4 5 4-5" fill="none" stroke="${ink}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="90" y="65" text-anchor="end" font-size="11" class="m-txt" fill="${ink}">Eg</text>
+      <path d="M30 86C26 68 32 56 40 50" fill="none" stroke="${ink}" stroke-width="1.8" stroke-dasharray="3 4" stroke-linecap="round" opacity=".6"/>
+      <g class="m-hop"><circle cx="50" cy="58" r="16" fill="var(--sticky)" stroke="${ink}" stroke-width="3"/>${eyes([[44, 56], [56, 56]], 3.2, ink)}${cheeks([[39, 63], [61, 63]], 3.6)}${smile(50, 63, 7, ink, 2.2)}</g>
+    </g>`; } },
+  { name: "CMCC 四格功能小晶片", lines: ["計算、記憶、連接、控制，一顆全包！", "SoC：整合計算＋控制＋連接！", "iPhone 裡有 30 多種晶片喔！"], svg: () => {
+    const ink = "var(--d-ink)", f = "var(--d-tape)";
+    const cells = [[27, 52, "C", "a"], [61, 52, "M", "b"], [27, 76, "C", "c"], [61, 76, "C", "e"]];
+    return `<g class="m-all" filter="url(#stk)">
+      <path d="M38 20v-9M60 20v-9M82 20v-9M38 100v9M60 100v9M82 100v9M20 40h-9M20 62h-9M20 84h-9M100 40h9M100 62h9M100 84h9" stroke="${ink}" stroke-width="3.2" stroke-linecap="round"/>
+      <rect x="20" y="20" width="80" height="80" rx="16" fill="${f}" stroke="${ink}" stroke-width="3"/>
+      ${eyes([[50, 35], [70, 35]], 3.6, ink)}${cheeks([[42, 43], [78, 43]], 4)}${smile(60, 42, 8, ink, 2.2)}
+      ${cells.map(([x, y, L, h], k) => `<rect class="m-cell" x="${x}" y="${y}" width="32" height="19" rx="5" fill="var(--card)" stroke="${ink}" stroke-width="1.8" style="--fl:var(--${h}-tape);animation-delay:${k * .3}s"/><text x="${x + 16}" y="${y + 14}" text-anchor="middle" font-size="12" class="m-txt" fill="${ink}">${L}</text>`).join("")}
+    </g>`; } },
+  { name: "上中下游的小工廠", lines: ["上游設計、中游製造、下游封測！", "中游要做約 1,000～1,500 個步驟！", "台灣代工世界第 1，護國神山！"], svg: () => {
+    const ink = "var(--e-ink)", f = "var(--e-tape)";
+    return `<g class="m-all" filter="url(#stk)">
+      <g class="m-chip"><rect x="88" y="76" width="16" height="13" rx="2.5" fill="var(--sticky)" stroke="${ink}" stroke-width="2.2"/><path d="M92 76v-3M96 76v-3M100 76v-3" stroke="${ink}" stroke-width="1.8" stroke-linecap="round"/></g>
+      <path d="M14 88V50l16-12v12l16-12v12l16-12v12h8V22h12v66z" fill="${f}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>
+      ${eyes([[38, 63], [58, 63]], 4, ink)}${cheeks([[30, 72], [66, 72]], 4.6)}${smile(48, 71, 9, ink)}
+      <g class="m-smoke"><circle cx="78" cy="14" r="4.5" fill="var(--card)" stroke="${ink}" stroke-width="1.8"/><circle cx="86" cy="7" r="3.2" fill="var(--card)" stroke="${ink}" stroke-width="1.8"/></g>
+      <rect x="8" y="90" width="104" height="12" rx="6" fill="var(--paper)" stroke="${ink}" stroke-width="2.6"/>
+      ${[16, 60, 104].map(x => `<g class="m-roll"><circle cx="${x}" cy="96" r="3.4" fill="var(--card)" stroke="${ink}" stroke-width="1.6"/><path d="M${x - 3.4} 96h6.8" stroke="${ink}" stroke-width="1.4"/></g>`).join("")}
+    </g>`; } },
+  { name: "整片的大晶圓", lines: ["我是整片 300 mm 晶圓做的！", "一個瑕疵就整顆報廢⋯⋯", "改用 Chiplets＋CoWoS 比較好啦！"], svg: () => {
+    const ink = "var(--f-ink)", f = "var(--f-tape)";
+    let grid = ""; for (let v = 24; v <= 96; v += 12) grid += `M${v} 18V98M20 ${v - 2}H100`;
+    return `<defs><clipPath id="wclip"><circle cx="60" cy="58" r="37"/></clipPath></defs>
+    <g class="m-all" filter="url(#stk)">
+      <circle cx="60" cy="58" r="40" fill="${f}" stroke="${ink}" stroke-width="3"/>
+      <path clip-path="url(#wclip)" d="${grid}" stroke="${ink}" stroke-width="1.2" opacity=".35"/>
+      <path d="M54 98.2l6-5 6 5" fill="var(--card)" stroke="${ink}" stroke-width="2.4" stroke-linejoin="round"/>
+      <ellipse cx="60" cy="62" rx="22" ry="14" fill="${f}"/>
+      ${eyes([[49, 58], [71, 58]], 4.4, ink)}${cheeks([[41, 67], [79, 67]], 4.6)}
+      <path d="M53 68c2-2 4.5-2 7 0s5 2 7 0" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>
+      <path class="m-sweat" d="M92 26c3 4 4 6 4 8a4 4 0 0 1-8 0c0-2 1-4 4-8z" fill="var(--c-tape)" stroke="var(--c-ink)" stroke-width="1.8"/>
+    </g>`; } }
+];
+const mwrap = document.getElementById("mwrap"), mbtn = document.getElementById("mascot"), bubble = document.getElementById("bubble");
+let mIdx = -1, mTok = 0, sayN = 0, bubT;
+function putMascot(i){
+  mbtn.innerHTML = `<svg viewBox="0 0 120 120" aria-hidden="true">${MASCOTS[i].svg()}</svg>`;
+  mbtn.setAttribute("aria-label", `小角色：${MASCOTS[i].name}，點我說一句話`);
+  bubble.classList.remove("show"); sayN = 0;
+}
+function setMascot(i, animate){
+  if (i === mIdx) return;
+  mIdx = i; const tok = ++mTok;
+  if (!animate || !motion()){ putMascot(i); return; }
+  mwrap.classList.remove("enter"); mwrap.classList.add("leave");
+  setTimeout(() => {
+    if (tok !== mTok) return;
+    putMascot(i); mwrap.classList.remove("leave"); void mwrap.offsetWidth; mwrap.classList.add("enter");
+  }, 220);
+}
+mwrap.addEventListener("animationend", e => { if (e.animationName === "m-enter") mwrap.classList.remove("enter"); });
+mbtn.addEventListener("click", () => {
+  const m = MASCOTS[mIdx];
+  bubble.textContent = m.lines[sayN++ % m.lines.length];
+  bubble.classList.add("show"); clearTimeout(bubT); bubT = setTimeout(() => bubble.classList.remove("show"), 2800);
+  if (!motion()) return;
+  const s = mbtn.querySelector("svg"); s.classList.remove("jump"); void s.getBoundingClientRect(); s.classList.add("jump");
+  setTimeout(() => s.classList.remove("jump"), 650);
+  for (let k = 0; k < 6; k++){
+    const a = (k / 6) * Math.PI * 2 - Math.PI / 2 + (Math.random() - .5) * .5, d = 52 + Math.random() * 18;
+    const sp = document.createElement("span"); sp.className = "spark";
+    sp.style.setProperty("--dx", (Math.cos(a) * d).toFixed(1) + "px"); sp.style.setProperty("--dy", (Math.sin(a) * d).toFixed(1) + "px");
+    const h = HUES[(mIdx + k) % 6];
+    sp.innerHTML = `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.3 5.4 5.7.6-4.3 3.8 1.3 5.7L10 14l-5 3 1.3-5.7L2 7.5l5.7-.6z" style="fill:var(--${h}-tape);stroke:var(--${h}-ink)" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+    mwrap.appendChild(sp); setTimeout(() => sp.remove(), 750);
+  }
+});
+
+/* ---------- 顯示模式 ---------- */
+let view = store.get("b-sample-view");
+const mqMobile = matchMedia("(max-width: 760px)");
+const curView = () => view || (mqMobile.matches ? "list" : "tree");
+function modeBtns(){
+  const b = document.getElementById("mode");
+  b.innerHTML = `<span class="lbl">顯示</span>` + [["tree","樹狀圖"],["list","清單"]].map(([k, n]) =>
+    `<button type="button" class="btn rough" data-v="${k}" aria-pressed="${curView() === k}">${ic(k)}<span>${n}</span></button>`).join("");
+  b.querySelectorAll("button").forEach(x => x.onclick = () => { view = x.dataset.v; store.set("b-sample-view", view); modeBtns(); play(b.querySelector(`[data-v="${view}"]`)); show(cur, false); });
+}
+function reciteBtn(){
+  const b = document.getElementById("rec");
+  b.innerHTML = `<button type="button" class="btn rough" aria-pressed="${recite}">${ic("tape")}<span>背誦模式${recite ? "：開" : "：關"}</span></button>`;
+  b.firstChild.onclick = () => { recite = !recite; store.set("b-sample-recite", recite ? "1" : "0"); peeled.clear(); reciteBtn(); play(b.firstChild); b.firstChild.focus(); renderView({}); setTip(); };
+}
+
+/* ---------- 分頁 ---------- */
+let cur = 0, first = true;
+function renderView(opt){
+  const sc = document.getElementById("sc"), t = T[cur];
+  sc.replaceChildren(curView() === "list" ? listView(t, cur) : draw(t, cur, opt));
+}
+function setTip(){
+  const tip = document.querySelector(".tip"); if (!tip) return;
+  const tree = curView() !== "list";
+  tip.innerHTML = (tree ? `${ic("swipe")}` : "") + (recite ? "背誦模式：先在心裡默背，再點紙膠帶撕開對答案；撕開後再點一下就蓋「背過了」貼紙。" :
+    tree ? "點樹枝（彩色膠帶）收合／展開，點葉子蓋上「背過了」貼紙；手機上可以左右滑動看整棵樹。" : "點彩色標籤收合／展開，點一行蓋上「背過了」貼紙。");
+}
+function show(i, anim = true){
+  const changed = i !== cur || first;
+  if (i !== cur) peeled.clear();
+  cur = i;
+  document.querySelectorAll(".tab").forEach((b, k) => { b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+  const t = T[i], p = document.getElementById("panel");
+  p.classList.remove("panel-in"); if (anim && motion()){ void p.offsetWidth; p.classList.add("panel-in"); }
+  p.innerHTML = `<h2>申論題<span class="no">${t.k}</span>｜${esc(t.title)}</h2>
+    <p class="q"><span class="tape">Q.</span><span class="qt">題目要點：${esc(t.q)}</span></p>
+    <p class="prog">${ic("check")}這題背過了 <b>0</b> / <span class="tot"></span><span class="bar rough"><i></i></span><span class="yay"></span><button type="button" class="btn rough clr">${ic("eraser")}<span>清空本題</span></button></p>
+    <div class="scroll" id="sc"></div>
+    <p class="tip"></p>`;
+  renderView({ anim: anim && changed });
+  setTip();
+  shownN = 0; updateProg(anim && changed);
+  if (anim && changed) grades();
+  setMascot(i, anim && !first);
+  store.set("b-sample-tab", String(i));
+  first = false;
+}
+const tabs = document.getElementById("tabs");
+T.forEach((t, i) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab");
+  b.style.setProperty("--t", `var(--${HUES[i]}-tape)`);
+  const tin = document.createElement("span"); tin.className = "tab-in";
+  tin.textContent = `${t.k}｜${t.title.split("＋")[0].split(" vs ")[0]}`; b.appendChild(tin);
+  b.onclick = () => { if (i !== cur) show(i); };
+  b.onkeydown = e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const n = (i + (e.key === "ArrowRight" ? 1 : T.length - 1)) % T.length;
+    show(n); tabs.children[n].focus();
+  };
+  tabs.appendChild(b);
+});
+
+/* ---------- 字體大小 ---------- */
+(function(){
+  const SIZES = [["小",16],["中",19],["大",22],["特大",25]];
+  let px = +(store.get("b-sample-font") || 19) || 19;
+  const box = document.getElementById("fsz");
+  box.innerHTML = `<span class="lbl">字體</span>` + SIZES.map(([n, v]) => `<button type="button" class="btn rough" data-px="${v}"><span>${n}</span></button>`).join("");
+  function apply(v, redraw){
+    px = v; window.__fontPx = v; document.documentElement.style.fontSize = v + "px";
+    store.set("b-sample-font", String(v));
+    box.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.px === v)));
+    if (redraw) renderView({});
+  }
+  box.querySelectorAll("button").forEach(b => b.onclick = () => apply(+b.dataset.px, true));
+  apply(px, false);
+})();
+
+/* ---------- 淺色／深色：跟隨系統 → 淺色 → 深色 ---------- */
+(function(){
+  const btn = document.getElementById("theme");
+  const MODES = { auto: ["跟隨系統", "auto"], light: ["淺色", "sun"], dark: ["深色", "moon"] };
+  let mode = store.get("b-sample-theme") || "auto";
+  if (!MODES[mode]) mode = "auto";
+  function apply(){
+    if (mode === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", mode);
+    btn.innerHTML = `${ic(MODES[mode][1])}<span>主題：${MODES[mode][0]}</span>`;
+  }
+  btn.onclick = () => { mode = mode === "auto" ? "light" : mode === "light" ? "dark" : "auto"; store.set("b-sample-theme", mode); apply(); play(btn); };
+  apply();
+})();
+
+modeBtns(); reciteBtn();
+let start = +(store.get("b-sample-tab") || 0) || 0;
+show(Math.min(Math.max(start, 0), T.length - 1), true);
+
+/* 字型載入後、視窗寬度改變時重畫（不重播動畫） */
+let rt, lastW = 0;
+const redrawQuiet = () => { clearTimeout(rt); rt = setTimeout(() => { if (curView() === "tree") renderView({}); }, 120); };
+if (document.fonts){ document.fonts.ready.then(redrawQuiet); document.fonts.addEventListener && document.fonts.addEventListener("loadingdone", redrawQuiet); }
+new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (Math.abs(w - lastW) > 2){ lastW = w; redrawQuiet(); } }).observe(document.querySelector(".notebook"));
+mqMobile.addEventListener && mqMobile.addEventListener("change", () => { if (!view){ modeBtns(); renderView({}); setTip(); } });
+</script>
+
+<div id="stsw-host"></div>
+<script>
+(function(){
+  try { localStorage.setItem("essay-map-style", "b"); } catch(e) {}
+  const host = document.getElementById("stsw-host");
+  const root = host.attachShadow({mode: "open"});
+  root.innerHTML = `<style>
+    :host{all:initial}
+    .wrap{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:2147483000;font:14px/1.5 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+    button{font:inherit;cursor:pointer;border:1px solid rgba(0,0,0,.15);background:#fff;color:#333;border-radius:999px;padding:7px 14px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+    button:focus-visible,a:focus-visible{outline:2px solid #3570A3;outline-offset:2px}
+    .panel{position:absolute;left:0;bottom:46px;background:#fff;color:#333;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.22);padding:8px;display:flex;flex-direction:column;gap:2px;min-width:170px}
+    .panel[hidden]{display:none}
+    .panel b{font-size:12px;color:#777;padding:2px 8px;font-weight:500}
+    a{display:flex;gap:10px;align-items:center;text-decoration:none;color:#333;padding:7px 10px;border-radius:9px}
+    a:hover{background:#f1efe9}
+    a[aria-current]{background:#ebe6dc;font-weight:700}
+    i{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.15)}
+  </style>
+  <div class="wrap"><div class="panel" hidden><b>選一種風格（會記住）</b><a href="essay-map-a.html" data-k="a" ><i style="background:#8A9E92"></i>精緻莫蘭迪</a><a href="essay-map-b.html" data-k="b" aria-current="page"><i style="background:#F0A6A0"></i>可愛手帳</a><a href="essay-map-c.html" data-k="c" ><i style="background:#2BD97F"></i>晶片科技</a><a href="essay-map-d.html" data-k="d" ><i style="background:#C0392B"></i>雜誌編排</a><a href="essay-map-e.html" data-k="e" ><i style="background:#5E8C4A"></i>森林樹枝</a></div><button type="button" aria-expanded="false">🎨 換風格</button></div>`;
+  const btn = root.querySelector("button"), panel = root.querySelector(".panel");
+  btn.onclick = () => { panel.hidden = !panel.hidden; btn.setAttribute("aria-expanded", String(!panel.hidden)); };
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { panel.hidden = true; btn.setAttribute("aria-expanded", "false"); } });
+})();
+</script>
+</body>
+</html>
